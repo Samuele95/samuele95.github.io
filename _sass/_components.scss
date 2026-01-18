@@ -363,7 +363,7 @@
     &::before {
       content: '';
       position: absolute;
-      left: -$spacing-8 + 1px;
+      left: calc(-#{$spacing-8} + 1px);
       top: 6px;
       width: 12px;
       height: 12px;
