@@ -45,6 +45,12 @@
     inset: 0;
     pointer-events: none;
     overflow: hidden;
+    // Mesh gradient background for visual depth
+    background:
+      radial-gradient(at 40% 20%, rgba($red, 0.12) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgba($orange, 0.08) 0px, transparent 40%),
+      radial-gradient(at 0% 50%, rgba($purple, 0.06) 0px, transparent 50%),
+      radial-gradient(at 80% 80%, rgba($blue, 0.05) 0px, transparent 40%);
   }
 
   &__glow {
