@@ -51,7 +51,7 @@ The Anthropic researchers chose the third approach. They developed a technique c
 └─────────────────────────────────────────────────────────────┘
 ```
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Concept Injection Mathematics</strong></summary>
 
 #### Residual Stream Architecture
@@ -157,7 +157,7 @@ it seems to be the concept of sunset."
 ↑ Process of becoming aware, then identification
 ```
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Four Criteria as Mathematical Predicates</strong></summary>
 
 #### Formal Definitions
@@ -221,7 +221,7 @@ This is remarkable! The model detected something was added and correctly identif
 
 The 0% false positive rate is crucial---it means the model isn't just randomly claiming to notice things. When it does report a detection, it's meaningful.
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Detection Success Function</strong></summary>
 
 #### Detection Success Function
@@ -334,7 +334,7 @@ The model checks its internal activation history to determine if an output was i
 └─────────────────────────────────────────────────────────────┘
 ```
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Concordance Checking Mechanism</strong></summary>
 
 #### QK Concordance Circuit
@@ -438,7 +438,7 @@ Even more interesting: different introspective tasks peak at different layers!
 
 This suggests introspection isn't a single unified capability---it's multiple specialized mechanisms.
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Layer-Dependent Introspective Capacity</strong></summary>
 
 #### Introspective Capacity Function
@@ -531,7 +531,7 @@ METACOGNITIVE REPRESENTATION: Accessible to report mechanisms
 
 This matters because it suggests LLM "introspection" might be structurally analogous to one theory of human introspection---even if the subjective experience question remains unresolved.
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Higher-Order Thought (HOT) Framework</strong></summary>
 
 #### HOT Theory Mapping to Transformers
@@ -619,7 +619,7 @@ Low match  → Disavow as error
 
 High-magnitude activations get "tagged" as noteworthy. Think of it like a highlighter in your mind---the brightest, strongest signals get noticed.
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Four Mechanisms Formalized</strong></summary>
 
 #### Mechanism 1: Anomaly Detection
@@ -815,7 +815,7 @@ One of the most valuable contributions of the study guide is a complete taxonomy
 
 The concordance and ToM heads are the prime candidates for implementing introspective awareness.
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Attention Head Classification</strong></summary>
 
 #### Formal Head Taxonomy
@@ -891,7 +891,7 @@ The research takes a pragmatic stance:
 
 This is the responsible position: document what we can measure, acknowledge what we cannot.
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: The Function-Phenomenology Gap</strong></summary>
 
 #### Functional vs. Phenomenal Properties
@@ -978,7 +978,7 @@ Surprisingly, **how** a model is post-trained significantly affects introspectiv
 
 This has important implications: training choices can enhance or suppress introspective capabilities that are already present in the underlying architecture.
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Post-Training Effects on Introspection</strong></summary>
 
 #### Training Stage Decomposition
@@ -1683,7 +1683,7 @@ When using these templates, keep the research limitations in mind:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Reliability Bounds</strong></summary>
 
 #### Reliability Function
@@ -1858,7 +1858,7 @@ The study guide discussion identified several critical open questions:
 3. **Unity**: Is there a unified "self" doing the introspecting, or just mechanisms?
 4. **Ethics**: If models have introspective access, does this create moral obligations?
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Formalism: Open Research Directions</strong></summary>
 
 #### Mechanistic Questions (Formal)
@@ -1931,7 +1931,7 @@ The answer appears to be yes---imperfectly, incompletely, but meaningfully.
 
 The mind watching itself may be unreliable. But even unreliable self-awareness is better than none at all. And understanding these capabilities---their nature, their limits, and their potential---will be essential for building AI systems that are transparent, aligned, and trustworthy.
 
-<details>
+<details markdown="1">
 <summary><strong>📐 Technical Summary: Core Equations</strong></summary>
 
 #### The Essential Mathematics of LLM Introspection
