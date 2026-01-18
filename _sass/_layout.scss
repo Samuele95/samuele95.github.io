@@ -1,0 +1,199 @@
+// Layout Styles
+// =============
+
+// Container
+.container {
+  width: 100%;
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding: 0 $container-padding;
+}
+
+.container-narrow {
+  max-width: 800px;
+}
+
+// Section
+.section {
+  padding: $spacing-16 0;
+
+  &--hero {
+    padding: $spacing-24 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+  }
+
+  &--dark {
+    background-color: $bg-darker;
+  }
+
+  &--highlight {
+    background-color: $bg-lighter;
+  }
+}
+
+// Section Header
+.section-header {
+  text-align: center;
+  margin-bottom: $spacing-12;
+
+  &__title {
+    font-size: $font-size-3xl;
+    margin-bottom: $spacing-4;
+    background: $gradient-primary;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  &__subtitle {
+    font-size: $font-size-lg;
+    color: $fg-dark;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+// Grid
+.grid {
+  display: grid;
+  gap: $spacing-6;
+
+  &--2 { grid-template-columns: repeat(2, 1fr); }
+  &--3 { grid-template-columns: repeat(3, 1fr); }
+  &--4 { grid-template-columns: repeat(4, 1fr); }
+
+  @media (max-width: $breakpoint-lg) {
+    &--3, &--4 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: $breakpoint-md) {
+    &--2, &--3, &--4 { grid-template-columns: 1fr; }
+  }
+}
+
+// Flex utilities
+.flex {
+  display: flex;
+
+  &--center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  &--between {
+    justify-content: space-between;
+  }
+
+  &--wrap {
+    flex-wrap: wrap;
+  }
+
+  &--gap-2 { gap: $spacing-2; }
+  &--gap-4 { gap: $spacing-4; }
+  &--gap-6 { gap: $spacing-6; }
+}
+
+// Page Layout
+.page {
+  padding-top: $spacing-16;
+  padding-bottom: $spacing-16;
+
+  &__header {
+    text-align: center;
+    margin-bottom: $spacing-12;
+  }
+
+  &__title {
+    font-size: $font-size-4xl;
+    margin-bottom: $spacing-4;
+  }
+
+  &__description {
+    font-size: $font-size-lg;
+    color: $fg-dark;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+}
+
+// Blog layout
+.blog-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: $spacing-12;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sidebar {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+
+  @media (max-width: $breakpoint-lg) {
+    position: static;
+  }
+}
+
+// Content
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: $spacing-10;
+  }
+
+  img {
+    margin: $spacing-6 0;
+    border-radius: $radius-lg;
+  }
+}
+
+// Two column layout
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-12;
+  align-items: center;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+    gap: $spacing-8;
+  }
+
+  &--reverse {
+    @media (min-width: $breakpoint-md) {
+      direction: rtl;
+      > * { direction: ltr; }
+    }
+  }
+}
+
+// Spacing utilities
+.mt-4 { margin-top: $spacing-4; }
+.mt-6 { margin-top: $spacing-6; }
+.mt-8 { margin-top: $spacing-8; }
+.mt-12 { margin-top: $spacing-12; }
+.mb-4 { margin-bottom: $spacing-4; }
+.mb-6 { margin-bottom: $spacing-6; }
+.mb-8 { margin-bottom: $spacing-8; }
+.mb-12 { margin-bottom: $spacing-12; }
+.py-4 { padding-top: $spacing-4; padding-bottom: $spacing-4; }
+.py-8 { padding-top: $spacing-8; padding-bottom: $spacing-8; }
+.py-16 { padding-top: $spacing-16; padding-bottom: $spacing-16; }
+
+// Text utilities
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.text-gradient {
+  background: $gradient-primary;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

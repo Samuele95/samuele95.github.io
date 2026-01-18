@@ -1,0 +1,43 @@
+<article class="project-card" data-category="{{ include.project.category | default: 'all' }}">
+  {% if include.project.image %}
+  <img src="{{ include.project.image | relative_url }}" alt="{{ include.project.title }}" class="project-card__image">
+  {% else %}
+  <div class="project-card__image" style="display: flex; align-items: center; justify-content: center; font-family: var(--font-code); font-size: 2rem; color: var(--blue, #7aa2f7);">
+    &lt;/&gt;
+  </div>
+  {% endif %}
+
+  <div class="project-card__overlay">
+    {% if include.project.github %}
+    <a href="{{ include.project.github }}" class="btn btn--secondary btn--sm" target="_blank" rel="noopener">
+      GitHub
+    </a>
+    {% endif %}
+    <a href="{{ include.project.url | relative_url }}" class="btn btn--primary btn--sm">
+      Details
+    </a>
+    {% if include.project.demo %}
+    <a href="{{ include.project.demo }}" class="btn btn--secondary btn--sm" target="_blank" rel="noopener">
+      Demo
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="project-card__content">
+    <h3 class="project-card__title">
+      <a href="{{ include.project.url | relative_url }}" style="color: inherit; text-decoration: none;">
+        {{ include.project.title }}
+      </a>
+    </h3>
+    <p class="project-card__description">
+      {{ include.project.description | truncate: 100 }}
+    </p>
+    {% if include.project.tech %}
+    <div class="project-card__tech">
+      {% for tech in include.project.tech limit:4 %}
+      <span class="tag">{{ tech }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</article>

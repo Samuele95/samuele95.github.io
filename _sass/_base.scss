@@ -1,0 +1,183 @@
+// Base Styles
+// ===========
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: $font-body;
+  font-size: $font-size-base;
+  line-height: 1.7;
+  color: $fg;
+  background-color: $bg-dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-heading;
+  font-weight: 600;
+  line-height: 1.3;
+  color: $fg;
+  margin-bottom: $spacing-4;
+}
+
+h1 { font-size: $font-size-4xl; }
+h2 { font-size: $font-size-3xl; }
+h3 { font-size: $font-size-2xl; }
+h4 { font-size: $font-size-xl; }
+h5 { font-size: $font-size-lg; }
+h6 { font-size: $font-size-base; }
+
+p {
+  margin-bottom: $spacing-4;
+  color: $fg-dark;
+}
+
+a {
+  color: $blue;
+  text-decoration: none;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $cyan;
+  }
+}
+
+// Lists
+ul, ol {
+  padding-left: $spacing-6;
+  margin-bottom: $spacing-4;
+  color: $fg-dark;
+
+  li {
+    margin-bottom: $spacing-2;
+  }
+}
+
+// Code
+code {
+  font-family: $font-code;
+  font-size: $font-size-sm;
+  padding: $spacing-1 $spacing-2;
+  background-color: $bg-lighter;
+  border-radius: $radius-sm;
+  color: $purple;
+}
+
+pre {
+  font-family: $font-code;
+  font-size: $font-size-sm;
+  padding: $spacing-6;
+  background-color: $bg-darker;
+  border-radius: $radius-lg;
+  overflow-x: auto;
+  margin-bottom: $spacing-6;
+  border: 1px solid $bg-highlight;
+
+  code {
+    padding: 0;
+    background: none;
+    color: $fg;
+  }
+}
+
+// Blockquote
+blockquote {
+  padding: $spacing-4 $spacing-6;
+  margin: $spacing-6 0;
+  border-left: 4px solid $purple;
+  background-color: $bg-lighter;
+  border-radius: 0 $radius-md $radius-md 0;
+  font-style: italic;
+  color: $fg-dark;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Images
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+// HR
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, $bg-highlight, transparent);
+  margin: $spacing-12 0;
+}
+
+// Selection
+::selection {
+  background-color: $purple;
+  color: $bg-dark;
+}
+
+// Scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $bg-darker;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $bg-highlight;
+  border-radius: $radius-full;
+
+  &:hover {
+    background: $fg-gutter;
+  }
+}
+
+// Focus styles
+:focus-visible {
+  outline: 2px solid $blue;
+  outline-offset: 2px;
+}
+
+// Tables
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: $spacing-6;
+  background-color: $bg-lighter;
+  border-radius: $radius-lg;
+  overflow: hidden;
+
+  th, td {
+    padding: $spacing-3 $spacing-4;
+    text-align: left;
+    border-bottom: 1px solid $bg-highlight;
+  }
+
+  th {
+    background-color: $bg-highlight;
+    font-weight: 600;
+    color: $fg;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover td {
+    background-color: rgba($blue, 0.05);
+  }
+}

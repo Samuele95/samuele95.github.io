@@ -1,0 +1,221 @@
+---
+layout: default
+title: Home
+---
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero__content">
+      <span class="hero__greeting">Welcome to my digital space</span>
+
+      <h1 class="hero__title">
+        Hi, I'm <span class="highlight">Samuele</span>
+      </h1>
+
+      <div class="hero__typing">
+        <span class="typing-text" id="typingText"></span>
+      </div>
+
+      <p class="hero__subtitle">
+        AI Engineer & Systems Researcher specializing in Context Engineering,
+        Agentic AI, Malware Analysis, and Language Implementation.
+      </p>
+
+      <div class="hero__cta">
+        <a href="{{ '/projects/' | relative_url }}" class="btn btn--primary btn--lg">
+          View Projects
+        </a>
+        <a href="{{ '/blog/' | relative_url }}" class="btn btn--secondary btn--lg">
+          Read Blog
+        </a>
+      </div>
+
+      <div class="hero__domains">
+        <div class="hero__domain">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Context Engineering
+        </div>
+        <div class="hero__domain">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Malware Analysis
+        </div>
+        <div class="hero__domain">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+          </svg>
+          Compilers & VMs
+        </div>
+        <div class="hero__domain">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+          Agentic AI
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Projects Section -->
+<section class="section section--dark">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-header__title">Featured Projects</h2>
+      <p class="section-header__subtitle">
+        A selection of my work spanning AI, systems programming, and security research.
+      </p>
+    </div>
+
+    <div class="featured-projects">
+      {% for project in site.data.projects %}
+        {% if project.featured %}
+          {% include project-card.html project=project %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-8">
+      <a href="{{ '/projects/' | relative_url }}" class="btn btn--secondary">
+        View All Projects &rarr;
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Expertise Section -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-header__title">Areas of Expertise</h2>
+      <p class="section-header__subtitle">
+        Deep technical knowledge across AI systems, security analysis, and language implementation.
+      </p>
+    </div>
+
+    <div class="expertise">
+      <div class="expertise__card">
+        <div class="expertise__icon">&#129504;</div>
+        <h3 class="expertise__title">AI & Context Engineering</h3>
+        <p class="expertise__description">
+          Building intelligent AI systems with LangChain, Claude, and advanced RAG architectures.
+          Specializing in multi-agent orchestration and context management.
+        </p>
+      </div>
+
+      <div class="expertise__card">
+        <div class="expertise__icon">&#128737;</div>
+        <h3 class="expertise__title">Malware Analysis</h3>
+        <p class="expertise__description">
+          Static and dynamic analysis using Ghidra, IDA Pro, and x64dbg.
+          Memory forensics with Volatility and automated analysis pipelines.
+        </p>
+      </div>
+
+      <div class="expertise__card">
+        <div class="expertise__icon">&#128187;</div>
+        <h3 class="expertise__title">Compilers & VMs</h3>
+        <p class="expertise__description">
+          Language design and implementation using Flex, Bison, and LLVM.
+          Virtual machine architecture and bytecode interpretation.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Latest Posts Section -->
+<section class="section section--highlight">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-header__title">Latest from the Blog</h2>
+      <p class="section-header__subtitle">
+        Thoughts on AI, security research, and systems programming.
+      </p>
+    </div>
+
+    <div class="grid grid--3">
+      {% for post in site.posts limit:3 %}
+        {% include post-card.html post=post %}
+      {% endfor %}
+    </div>
+
+    {% if site.posts.size == 0 %}
+    <p class="text-center" style="color: var(--comment);">
+      Blog posts coming soon...
+    </p>
+    {% endif %}
+
+    <div class="text-center mt-8">
+      <a href="{{ '/blog/' | relative_url }}" class="btn btn--secondary">
+        Read More Posts &rarr;
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section">
+  <div class="container">
+    <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+      <h2>Let's Work Together</h2>
+      <p style="color: var(--fg-dark); margin-bottom: 2rem;">
+        Interested in collaborating on AI projects, security research, or systems programming?
+        I'm always open to discussing new opportunities.
+      </p>
+      <a href="{{ '/contact/' | relative_url }}" class="btn btn--primary btn--lg">
+        Get in Touch
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+// Typing animation
+const texts = [
+  "Building Intelligent AI Systems",
+  "Context Engineering & Agentic AI",
+  "Malware Analysis & Reverse Engineering",
+  "Compilers & Language Implementation"
+];
+
+let textIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+const typingElement = document.getElementById('typingText');
+
+function type() {
+  const currentText = texts[textIndex];
+
+  if (isDeleting) {
+    typingElement.textContent = currentText.substring(0, charIndex - 1);
+    charIndex--;
+  } else {
+    typingElement.textContent = currentText.substring(0, charIndex + 1);
+    charIndex++;
+  }
+
+  let typeSpeed = isDeleting ? 30 : 80;
+
+  if (!isDeleting && charIndex === currentText.length) {
+    typeSpeed = 2000;
+    isDeleting = true;
+  } else if (isDeleting && charIndex === 0) {
+    isDeleting = false;
+    textIndex = (textIndex + 1) % texts.length;
+    typeSpeed = 500;
+  }
+
+  setTimeout(type, typeSpeed);
+}
+
+document.addEventListener('DOMContentLoaded', type);
+</script>

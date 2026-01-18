@@ -1,0 +1,95 @@
+# Site Settings
+title: Samuele
+description: >-
+  AI Engineer & Systems Researcher specializing in Context Engineering,
+  Agentic AI, Malware Analysis, and Language Implementation.
+url: "https://samuele95.github.io"
+baseurl: ""
+author: Samuele
+email: smlstr095@gmail.com
+
+# Build Settings
+markdown: kramdown
+highlighter: rouge
+permalink: /blog/:year/:month/:title/
+paginate: 6
+paginate_path: "/blog/page:num/"
+
+# Sass
+sass:
+  style: compressed
+  sass_dir: _sass
+
+# Collections
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+  writeups:
+    output: true
+    permalink: /writeups/:name/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Samuele"
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "project"
+  - scope:
+      path: ""
+      type: "writeups"
+    values:
+      layout: "writeup"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-paginate
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .git
+  - .gitignore
+  - README.md
+
+# Social Links
+github_username: Samuele95
+
+# Analytics (optional)
+# google_analytics: UA-XXXXXXXX-X
+
+# Categories
+category_list:
+  - name: AI & Context Engineering
+    slug: ai
+    color: "#7aa2f7"
+  - name: Malware Analysis
+    slug: malware
+    color: "#f7768e"
+  - name: Compilers & VMs
+    slug: compilers
+    color: "#bb9af7"
+  - name: Security Research
+    slug: security
+    color: "#ff9e64"
+  - name: Tutorials
+    slug: tutorials
+    color: "#9ece6a"

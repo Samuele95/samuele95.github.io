@@ -1,0 +1,16 @@
+# Main navigation links
+main:
+  - title: Home
+    url: /
+  - title: About
+    url: /about/
+  - title: Projects
+    url: /projects/
+  - title: Blog
+    url: /blog/
+  - title: Research
+    url: /research/
+  - title: Writeups
+    url: /writeups/
+  - title: Contact
+    url: /contact/

@@ -1,0 +1,99 @@
+# Skills organized by category
+
+ai_llm:
+  title: AI & Context Engineering
+  icon: brain
+  items:
+    - name: Claude Code / Claude API
+      level: 90
+    - name: LangChain / LangGraph
+      level: 85
+    - name: OpenAI API
+      level: 85
+    - name: RAG & Vector Databases
+      level: 80
+    - name: Prompt Engineering
+      level: 90
+    - name: Multi-Agent Systems
+      level: 85
+
+malware_analysis:
+  title: Malware Analysis & Security
+  icon: shield
+  items:
+    - name: Ghidra / IDA Pro
+      level: 85
+    - name: x64dbg / WinDbg
+      level: 80
+    - name: Volatility (Memory Forensics)
+      level: 80
+    - name: YARA Rules
+      level: 75
+    - name: Reverse Engineering
+      level: 80
+    - name: REMnux Toolkit
+      level: 85
+
+compilers_vms:
+  title: Compilers & VMs
+  icon: code
+  items:
+    - name: Lexical Analysis (Flex)
+      level: 85
+    - name: Syntax Analysis (Bison)
+      level: 85
+    - name: ANTLR
+      level: 80
+    - name: LLVM
+      level: 75
+    - name: Virtual Machine Design
+      level: 85
+    - name: Language Design
+      level: 80
+
+programming:
+  title: Programming Languages
+  icon: terminal
+  items:
+    - name: Python
+      level: 95
+    - name: C / C++
+      level: 90
+    - name: Java
+      level: 85
+    - name: Assembly (x86/x64)
+      level: 75
+    - name: Haskell
+      level: 70
+    - name: Scala
+      level: 70
+
+machine_learning:
+  title: Machine Learning
+  icon: chart
+  items:
+    - name: TensorFlow / PyTorch
+      level: 85
+    - name: scikit-learn
+      level: 90
+    - name: HuggingFace Transformers
+      level: 80
+    - name: NumPy / Pandas
+      level: 95
+    - name: OpenCV
+      level: 75
+
+tools:
+  title: Tools & Platforms
+  icon: wrench
+  items:
+    - name: Linux
+      level: 95
+    - name: Git
+      level: 90
+    - name: Docker
+      level: 80
+    - name: PostgreSQL / MongoDB
+      level: 80
+    - name: Django / Flask
+      level: 85
