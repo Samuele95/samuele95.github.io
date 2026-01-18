@@ -563,27 +563,38 @@
 
 // Collapsible technical details blocks
 details {
-  margin: $spacing-6 0;
-  padding: $spacing-4 $spacing-6;
-  background-color: rgba($purple, 0.05);
-  border: 1px solid rgba($purple, 0.2);
-  border-radius: $radius-lg;
+  margin: $spacing-8 0;
+  padding: 0;
+  background: linear-gradient(145deg, rgba($red, 0.12) 0%, rgba($red-dark, 0.08) 100%);
+  border: 2px solid $red;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba($red, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   transition: all $transition-base;
 
+  &:hover {
+    box-shadow: 0 6px 30px rgba($red, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border-color: $red-light;
+  }
+
   &[open] {
-    background-color: rgba($purple, 0.08);
-    border-color: rgba($purple, 0.3);
+    background: linear-gradient(145deg, rgba($red, 0.15) 0%, rgba($red-dark, 0.1) 100%);
+    box-shadow: 0 8px 40px rgba($red, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   summary {
     cursor: pointer;
-    font-weight: 600;
-    color: $purple;
-    padding: $spacing-2 0;
+    font-weight: 700;
+    font-size: $font-size-lg;
+    color: $fg;
+    padding: $spacing-5 $spacing-6;
     list-style: none;
     display: flex;
     align-items: center;
-    gap: $spacing-2;
+    gap: $spacing-3;
+    background: linear-gradient(90deg, rgba($red, 0.2) 0%, transparent 100%);
+    border-bottom: 1px solid rgba($red, 0.3);
+    transition: all $transition-fast;
 
     &::-webkit-details-marker {
       display: none;
@@ -591,58 +602,127 @@ details {
 
     &::before {
       content: '▶';
-      font-size: $font-size-xs;
+      font-size: $font-size-sm;
+      color: $red;
       transition: transform $transition-fast;
+      text-shadow: 0 0 10px $red-glow;
     }
 
     &:hover {
-      color: lighten($purple, 10%);
+      background: linear-gradient(90deg, rgba($red, 0.3) 0%, rgba($red, 0.1) 100%);
+      color: $fg;
+    }
+
+    strong {
+      color: $red-light;
     }
   }
 
-  &[open] summary::before {
-    transform: rotate(90deg);
+  &[open] summary {
+    border-bottom: 1px solid rgba($red, 0.4);
+
+    &::before {
+      transform: rotate(90deg);
+    }
   }
 
-  // Content inside details
+  // Content container
   > *:not(summary) {
-    margin-top: $spacing-4;
+    padding: 0 $spacing-6;
+  }
+
+  > *:not(summary):first-of-type {
+    margin-top: $spacing-6;
+  }
+
+  > *:not(summary):last-child {
+    padding-bottom: $spacing-6;
   }
 
   h4 {
-    color: $cyan;
-    font-size: $font-size-base;
-    margin-top: $spacing-6;
-    margin-bottom: $spacing-3;
+    color: $red-light;
+    font-size: $font-size-lg;
+    font-weight: 600;
+    margin-top: $spacing-8;
+    margin-bottom: $spacing-4;
     padding-bottom: $spacing-2;
-    border-bottom: 1px solid rgba($cyan, 0.2);
+    border-bottom: 2px solid rgba($red, 0.3);
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+
+    &::before {
+      content: '◆';
+      color: $red;
+      font-size: $font-size-sm;
+    }
   }
 
   // Math equations styling
   .MathJax {
     font-size: 1.1em;
+    color: $fg;
   }
 
   // Tables inside details
   table {
     width: 100%;
-    margin: $spacing-4 0;
+    margin: $spacing-6 0;
     font-size: $font-size-sm;
+    border-collapse: collapse;
+    background-color: rgba($bg-dark, 0.5);
+    border-radius: $radius-md;
+    overflow: hidden;
 
     th {
-      background-color: rgba($purple, 0.15);
-      color: $purple;
+      background: linear-gradient(135deg, rgba($red, 0.25) 0%, rgba($red-dark, 0.2) 100%);
+      color: $red-light;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: $font-size-xs;
+      letter-spacing: 0.05em;
     }
 
     td, th {
-      padding: $spacing-2 $spacing-3;
-      border: 1px solid rgba($purple, 0.2);
+      padding: $spacing-3 $spacing-4;
+      border: 1px solid rgba($red, 0.2);
+    }
+
+    tr:nth-child(even) td {
+      background-color: rgba($red, 0.03);
+    }
+
+    tr:hover td {
+      background-color: rgba($red, 0.08);
     }
   }
 
   // Code blocks inside details
   pre {
-    background-color: $bg-dark;
-    border: 1px solid $bg-highlight;
+    background-color: $bg-darker;
+    border: 1px solid rgba($red, 0.2);
+    border-radius: $radius-md;
+    margin: $spacing-4 0;
+  }
+
+  code {
+    color: $red-light;
+  }
+
+  // Paragraphs
+  p {
+    color: $fg-dark;
+    line-height: 1.7;
+  }
+
+  // Lists
+  ul, ol {
+    margin: $spacing-4 0;
+    padding-left: $spacing-6;
+
+    li {
+      margin-bottom: $spacing-2;
+      color: $fg-dark;
+    }
   }
 }
