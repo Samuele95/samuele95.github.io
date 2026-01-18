@@ -560,3 +560,89 @@
     margin-bottom: $spacing-8;
   }
 }
+
+// Collapsible technical details blocks
+details {
+  margin: $spacing-6 0;
+  padding: $spacing-4 $spacing-6;
+  background-color: rgba($purple, 0.05);
+  border: 1px solid rgba($purple, 0.2);
+  border-radius: $radius-lg;
+  transition: all $transition-base;
+
+  &[open] {
+    background-color: rgba($purple, 0.08);
+    border-color: rgba($purple, 0.3);
+  }
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: $purple;
+    padding: $spacing-2 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::before {
+      content: '▶';
+      font-size: $font-size-xs;
+      transition: transform $transition-fast;
+    }
+
+    &:hover {
+      color: lighten($purple, 10%);
+    }
+  }
+
+  &[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  // Content inside details
+  > *:not(summary) {
+    margin-top: $spacing-4;
+  }
+
+  h4 {
+    color: $cyan;
+    font-size: $font-size-base;
+    margin-top: $spacing-6;
+    margin-bottom: $spacing-3;
+    padding-bottom: $spacing-2;
+    border-bottom: 1px solid rgba($cyan, 0.2);
+  }
+
+  // Math equations styling
+  .MathJax {
+    font-size: 1.1em;
+  }
+
+  // Tables inside details
+  table {
+    width: 100%;
+    margin: $spacing-4 0;
+    font-size: $font-size-sm;
+
+    th {
+      background-color: rgba($purple, 0.15);
+      color: $purple;
+    }
+
+    td, th {
+      padding: $spacing-2 $spacing-3;
+      border: 1px solid rgba($purple, 0.2);
+    }
+  }
+
+  // Code blocks inside details
+  pre {
+    background-color: $bg-dark;
+    border: 1px solid $bg-highlight;
+  }
+}
