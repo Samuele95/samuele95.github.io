@@ -164,7 +164,7 @@
     }
 
     &:active {
-      transform: translateY(0);
+      transform: translateY(0) scale(0.98);
     }
   }
 
@@ -213,10 +213,12 @@
 .card {
   background: linear-gradient(145deg, $bg-lighter 0%, $bg-card 100%);
   border-radius: $radius-2xl;
-  border: 1px solid $bg-highlight;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   overflow: hidden;
   transition: all $transition-base;
   position: relative;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 
   &::before {
     content: '';
@@ -287,9 +289,11 @@
   position: relative;
   background: linear-gradient(145deg, $bg-lighter 0%, $bg-card 100%);
   border-radius: $radius-2xl;
-  border: 1px solid $bg-highlight;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   overflow: hidden;
   transition: all $transition-base;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 
   &:hover {
     border-color: rgba($red, 0.3);
@@ -820,12 +824,14 @@
 .expertise-card {
   background: linear-gradient(145deg, $bg-lighter 0%, $bg-card 100%);
   border-radius: $radius-2xl;
-  border: 1px solid $bg-highlight;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   padding: $spacing-8;
   text-align: center;
   transition: all $transition-base;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 
   &::before {
     content: '';
@@ -859,6 +865,7 @@
     border-radius: $radius-xl;
     color: $red;
     font-size: $font-size-2xl;
+    transition: all $transition-base;
   }
 
   &__title {
@@ -871,6 +878,34 @@
     font-size: $font-size-sm;
     color: $fg-dark;
     line-height: 1.7;
+  }
+
+  // Color Variants for different research areas
+  &--ai {
+    &:hover {
+      border-color: rgba($blue, 0.3);
+      box-shadow: $shadow-xl, 0 0 40px rgba($blue, 0.1);
+    }
+    &::before { background: linear-gradient(135deg, $blue 0%, $cyan 100%); }
+    .expertise-card__icon { background: rgba($blue, 0.1); color: $blue; }
+  }
+
+  &--compilers {
+    &:hover {
+      border-color: rgba($purple, 0.3);
+      box-shadow: $shadow-xl, 0 0 40px rgba($purple, 0.1);
+    }
+    &::before { background: linear-gradient(135deg, $purple 0%, $magenta 100%); }
+    .expertise-card__icon { background: rgba($purple, 0.1); color: $purple; }
+  }
+
+  &--malware {
+    &:hover {
+      border-color: rgba($orange, 0.3);
+      box-shadow: $shadow-xl, 0 0 40px rgba($orange, 0.1);
+    }
+    &::before { background: linear-gradient(135deg, $orange 0%, $yellow 100%); }
+    .expertise-card__icon { background: rgba($orange, 0.1); color: $orange; }
   }
 }
 
@@ -895,4 +930,33 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
   }
+}
+
+// Animated Link Underline (for content areas)
+.content a,
+.about a,
+.page__content a {
+  position: relative;
+  text-decoration: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: $gradient-primary;
+    transition: width $transition-base;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+}
+
+// Shimmer Animation (for premium card effects)
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
