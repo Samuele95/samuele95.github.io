@@ -1,0 +1,159 @@
+// Syntax Highlighting - Tokyo Night Theme
+// =======================================
+
+.highlight {
+  background-color: $bg-darker;
+  border-radius: $radius-lg;
+  border: 1px solid $bg-highlight;
+  margin-bottom: $spacing-6;
+
+  pre {
+    margin: 0;
+    padding: $spacing-6;
+    overflow-x: auto;
+    border: none;
+    background: transparent;
+  }
+
+  code {
+    background: transparent;
+    padding: 0;
+    color: $fg;
+  }
+
+  // Line numbers
+  .lineno {
+    color: $comment;
+    padding-right: $spacing-4;
+    border-right: 1px solid $bg-highlight;
+    margin-right: $spacing-4;
+    user-select: none;
+  }
+
+  // Rouge token classes
+  .c, .c1, .cm, .cs { color: $comment; font-style: italic; } // Comment
+  .cd { color: $comment; } // Comment.Doc
+  .cp { color: $cyan; } // Comment.Preproc
+  .err { color: $red; } // Error
+  .gd { color: $red; } // Generic.Deleted
+  .ge { font-style: italic; } // Generic.Emph
+  .gh { color: $fg; font-weight: bold; } // Generic.Heading
+  .gi { color: $green; } // Generic.Inserted
+  .go { color: $fg-dark; } // Generic.Output
+  .gp { color: $comment; font-weight: bold; } // Generic.Prompt
+  .gs { font-weight: bold; } // Generic.Strong
+  .gt { color: $red; } // Generic.Traceback
+  .gu { color: $cyan; font-weight: bold; } // Generic.Subheading
+  .il { color: $orange; } // Literal.Number.Integer.Long
+  .k, .kc, .kd, .kn, .kp, .kr { color: $purple; } // Keyword
+  .kt { color: $cyan; } // Keyword.Type
+  .kv { color: $blue; } // Keyword.Variable
+  .m, .mf, .mh, .mi, .mo { color: $orange; } // Number
+  .n { color: $fg; } // Name
+  .na { color: $blue; } // Name.Attribute
+  .nb { color: $cyan; } // Name.Builtin
+  .nc { color: $yellow; } // Name.Class
+  .nd { color: $purple; } // Name.Decorator
+  .ne { color: $red; } // Name.Exception
+  .nf, .fm { color: $blue; } // Name.Function
+  .ni { color: $fg; font-weight: bold; } // Name.Entity
+  .nl { color: $fg; } // Name.Label
+  .nn { color: $fg; } // Name.Namespace
+  .no { color: $orange; } // Name.Constant
+  .nt { color: $red; } // Name.Tag
+  .nv, .vc, .vg, .vi { color: $fg; } // Name.Variable
+  .o, .ow { color: $cyan; } // Operator
+  .p { color: $fg; } // Punctuation
+  .s, .s1, .s2, .sb, .sc, .sd, .se, .sh, .si, .sx { color: $green; } // String
+  .sr { color: $cyan; } // String.Regex
+  .ss { color: $green; } // String.Symbol
+  .w { color: $fg; } // Text.Whitespace
+}
+
+// Inline code in text
+p code, li code, td code {
+  background-color: $bg-lighter;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius-sm;
+  font-size: 0.9em;
+  color: $purple;
+}
+
+// Code blocks with filename
+.code-block {
+  position: relative;
+  margin-bottom: $spacing-6;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-3 $spacing-4;
+    background-color: $bg-highlight;
+    border: 1px solid $bg-highlight;
+    border-bottom: none;
+    border-radius: $radius-lg $radius-lg 0 0;
+    font-size: $font-size-sm;
+    color: $fg-dark;
+  }
+
+  &__filename {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+  }
+
+  &__copy {
+    background: none;
+    border: none;
+    color: $fg-dark;
+    cursor: pointer;
+    padding: $spacing-1 $spacing-2;
+    border-radius: $radius-sm;
+    transition: all $transition-fast;
+
+    &:hover {
+      background-color: $bg-lighter;
+      color: $blue;
+    }
+  }
+
+  .highlight {
+    border-radius: 0 0 $radius-lg $radius-lg;
+    margin-bottom: 0;
+  }
+}
+
+// Diff highlighting
+.highlight .gi {
+  background-color: rgba($green, 0.1);
+  display: block;
+  margin: 0 (-$spacing-6);
+  padding: 0 $spacing-6;
+}
+
+.highlight .gd {
+  background-color: rgba($red, 0.1);
+  display: block;
+  margin: 0 (-$spacing-6);
+  padding: 0 $spacing-6;
+}
+
+// YARA rule highlighting (custom)
+.language-yara {
+  .k { color: $purple; } // Keywords: rule, strings, condition
+  .s { color: $green; } // Strings
+  .nv { color: $blue; } // Variable names
+  .c { color: $comment; } // Comments
+  .m { color: $orange; } // Numbers
+}
+
+// Assembly highlighting
+.language-asm, .language-nasm, .language-x86asm {
+  .k { color: $purple; } // Instructions
+  .nf { color: $blue; } // Labels
+  .nv { color: $cyan; } // Registers
+  .c { color: $comment; } // Comments
+  .m { color: $orange; } // Numbers/addresses
+  .s { color: $green; } // Strings
+}

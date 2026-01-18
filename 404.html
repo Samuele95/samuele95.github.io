@@ -1,0 +1,83 @@
+---
+layout: default
+title: Page Not Found
+permalink: /404.html
+---
+
+<div class="error-page">
+  <div class="container">
+    <div class="error-page__code">404</div>
+    <h1 class="error-page__title">Page Not Found</h1>
+    <p class="error-page__description">
+      Oops! The page you're looking for doesn't exist or has been moved.
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="{{ '/' | relative_url }}" class="btn btn--primary">
+        Go Home
+      </a>
+      <a href="{{ '/blog/' | relative_url }}" class="btn btn--secondary">
+        Read Blog
+      </a>
+      <a href="{{ '/projects/' | relative_url }}" class="btn btn--secondary">
+        View Projects
+      </a>
+    </div>
+
+    <div style="margin-top: 4rem; padding: 2rem; background: var(--bg-lighter); border-radius: 1rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+      <h3 style="font-size: 1rem; margin-bottom: 1rem;">Looking for something specific?</h3>
+      <ul style="text-align: left; color: var(--fg-dark); font-size: 0.875rem;">
+        <li><a href="{{ '/about/' | relative_url }}">About Me</a> - Learn more about my work</li>
+        <li><a href="{{ '/projects/' | relative_url }}">Projects</a> - View my portfolio</li>
+        <li><a href="{{ '/blog/' | relative_url }}">Blog</a> - Read my latest posts</li>
+        <li><a href="{{ '/writeups/' | relative_url }}">Writeups</a> - Technical analysis reports</li>
+        <li><a href="{{ '/contact/' | relative_url }}">Contact</a> - Get in touch</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+.error-page {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.error-page__code {
+  font-family: var(--font-heading);
+  font-size: 8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.error-page__title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.error-page__description {
+  color: var(--fg-dark);
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 640px) {
+  .error-page__code {
+    font-size: 5rem;
+  }
+
+  .error-page__title {
+    font-size: 1.5rem;
+  }
+}
+</style>

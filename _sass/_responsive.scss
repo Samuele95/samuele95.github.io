@@ -1,0 +1,188 @@
+// Responsive Styles
+// =================
+
+// Mobile-first responsive adjustments
+
+// Small devices (phones)
+@media (max-width: $breakpoint-sm) {
+  html {
+    font-size: 14px;
+  }
+
+  h1 { font-size: $font-size-3xl; }
+  h2 { font-size: $font-size-2xl; }
+  h3 { font-size: $font-size-xl; }
+
+  .section {
+    padding: $spacing-10 0;
+
+    &--hero {
+      padding: $spacing-16 0;
+      min-height: auto;
+    }
+  }
+
+  .container {
+    padding: 0 $spacing-4;
+  }
+
+  .hero {
+    &__title {
+      font-size: $font-size-3xl;
+    }
+
+    &__subtitle {
+      font-size: $font-size-base;
+    }
+
+    &__cta {
+      flex-direction: column;
+      width: 100%;
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  .card {
+    &__content {
+      padding: $spacing-4;
+    }
+  }
+
+  .blog-layout {
+    gap: $spacing-8;
+  }
+
+  .page {
+    padding-top: $spacing-10;
+    padding-bottom: $spacing-10;
+
+    &__title {
+      font-size: $font-size-3xl;
+    }
+  }
+
+  pre {
+    padding: $spacing-4;
+    font-size: $font-size-xs;
+  }
+
+  .nav {
+    padding: $spacing-3 0;
+
+    &__logo {
+      font-size: $font-size-lg;
+    }
+  }
+
+  .footer {
+    padding: $spacing-8 0 $spacing-4;
+
+    &__grid {
+      gap: $spacing-6;
+    }
+  }
+
+  .back-to-top {
+    bottom: $spacing-4;
+    right: $spacing-4;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+// Medium devices (tablets)
+@media (min-width: $breakpoint-sm) and (max-width: $breakpoint-md) {
+  .hero {
+    &__title {
+      font-size: $font-size-4xl;
+    }
+  }
+
+  .grid {
+    &--3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &--4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+// Large devices (desktops)
+@media (min-width: $breakpoint-lg) {
+  .hero {
+    &__content {
+      max-width: 800px;
+    }
+  }
+}
+
+// Print styles
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .nav,
+  .footer,
+  .back-to-top,
+  .mobile-menu {
+    display: none !important;
+  }
+
+  .page {
+    padding-top: 0;
+  }
+
+  a {
+    color: black;
+    text-decoration: underline;
+  }
+
+  .card,
+  .project-card {
+    break-inside: avoid;
+    border: 1px solid #ccc;
+  }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  :root {
+    --bg-dark: #000;
+    --fg: #fff;
+    --blue: #5dade2;
+  }
+
+  .card,
+  .project-card,
+  .nav {
+    border-width: 2px;
+  }
+}
+
+// Dark mode (already default, but explicit for completeness)
+@media (prefers-color-scheme: dark) {
+  // Already using dark theme as default
+}

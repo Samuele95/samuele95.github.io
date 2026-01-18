@@ -1,0 +1,37 @@
+<nav class="nav" id="navbar">
+  <div class="nav__container">
+    <a href="{{ '/' | relative_url }}" class="nav__logo">
+      <span>&lt;</span>Samuele<span>/&gt;</span>
+    </a>
+
+    <ul class="nav__links">
+      {% for item in site.data.navigation.main %}
+      <li>
+        <a href="{{ item.url | relative_url }}" class="nav__link {% if page.url == item.url %}active{% endif %}">
+          {{ item.title }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <button class="nav__toggle" id="navToggle" aria-label="Toggle navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <ul class="mobile-menu__links">
+    {% for item in site.data.navigation.main %}
+    <li>
+      <a href="{{ item.url | relative_url }}" class="mobile-menu__link">
+        {{ item.title }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>

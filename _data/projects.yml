@@ -1,0 +1,48 @@
+# Featured projects
+- name: WebCat
+  title: WebCat
+  description: Neural network-based website categorization system using machine learning for automatic classification.
+  github: https://github.com/Samuele95/WebCat
+  category: ai
+  tech:
+    - Python
+    - TensorFlow
+    - Neural Networks
+    - NLP
+  featured: true
+
+- name: LC3VM
+  title: LC3VM
+  description: Implementation of the LC-3 Virtual Machine, a complete educational computer system emulator.
+  github: https://github.com/Samuele95/LC3VM
+  category: systems
+  tech:
+    - C
+    - Assembly
+    - Virtual Machine
+    - Emulation
+  featured: true
+
+- name: parkinson-repast-kit
+  title: Parkinson Repast Kit
+  description: Multi-agent simulation framework for Parkinson's disease research using REPAST.
+  github: https://github.com/Samuele95/parkinson-repast-kit
+  category: ai
+  tech:
+    - Java
+    - Multi-Agent Systems
+    - REPAST
+    - Simulation
+  featured: true
+
+- name: mapyreduce
+  title: MapyReduce
+  description: Lightweight MapReduce implementation for distributed data processing in Python.
+  github: https://github.com/Samuele95/mapyreduce
+  category: systems
+  tech:
+    - Python
+    - Distributed Systems
+    - MapReduce
+    - Big Data
+  featured: true
