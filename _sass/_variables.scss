@@ -1,56 +1,66 @@
-// Tokyo Night Color Palette
-// =========================
+// Modern Dark Theme with Red Accents
+// ===================================
 
 // Background Colors
-$bg-dark: #1a1b26;
-$bg-darker: #16161e;
-$bg-lighter: #24283b;
-$bg-highlight: #292e42;
+$bg-dark: #0d0d0d;
+$bg-darker: #000000;
+$bg-lighter: #1a1a1a;
+$bg-highlight: #262626;
+$bg-card: #141414;
 
 // Foreground Colors
-$fg: #c0caf5;
-$fg-dark: #a9b1d6;
-$fg-gutter: #3b4261;
+$fg: #f5f5f5;
+$fg-dark: #a3a3a3;
+$fg-muted: #737373;
+$fg-gutter: #404040;
 
-// Accent Colors
-$blue: #7aa2f7;
-$cyan: #7dcfff;
-$purple: #bb9af7;
-$magenta: #ff007c;
-$orange: #ff9e64;
-$yellow: #e0af68;
-$green: #9ece6a;
-$teal: #73daca;
-$red: #f7768e;
+// Primary Accent - Red
+$red: #ef4444;
+$red-light: #f87171;
+$red-dark: #dc2626;
+$red-glow: rgba(239, 68, 68, 0.4);
+
+// Secondary Accents
+$blue: #3b82f6;
+$cyan: #22d3ee;
+$purple: #a855f7;
+$magenta: #ec4899;
+$orange: #f97316;
+$yellow: #eab308;
+$green: #22c55e;
+$teal: #14b8a6;
 
 // Syntax Highlighting
-$comment: #565f89;
-$keyword: #bb9af7;
-$string: #9ece6a;
-$function: #7aa2f7;
+$comment: #6b7280;
+$keyword: #a855f7;
+$string: #22c55e;
+$function: #3b82f6;
 
 // Gradients
-$gradient-primary: linear-gradient(135deg, $blue 0%, $purple 100%);
-$gradient-secondary: linear-gradient(135deg, $cyan 0%, $teal 100%);
-$gradient-accent: linear-gradient(135deg, $orange 0%, $red 100%);
+$gradient-primary: linear-gradient(135deg, $red 0%, $orange 100%);
+$gradient-secondary: linear-gradient(135deg, $red-dark 0%, $magenta 100%);
+$gradient-accent: linear-gradient(135deg, $orange 0%, $yellow 100%);
+$gradient-subtle: linear-gradient(135deg, rgba($red, 0.1) 0%, rgba($orange, 0.05) 100%);
+$gradient-card: linear-gradient(145deg, $bg-lighter 0%, $bg-card 100%);
 
 // Typography
-$font-heading: 'JetBrains Mono', 'Fira Code', monospace;
+$font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 $font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 $font-code: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
-// Font Sizes
+// Font Sizes (slightly larger for better readability)
 $font-size-xs: 0.75rem;
 $font-size-sm: 0.875rem;
 $font-size-base: 1rem;
 $font-size-lg: 1.125rem;
 $font-size-xl: 1.25rem;
 $font-size-2xl: 1.5rem;
-$font-size-3xl: 1.875rem;
-$font-size-4xl: 2.25rem;
-$font-size-5xl: 3rem;
+$font-size-3xl: 2rem;
+$font-size-4xl: 2.5rem;
+$font-size-5xl: 3.5rem;
+$font-size-6xl: 4.5rem;
 
-// Spacing
+// Spacing (more generous)
 $spacing-1: 0.25rem;
 $spacing-2: 0.5rem;
 $spacing-3: 0.75rem;
@@ -63,26 +73,31 @@ $spacing-12: 3rem;
 $spacing-16: 4rem;
 $spacing-20: 5rem;
 $spacing-24: 6rem;
+$spacing-32: 8rem;
 
 // Border Radius
-$radius-sm: 0.25rem;
+$radius-sm: 0.375rem;
 $radius-md: 0.5rem;
 $radius-lg: 0.75rem;
 $radius-xl: 1rem;
 $radius-2xl: 1.5rem;
+$radius-3xl: 2rem;
 $radius-full: 9999px;
 
-// Shadows
-$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-$shadow-glow: 0 0 20px rgba($blue, 0.3);
+// Shadows (more dramatic)
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+$shadow-glow: 0 0 30px $red-glow;
+$shadow-glow-sm: 0 0 15px rgba($red, 0.2);
 
 // Transitions
-$transition-fast: 150ms ease;
-$transition-base: 200ms ease;
-$transition-slow: 300ms ease;
+$transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
 
 // Breakpoints
 $breakpoint-sm: 640px;
@@ -92,7 +107,7 @@ $breakpoint-xl: 1280px;
 $breakpoint-2xl: 1536px;
 
 // Container
-$container-max-width: 1200px;
+$container-max-width: 1280px;
 $container-padding: $spacing-6;
 
 // Z-Index

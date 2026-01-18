@@ -15,13 +15,10 @@
 
 // Section
 .section {
-  padding: $spacing-16 0;
+  padding: $spacing-24 0;
 
-  &--hero {
-    padding: $spacing-24 0;
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-16 0;
   }
 
   &--dark {
@@ -33,32 +30,328 @@
   }
 }
 
-// Section Header
-.section-header {
-  text-align: center;
-  margin-bottom: $spacing-12;
+// Hero Section
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-24 0;
+  overflow: hidden;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  &__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.4;
+
+    &--1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba($red, 0.4) 0%, transparent 70%);
+      top: -200px;
+      right: -100px;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    &--2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba($orange, 0.3) 0%, transparent 70%);
+      bottom: -100px;
+      left: -50px;
+      animation: float 15s ease-in-out infinite reverse;
+    }
+  }
+
+  &__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba($fg-gutter, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba($fg-gutter, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 50%, black 40%, transparent 100%);
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-2 $spacing-4;
+    background-color: rgba($red, 0.1);
+    border: 1px solid rgba($red, 0.2);
+    border-radius: $radius-full;
+    font-size: $font-size-sm;
+    color: $red;
+    margin-bottom: $spacing-8;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  &__badge-dot {
+    width: 8px;
+    height: 8px;
+    background-color: $green;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
 
   &__title {
-    font-size: $font-size-3xl;
+    font-size: $font-size-6xl;
+    font-weight: 800;
     margin-bottom: $spacing-4;
-    background: $gradient-primary;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    letter-spacing: -0.03em;
+    animation: fadeInUp 0.6s ease-out 0.1s both;
+
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-4xl;
+    }
+  }
+
+  &__typing {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: $spacing-6;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+  }
+
+  .typing-text {
+    font-size: $font-size-2xl;
+    font-weight: 600;
+    color: $red;
+
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-xl;
+    }
+  }
+
+  .typing-cursor {
+    font-size: $font-size-2xl;
+    font-weight: 300;
+    color: $red;
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
   }
 
   &__subtitle {
     font-size: $font-size-lg;
     color: $fg-dark;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 0 auto $spacing-10;
+    line-height: 1.7;
+    animation: fadeInUp 0.6s ease-out 0.3s both;
+
+    strong {
+      color: $fg;
+    }
+
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-base;
+    }
   }
+
+  &__cta {
+    display: flex;
+    gap: $spacing-4;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: $spacing-12;
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+  }
+
+  &__stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-8;
+    animation: fadeInUp 0.6s ease-out 0.5s both;
+
+    @media (max-width: $breakpoint-sm) {
+      flex-direction: column;
+      gap: $spacing-4;
+    }
+  }
+
+  &__stat {
+    text-align: center;
+  }
+
+  &__stat-value {
+    display: block;
+    font-size: $font-size-3xl;
+    font-weight: 800;
+    color: $fg;
+    line-height: 1;
+  }
+
+  &__stat-label {
+    font-size: $font-size-sm;
+    color: $fg-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__stat-divider {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(180deg, transparent, $bg-highlight, transparent);
+
+    @media (max-width: $breakpoint-sm) {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, $bg-highlight, transparent);
+    }
+  }
+
+  &__scroll {
+    position: absolute;
+    bottom: $spacing-8;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-2;
+    color: $fg-muted;
+    font-size: $font-size-sm;
+    animation: fadeIn 1s ease-out 1s both, bounce 2s ease-in-out 2s infinite;
+
+    svg {
+      animation: bounceDown 1.5s ease-in-out infinite;
+    }
+  }
+}
+
+// CTA Section
+.cta-section {
+  padding: $spacing-24 0;
+
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-16 0;
+  }
+}
+
+.cta-card {
+  position: relative;
+  background: linear-gradient(145deg, $bg-lighter 0%, $bg-card 100%);
+  border-radius: $radius-3xl;
+  border: 1px solid $bg-highlight;
+  padding: $spacing-16;
+  text-align: center;
+  overflow: hidden;
+
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-10;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__title {
+    font-size: $font-size-4xl;
+    font-weight: 800;
+    margin-bottom: $spacing-4;
+
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  &__description {
+    font-size: $font-size-lg;
+    color: $fg-dark;
+    max-width: 500px;
+    margin: 0 auto $spacing-8;
+
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-base;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-4;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  &__decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  &__circle {
+    position: absolute;
+    border-radius: 50%;
+
+    &--1 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba($red, 0.15) 0%, transparent 70%);
+      top: -100px;
+      right: -50px;
+    }
+
+    &--2 {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba($orange, 0.1) 0%, transparent 70%);
+      bottom: -50px;
+      left: -30px;
+    }
+  }
+}
+
+// Empty State
+.empty-state {
+  text-align: center;
+  padding: $spacing-16;
+  color: $fg-muted;
+
+  svg {
+    margin-bottom: $spacing-4;
+    opacity: 0.5;
+  }
+
+  p {
+    color: $fg-muted;
+  }
+}
+
+// Expertise Card Tags
+.expertise-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  margin-top: $spacing-4;
+  justify-content: center;
 }
 
 // Grid
 .grid {
   display: grid;
-  gap: $spacing-6;
+  gap: $spacing-8;
 
   &--2 { grid-template-columns: repeat(2, 1fr); }
   &--3 { grid-template-columns: repeat(3, 1fr); }
@@ -97,17 +390,21 @@
 
 // Page Layout
 .page {
-  padding-top: $spacing-16;
-  padding-bottom: $spacing-16;
+  padding-top: $spacing-20;
+  padding-bottom: $spacing-20;
 
   &__header {
     text-align: center;
-    margin-bottom: $spacing-12;
+    margin-bottom: $spacing-16;
   }
 
   &__title {
-    font-size: $font-size-4xl;
+    font-size: $font-size-5xl;
     margin-bottom: $spacing-4;
+
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-4xl;
+    }
   }
 
   &__description {
@@ -145,12 +442,13 @@
   margin: 0 auto;
 
   h1, h2, h3, h4, h5, h6 {
-    margin-top: $spacing-10;
+    margin-top: $spacing-12;
+    margin-bottom: $spacing-4;
   }
 
   img {
-    margin: $spacing-6 0;
-    border-radius: $radius-lg;
+    margin: $spacing-8 0;
+    border-radius: $radius-xl;
   }
 }
 
@@ -187,13 +485,39 @@
 .py-8 { padding-top: $spacing-8; padding-bottom: $spacing-8; }
 .py-16 { padding-top: $spacing-16; padding-bottom: $spacing-16; }
 
-// Text utilities
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
-.text-gradient {
-  background: $gradient-primary;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+// Animations
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, -30px); }
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
 }

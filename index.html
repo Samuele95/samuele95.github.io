@@ -5,60 +5,144 @@ title: Home
 
 <!-- Hero Section -->
 <section class="hero">
+  <div class="hero__bg">
+    <div class="hero__glow hero__glow--1"></div>
+    <div class="hero__glow hero__glow--2"></div>
+    <div class="hero__grid"></div>
+  </div>
+
   <div class="container">
     <div class="hero__content">
-      <span class="hero__greeting">Welcome to my digital space</span>
+      <div class="hero__badge">
+        <span class="hero__badge-dot"></span>
+        Available for opportunities
+      </div>
 
       <h1 class="hero__title">
-        Hi, I'm <span class="highlight">Samuele</span>
+        I'm <span class="text-gradient">Samuele</span>
       </h1>
 
       <div class="hero__typing">
         <span class="typing-text" id="typingText"></span>
+        <span class="typing-cursor">|</span>
       </div>
 
       <p class="hero__subtitle">
-        AI Engineer & Systems Researcher specializing in Context Engineering,
-        Agentic AI, Malware Analysis, and Language Implementation.
+        AI Engineer & Systems Researcher crafting intelligent systems at the intersection of
+        <strong>Context Engineering</strong>, <strong>Security Research</strong>, and <strong>Language Implementation</strong>.
       </p>
 
       <div class="hero__cta">
         <a href="{{ '/projects/' | relative_url }}" class="btn btn--primary btn--lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
           View Projects
         </a>
         <a href="{{ '/blog/' | relative_url }}" class="btn btn--secondary btn--lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
           Read Blog
         </a>
       </div>
 
-      <div class="hero__domains">
-        <div class="hero__domain">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
-          Context Engineering
+      <div class="hero__stats">
+        <div class="hero__stat">
+          <span class="hero__stat-value">4+</span>
+          <span class="hero__stat-label">Years Experience</span>
         </div>
-        <div class="hero__domain">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="hero__stat-divider"></div>
+        <div class="hero__stat">
+          <span class="hero__stat-value">10+</span>
+          <span class="hero__stat-label">Projects</span>
+        </div>
+        <div class="hero__stat-divider"></div>
+        <div class="hero__stat">
+          <span class="hero__stat-value">3</span>
+          <span class="hero__stat-label">Focus Areas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__scroll">
+    <span>Scroll to explore</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+</section>
+
+<!-- Expertise Section -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-subtitle">What I Do</span>
+      <h2 class="section-title">Areas of Expertise</h2>
+      <p class="section-description">
+        Deep technical knowledge across AI systems, security analysis, and language implementation.
+      </p>
+    </div>
+
+    <div class="grid grid--3">
+      <div class="expertise-card">
+        <div class="expertise-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="4"/>
+            <line x1="21.17" y1="8" x2="12" y2="8"/>
+            <line x1="3.95" y1="6.06" x2="8.54" y2="14"/>
+            <line x1="10.88" y1="21.94" x2="15.46" y2="14"/>
+          </svg>
+        </div>
+        <h3 class="expertise-card__title">AI & Context Engineering</h3>
+        <p class="expertise-card__description">
+          Building intelligent AI systems with LangChain, Claude Code, and advanced RAG architectures.
+          Specializing in multi-agent orchestration and context management.
+        </p>
+        <div class="expertise-card__tags">
+          <span class="tag tag--ai">LangChain</span>
+          <span class="tag tag--ai">Claude</span>
+          <span class="tag tag--ai">RAG</span>
+        </div>
+      </div>
+
+      <div class="expertise-card">
+        <div class="expertise-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
-          Malware Analysis
         </div>
-        <div class="hero__domain">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <h3 class="expertise-card__title">Malware Analysis</h3>
+        <p class="expertise-card__description">
+          Static and dynamic analysis using Ghidra, IDA Pro, and x64dbg.
+          Memory forensics with Volatility and automated analysis pipelines.
+        </p>
+        <div class="expertise-card__tags">
+          <span class="tag tag--malware">Ghidra</span>
+          <span class="tag tag--malware">IDA Pro</span>
+          <span class="tag tag--malware">Volatility</span>
+        </div>
+      </div>
+
+      <div class="expertise-card">
+        <div class="expertise-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="16 18 22 12 16 6"/>
             <polyline points="8 6 2 12 8 18"/>
           </svg>
-          Compilers & VMs
         </div>
-        <div class="hero__domain">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-            <line x1="8" y1="21" x2="16" y2="21"/>
-            <line x1="12" y1="17" x2="12" y2="21"/>
-          </svg>
-          Agentic AI
+        <h3 class="expertise-card__title">Compilers & VMs</h3>
+        <p class="expertise-card__description">
+          Language design and implementation using Flex, Bison, and LLVM.
+          Virtual machine architecture and bytecode interpretation.
+        </p>
+        <div class="expertise-card__tags">
+          <span class="tag tag--compilers">LLVM</span>
+          <span class="tag tag--compilers">Flex/Bison</span>
+          <span class="tag tag--compilers">VMs</span>
         </div>
       </div>
     </div>
@@ -69,13 +153,14 @@ title: Home
 <section class="section section--dark">
   <div class="container">
     <div class="section-header">
-      <h2 class="section-header__title">Featured Projects</h2>
-      <p class="section-header__subtitle">
+      <span class="section-subtitle">My Work</span>
+      <h2 class="section-title">Featured Projects</h2>
+      <p class="section-description">
         A selection of my work spanning AI, systems programming, and security research.
       </p>
     </div>
 
-    <div class="featured-projects">
+    <div class="grid grid--3">
       {% for project in site.data.projects %}
         {% if project.featured %}
           {% include project-card.html project=project %}
@@ -83,61 +168,25 @@ title: Home
       {% endfor %}
     </div>
 
-    <div class="text-center mt-8">
-      <a href="{{ '/projects/' | relative_url }}" class="btn btn--secondary">
-        View All Projects &rarr;
+    <div class="text-center" style="margin-top: 3rem;">
+      <a href="{{ '/projects/' | relative_url }}" class="btn btn--secondary btn--lg">
+        View All Projects
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
       </a>
     </div>
   </div>
 </section>
 
-<!-- Expertise Section -->
+<!-- Latest Posts Section -->
 <section class="section">
   <div class="container">
     <div class="section-header">
-      <h2 class="section-header__title">Areas of Expertise</h2>
-      <p class="section-header__subtitle">
-        Deep technical knowledge across AI systems, security analysis, and language implementation.
-      </p>
-    </div>
-
-    <div class="expertise">
-      <div class="expertise__card">
-        <div class="expertise__icon">&#129504;</div>
-        <h3 class="expertise__title">AI & Context Engineering</h3>
-        <p class="expertise__description">
-          Building intelligent AI systems with LangChain, Claude, and advanced RAG architectures.
-          Specializing in multi-agent orchestration and context management.
-        </p>
-      </div>
-
-      <div class="expertise__card">
-        <div class="expertise__icon">&#128737;</div>
-        <h3 class="expertise__title">Malware Analysis</h3>
-        <p class="expertise__description">
-          Static and dynamic analysis using Ghidra, IDA Pro, and x64dbg.
-          Memory forensics with Volatility and automated analysis pipelines.
-        </p>
-      </div>
-
-      <div class="expertise__card">
-        <div class="expertise__icon">&#128187;</div>
-        <h3 class="expertise__title">Compilers & VMs</h3>
-        <p class="expertise__description">
-          Language design and implementation using Flex, Bison, and LLVM.
-          Virtual machine architecture and bytecode interpretation.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Latest Posts Section -->
-<section class="section section--highlight">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-header__title">Latest from the Blog</h2>
-      <p class="section-header__subtitle">
+      <span class="section-subtitle">Blog</span>
+      <h2 class="section-title">Latest Articles</h2>
+      <p class="section-description">
         Thoughts on AI, security research, and systems programming.
       </p>
     </div>
@@ -149,31 +198,57 @@ title: Home
     </div>
 
     {% if site.posts.size == 0 %}
-    <p class="text-center" style="color: var(--comment);">
-      Blog posts coming soon...
-    </p>
+    <div class="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+      </svg>
+      <p>Blog posts coming soon...</p>
+    </div>
     {% endif %}
 
-    <div class="text-center mt-8">
-      <a href="{{ '/blog/' | relative_url }}" class="btn btn--secondary">
-        Read More Posts &rarr;
+    <div class="text-center" style="margin-top: 3rem;">
+      <a href="{{ '/blog/' | relative_url }}" class="btn btn--secondary btn--lg">
+        Read More Articles
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
       </a>
     </div>
   </div>
 </section>
 
 <!-- CTA Section -->
-<section class="section">
+<section class="cta-section">
   <div class="container">
-    <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-      <h2>Let's Work Together</h2>
-      <p style="color: var(--fg-dark); margin-bottom: 2rem;">
-        Interested in collaborating on AI projects, security research, or systems programming?
-        I'm always open to discussing new opportunities.
-      </p>
-      <a href="{{ '/contact/' | relative_url }}" class="btn btn--primary btn--lg">
-        Get in Touch
-      </a>
+    <div class="cta-card">
+      <div class="cta-card__content">
+        <h2 class="cta-card__title">Let's Build Something Together</h2>
+        <p class="cta-card__description">
+          Interested in collaborating on AI projects, security research, or systems programming?
+          I'm always open to discussing new opportunities.
+        </p>
+        <div class="cta-card__actions">
+          <a href="{{ '/contact/' | relative_url }}" class="btn btn--primary btn--lg">
+            Get in Touch
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+          <a href="https://github.com/Samuele95" class="btn btn--secondary btn--lg" target="_blank" rel="noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+      <div class="cta-card__decoration">
+        <div class="cta-card__circle cta-card__circle--1"></div>
+        <div class="cta-card__circle cta-card__circle--2"></div>
+      </div>
     </div>
   </div>
 </section>
