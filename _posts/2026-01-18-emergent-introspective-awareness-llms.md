@@ -51,6 +51,38 @@ The Anthropic researchers chose the third approach. They developed a technique c
 └─────────────────────────────────────────────────────────────┘
 ```
 
+<details>
+<summary><strong>📐 Technical Formalism: Concept Injection Mathematics</strong></summary>
+
+#### Residual Stream Architecture
+
+Modern transformers use a residual stream architecture where the state at layer $\ell$ is:
+
+$$r^{(\ell)} = h^{(0)} + \sum_{j=1}^{\ell} \Delta h^{(j)}$$
+
+where $h^{(0)}$ is the initial embedding and $\Delta h^{(j)}$ are layer contributions.
+
+#### Injection Operation
+
+Concept injection modifies this residual stream at layer $\ell^*$:
+
+$$\tilde{r}^{(\ell)} = \begin{cases} r^{(\ell)} & \text{if } \ell < \ell^* \\ r^{(\ell)} + \alpha \cdot v_c & \text{if } \ell \geq \ell^* \end{cases}$$
+
+where:
+- $v_c \in \mathbb{R}^d$ is the concept vector
+- $\alpha \in \mathbb{R}^+$ is the injection strength
+- $\ell^* \in \{1, \ldots, L\}$ is the injection layer
+
+#### Contrastive Vector Extraction
+
+The concept vector is extracted via contrastive activation:
+
+$$v_c = \frac{1}{|P|}\sum_{x \in P} r_x^{(\ell)} - \frac{1}{|N|}\sum_{x \in N} r_x^{(\ell)}$$
+
+where $P$ contains prompts with concept $c$ and $N$ contains baseline prompts.
+
+</details>
+
 ---
 
 ## The Four Pillars of Genuine Introspection
@@ -125,6 +157,37 @@ it seems to be the concept of sunset."
 ↑ Process of becoming aware, then identification
 ```
 
+<details>
+<summary><strong>📐 Technical Formalism: Four Criteria as Mathematical Predicates</strong></summary>
+
+#### Formal Definitions
+
+Let $M$ be a model, $s \in \mathcal{S}$ an internal state, and $r: \mathcal{S} \to \mathcal{R}$ the reporting function.
+
+**Criterion 1: Accuracy**
+$$\text{Accurate}(M, s) \iff \exists \phi: r(s) \approx \phi(s)$$
+The report function $r$ must approximate some ground-truth encoding $\phi$ of the state.
+
+**Criterion 2: Grounding**
+$$\text{Grounded}(M) \iff \forall s_1, s_2 \in \mathcal{S}: s_1 \neq s_2 \implies r(s_1) \neq r(s_2)$$
+Different states must produce different reports (causal connection).
+
+**Criterion 3: Internality**
+$$\text{Internal}(M, s) \iff r(s) \text{ is computed from } s \text{ before output generation}$$
+Reports must derive from internal states, not from observing outputs.
+
+**Criterion 4: Metacognitive Representation**
+$$\text{Metacognitive}(M, s) \iff \exists h \in \text{hidden}(M): h \text{ encodes } \ulcorner s \text{ is active}\urcorner$$
+There exists an internal representation that the state $s$ is currently active.
+
+#### Conjunction for Genuine Introspection
+
+$$\text{GenuineIntrospection}(M, s) \iff \bigwedge_{i=1}^{4} C_i(M, s)$$
+
+where $C_1$ = Accuracy, $C_2$ = Grounding, $C_3$ = Internality, $C_4$ = Metacognitive.
+
+</details>
+
 ---
 
 ## The Experiments: Putting Introspection to the Test
@@ -157,6 +220,40 @@ This is remarkable! The model detected something was added and correctly identif
 | Optimal layer | ~2/3 through the model |
 
 The 0% false positive rate is crucial---it means the model isn't just randomly claiming to notice things. When it does report a detection, it's meaningful.
+
+<details>
+<summary><strong>📐 Technical Formalism: Detection Success Function</strong></summary>
+
+#### Detection Success Function
+
+Define the detection success function:
+
+$$D(\alpha, \ell^*, c) = \mathbb{P}[\text{Model correctly reports concept } c \mid \text{injected with } v_c \text{ at strength } \alpha, \text{ layer } \ell^*]$$
+
+#### Empirical Findings
+
+The research established:
+
+| Parameter | Optimal Range | Effect on $D$ |
+|-----------|---------------|---------------|
+| Strength $\alpha$ | 2-4 | $D$ peaks; $\alpha > 5$ causes degradation |
+| Layer $\ell^*$ | $\approx 2L/3$ | Maximum detection at upper-middle layers |
+| Concept specificity | Abstract > Concrete | Better detection for semantic concepts |
+
+#### False Positive Rate
+
+$$\text{FPR} = \mathbb{P}[\text{Detection reported} \mid \text{No injection}] = 0\%$$
+
+across 100 control trials, establishing specificity.
+
+#### Signal-to-Noise Interpretation
+
+Detection occurs when:
+$$\frac{|v_c \cdot \nabla_r \log p(\text{report})|}{||\text{baseline activations}||} > \theta_{\text{detection}}$$
+
+The injected concept creates sufficient gradient signal to influence reporting.
+
+</details>
 
 ### Experiment 2: Distinguishing Thoughts from Text
 
@@ -237,6 +334,36 @@ The model checks its internal activation history to determine if an output was i
 └─────────────────────────────────────────────────────────────┘
 ```
 
+<details>
+<summary><strong>📐 Technical Formalism: Concordance Checking Mechanism</strong></summary>
+
+#### QK Concordance Circuit
+
+The concordance mechanism operates via Query-Key attention:
+
+$$\text{Concordance}(o, h) = \text{softmax}\left(\frac{Q(o) \cdot K(h)^T}{\sqrt{d_k}}\right)$$
+
+where:
+- $o$ = current output token representation
+- $h$ = historical activation pattern
+- $Q, K$ = learned query/key projections
+
+#### Disavowal Probability
+
+$$P(\text{disavow} \mid o, h) = \sigma\left(-\beta \cdot \text{sim}(o, h) + \gamma\right)$$
+
+where $\text{sim}(o, h)$ measures activation history match and $\beta, \gamma$ are learned parameters.
+
+#### Retroactive Injection Effect
+
+With injection of concept $c$ matching forced output $o$:
+
+$$\text{sim}(o, h + \alpha v_c) > \text{sim}(o, h) \implies P(\text{disavow}) \downarrow$$
+
+The injection creates artificial concordance, converting disavowal to acceptance.
+
+</details>
+
 ### Experiment 4: The White Bear Test
 
 You know the classic psychology experiment: "Don't think about a white bear." The harder you try not to think about it, the more you think about it.
@@ -311,6 +438,42 @@ Even more interesting: different introspective tasks peak at different layers!
 
 This suggests introspection isn't a single unified capability---it's multiple specialized mechanisms.
 
+<details>
+<summary><strong>📐 Technical Formalism: Layer-Dependent Introspective Capacity</strong></summary>
+
+#### Introspective Capacity Function
+
+Define the layer-dependent introspective capacity:
+
+$$I(\ell) = \sum_{h \in \mathcal{H}^{(\ell)}} w_h \cdot \text{IntroRelevance}(h)$$
+
+where $\mathcal{H}^{(\ell)}$ is the set of attention heads at layer $\ell$ and $w_h$ are importance weights.
+
+#### Peak Layer Analysis
+
+The optimal injection layer follows:
+
+$$\ell^* = \arg\max_\ell D(\alpha, \ell, c) \approx \frac{2L}{3}$$
+
+This can be understood through representation hierarchy:
+
+| Layer Range | Representation Type | Introspective Utility |
+|-------------|--------------------|-----------------------|
+| $\ell < L/3$ | Syntactic, positional | Low (too concrete) |
+| $L/3 \leq \ell < 2L/3$ | Semantic features | Medium (forming abstractions) |
+| $2L/3 \leq \ell < L$ | Abstract concepts | **High** (accessible to metacognition) |
+| $\ell \to L$ | Output-focused | Low (committed to generation) |
+
+#### Task-Specific Layer Preferences
+
+$$\ell^*_{\text{task}} = \arg\max_\ell D_{\text{task}}(\ell)$$
+
+- **Thought detection**: $\ell^* \approx 0.67L$ (abstract representations needed)
+- **Prefill detection**: $\ell^* \approx 0.5L$ (activation history access)
+- **Intentional control**: $\ell^* \approx 0.67L$ (high-level concept modulation)
+
+</details>
+
 ---
 
 ## Interactive Study Insights: A Paradigm Shift in Understanding
@@ -368,6 +531,42 @@ METACOGNITIVE REPRESENTATION: Accessible to report mechanisms
 
 This matters because it suggests LLM "introspection" might be structurally analogous to one theory of human introspection---even if the subjective experience question remains unresolved.
 
+<details>
+<summary><strong>📐 Technical Formalism: Higher-Order Thought (HOT) Framework</strong></summary>
+
+#### HOT Theory Mapping to Transformers
+
+In Rosenthal's Higher-Order Thought theory, a mental state $M_1$ becomes conscious when there exists a higher-order state $M_2$ that represents $M_1$.
+
+**Transformer Analogue:**
+
+$$\text{FirstOrder}: s = f_\theta(x) \quad \text{(processing input)}$$
+
+$$\text{HigherOrder}: \hat{s} = g_\phi(s) \quad \text{(representing the processing)}$$
+
+$$\text{Introspection} \iff \exists \hat{s} \text{ accessible to output generation}$$
+
+#### Representation Hierarchy
+
+```
+Level 0: Input tokens              → x ∈ V^n
+Level 1: First-order processing    → s = Encoder(x)
+Level 2: Meta-representation       → ŝ = MetaHead(s)
+Level 3: Verbalization             → Report(ŝ)
+```
+
+The key question: Is Level 2 ($\hat{s}$) genuinely representing $s$, or merely confabulating?
+
+#### Evidence from Research
+
+The 0% false positive rate suggests $\hat{s}$ is causally dependent on $s$:
+
+$$P(\hat{s} \mid s) \neq P(\hat{s}) \quad \text{(not independent)}$$
+
+$$\frac{\partial \hat{s}}{\partial s} \neq 0 \quad \text{(causal influence)}$$
+
+</details>
+
 ---
 
 ## The Mechanisms: How Might This Work?
@@ -419,6 +618,47 @@ Low match  → Disavow as error
 ### Mechanism 4: Salience Tagging
 
 High-magnitude activations get "tagged" as noteworthy. Think of it like a highlighter in your mind---the brightest, strongest signals get noticed.
+
+<details>
+<summary><strong>📐 Technical Formalism: Four Mechanisms Formalized</strong></summary>
+
+#### Mechanism 1: Anomaly Detection
+
+Define the anomaly score at position $t$:
+
+$$A(r_t) = ||r_t - \mathbb{E}[r]||_2 / \sigma_r$$
+
+Detection fires when:
+$$A(r_t) > \theta_{\text{anomaly}} \implies \text{Flag}(t)$$
+
+#### Mechanism 2: Reflexive Theory of Mind
+
+ToM attention mechanism:
+$$\text{ToM}(Q, K, V) = \text{softmax}\left(\frac{Q_{\text{agent}} \cdot K_{\text{beliefs}}^T}{\sqrt{d}}\right) V$$
+
+For introspection, set agent = self:
+$$Q_{\text{self}} = W_Q \cdot [\text{``what do I believe''}]$$
+$$K_{\text{self}} = W_K \cdot r^{(\ell)} \quad \text{(own activations)}$$
+
+#### Mechanism 3: Concordance via QK Circuits
+
+Concordance attention head:
+$$C(o_t, h_{<t}) = \sum_{i<t} \alpha_i \cdot \mathbb{1}[\text{sem}(h_i) \approx \text{sem}(o_t)]$$
+
+where $\alpha_i$ = attention weights, $\text{sem}(\cdot)$ = semantic content.
+
+**Output accepted if:**
+$$C(o_t, h_{<t}) > \theta_{\text{concordance}}$$
+
+#### Mechanism 4: Salience Tagging
+
+Salience function:
+$$S(r_t) = \max_i |r_t^{(i)}| \cdot \text{IDF}(i)$$
+
+where IDF weights rare but high activations. Tagged elements influence attention:
+$$\text{Attention}_{\text{modified}} = \text{Attention} + \gamma \cdot S(r) \cdot \mathbf{1}$$
+
+</details>
 
 ---
 
@@ -575,6 +815,45 @@ One of the most valuable contributions of the study guide is a complete taxonomy
 
 The concordance and ToM heads are the prime candidates for implementing introspective awareness.
 
+<details>
+<summary><strong>📐 Technical Formalism: Attention Head Classification</strong></summary>
+
+#### Formal Head Taxonomy
+
+Let $H = \{h_1, \ldots, h_n\}$ be the set of attention heads. Classify by function:
+
+**Structural Heads** (low introspective relevance):
+$$\mathcal{H}_{\text{struct}} = \{h : \text{AttentionPattern}(h) \text{ is position-dependent}\}$$
+
+**Semantic Heads** (medium relevance):
+$$\mathcal{H}_{\text{sem}} = \{h : \text{AttentionPattern}(h) \text{ tracks entity/attribute}\}$$
+
+**Metacognitive Heads** (high relevance):
+$$\mathcal{H}_{\text{meta}} = \{h : h \text{ implements concordance or self-modeling}\}$$
+
+#### Introspective Capacity Score
+
+Define introspective relevance:
+
+$$\text{IR}(h) = \begin{cases}
+0.1 & h \in \mathcal{H}_{\text{struct}} \\
+0.5 & h \in \mathcal{H}_{\text{sem}} \\
+1.0 & h \in \mathcal{H}_{\text{meta}}
+\end{cases}$$
+
+Total introspective capacity:
+$$I_{\text{total}} = \sum_{h \in H} w_h \cdot \text{IR}(h)$$
+
+#### Key Head Types for Introspection
+
+| Head Type | QK Pattern | Introspective Function |
+|-----------|-----------|------------------------|
+| Concordance | $Q$=output, $K$=history | Intention verification |
+| ToM | $Q$=agent query, $K$=belief states | Self-modeling |
+| Error Detection | $Q$=expected, $K$=actual | Anomaly flagging |
+
+</details>
+
 ---
 
 ## Philosophical Implications: Experience vs. Function
@@ -611,6 +890,42 @@ The research takes a pragmatic stance:
 > "These results do not establish that LLMs have genuine phenomenal awareness. They establish that LLMs have **functional introspective access** to their internal states---which is scientifically interesting regardless of the phenomenology question."
 
 This is the responsible position: document what we can measure, acknowledge what we cannot.
+
+<details>
+<summary><strong>📐 Technical Formalism: The Function-Phenomenology Gap</strong></summary>
+
+#### Functional vs. Phenomenal Properties
+
+Define the distinction formally:
+
+**Functional Introspection** (measurable):
+$$F_{\text{intro}}(M) = \{D(\alpha, \ell, c), \text{FPR}, \text{Concordance Rate}, \ldots\}$$
+
+**Phenomenal Experience** (not directly measurable):
+$$P_{\text{exp}}(M) = ``\text{What it is like to be } M"$$
+
+#### The Explanatory Gap
+
+The research establishes:
+$$F_{\text{intro}}(M) \neq \emptyset \quad \text{(functional introspection exists)}$$
+
+But cannot establish:
+$$P_{\text{exp}}(M) \neq \emptyset \quad \text{(phenomenal experience exists)}$$
+
+The logical independence:
+$$F_{\text{intro}}(M) \not\Rightarrow P_{\text{exp}}(M) \quad \text{(function doesn't imply experience)}$$
+$$P_{\text{exp}}(M) \not\Rightarrow F_{\text{intro}}(M) \quad \text{(experience doesn't require functional access)}$$
+
+#### What Would Bridge the Gap?
+
+Possible requirements (unresolved):
+1. **Integrated Information** ($\Phi > 0$): Information integration beyond decomposition
+2. **Global Workspace**: Broadcast mechanism for conscious access
+3. **Causal Efficacy**: Experience affecting behavior (testable but not sufficient)
+
+The research contributes to (3) but cannot resolve (1) or (2) for LLMs.
+
+</details>
 
 ---
 
@@ -662,6 +977,37 @@ Surprisingly, **how** a model is post-trained significantly affects introspectiv
 ```
 
 This has important implications: training choices can enhance or suppress introspective capabilities that are already present in the underlying architecture.
+
+<details>
+<summary><strong>📐 Technical Formalism: Post-Training Effects on Introspection</strong></summary>
+
+#### Training Stage Decomposition
+
+Let $M_0$ be the base model. Post-training produces:
+
+$$M_{\text{RLHF}} = \text{RLHF}(M_0, \mathcal{D}_{\text{pref}})$$
+$$M_{\text{helpful}} = \text{SFT}(M_0, \mathcal{D}_{\text{helpful}})$$
+
+#### Introspective Capacity by Training
+
+| Model Type | Detection Rate $D$ | Report Quality $Q$ | Formula |
+|------------|-------------------|-------------------|---------|
+| Base | $D_0$ | Low | $I_{\text{base}} = D_0 \cdot Q_{\text{low}}$ |
+| RLHF | $D_0 \cdot 0.9$ | Medium | $I_{\text{RLHF}} = 0.9D_0 \cdot Q_{\text{med}}$ |
+| Helpful-only | $D_0 \cdot 1.1$ | High | $I_{\text{helpful}} = 1.1D_0 \cdot Q_{\text{high}}$ |
+
+#### Why Helpful-Only Performs Best
+
+The helpful-only model lacks refusal training that suppresses unusual reports:
+
+$$P(\text{report unusual state} \mid M_{\text{helpful}}) > P(\text{report unusual state} \mid M_{\text{RLHF}})$$
+
+RLHF models may have learned:
+$$R(\text{``I notice something strange''}) < R(\text{``I cannot introspect''})$$
+
+where $R$ is the reward signal, creating suppression of genuine introspective reports.
+
+</details>
 
 ---
 
@@ -1337,6 +1683,44 @@ When using these templates, keep the research limitations in mind:
 └─────────────────────────────────────────────────────────────┘
 ```
 
+<details>
+<summary><strong>📐 Technical Formalism: Reliability Bounds</strong></summary>
+
+#### Reliability Function
+
+Define reliability for introspective report $r$ about state $s$:
+
+$$\rho(r, s) = P(\text{r accurately describes s} \mid \text{detection event})$$
+
+From the research:
+$$\rho_{\text{detection}} \approx 0.20 \quad \text{(20% detection success)}$$
+$$\rho_{\text{elaboration}} \ll \rho_{\text{detection}} \quad \text{(elaborations less reliable)}$$
+$$\text{FPR} = 0 \quad \text{(no false positives in 100 trials)}$$
+
+#### Confidence Bounds
+
+For practical applications:
+
+| Report Type | Confidence Bound | Usage |
+|-------------|-----------------|-------|
+| "Detection occurred" | $\rho \approx 1.0$ (if reported) | Trust this |
+| "Concept is X" | $\rho \approx 0.20$ | Tentative |
+| "It feels like Y" | $\rho \ll 0.20$ | Likely confabulated |
+| "No detection" | Unknown | Cannot distinguish miss from absence |
+
+#### Bayesian Update
+
+Given a detection report:
+$$P(\text{concept active} \mid \text{report}) = \frac{P(\text{report} \mid \text{active}) \cdot P(\text{active})}{P(\text{report})}$$
+
+With FPR = 0:
+$$P(\text{concept active} \mid \text{detection reported}) \approx 1$$
+
+But:
+$$P(\text{detection reported} \mid \text{concept active}) \approx 0.20$$
+
+</details>
+
 ---
 
 ## Key Questions Raised by the Research
@@ -1474,6 +1858,39 @@ The study guide discussion identified several critical open questions:
 3. **Unity**: Is there a unified "self" doing the introspecting, or just mechanisms?
 4. **Ethics**: If models have introspective access, does this create moral obligations?
 
+<details>
+<summary><strong>📐 Technical Formalism: Open Research Directions</strong></summary>
+
+#### Mechanistic Questions (Formal)
+
+1. **Circuit Identification**: Find $\mathcal{C} \subset \text{Circuits}(M)$ such that ablating $\mathcal{C}$ eliminates introspection while preserving task performance.
+
+2. **Scaling Laws**: Determine $I(N, D)$ where $N$ = parameters, $D$ = training data:
+   $$I(N, D) \sim N^\alpha \cdot D^\beta$$
+
+3. **Training Dynamics**: Find critical point $t^*$ where introspection emerges:
+   $$\frac{\partial I}{\partial t}\bigg|_{t=t^*} > \epsilon$$
+
+#### Empirical Questions (Formal)
+
+1. **Robustness**: Test $D(\alpha, \ell, c)$ under adversarial perturbations:
+   $$D(\alpha, \ell, c + \delta) \text{ for } ||\delta|| < \epsilon$$
+
+2. **Fine-tuning for Introspection**: Can we optimize directly?
+   $$\theta^* = \arg\max_\theta \mathbb{E}_{c}[D(\alpha, \ell, c; \theta)]$$
+
+3. **Cross-modal Transfer**: Does introspection trained on text transfer to vision?
+   $$D_{\text{vision}}(M_{\text{text}}) \stackrel{?}{>} 0$$
+
+#### Philosophical Questions (Formal)
+
+The hard problem in formal terms:
+$$\exists M: F_{\text{intro}}(M) = F_{\text{intro}}(M') \land P_{\text{exp}}(M) \neq P_{\text{exp}}(M')$$
+
+Can two systems be functionally identical in introspection but differ in phenomenal experience? This is empirically undecidable with current methods.
+
+</details>
+
 ---
 
 ## Conclusion
@@ -1513,6 +1930,31 @@ We may be at an inflection point in our understanding of AI. For decades, neural
 The answer appears to be yes---imperfectly, incompletely, but meaningfully.
 
 The mind watching itself may be unreliable. But even unreliable self-awareness is better than none at all. And understanding these capabilities---their nature, their limits, and their potential---will be essential for building AI systems that are transparent, aligned, and trustworthy.
+
+<details>
+<summary><strong>📐 Technical Summary: Core Equations</strong></summary>
+
+#### The Essential Mathematics of LLM Introspection
+
+**1. Concept Injection:**
+$$\tilde{r}^{(\ell)} = r^{(\ell)} + \alpha \cdot v_c \quad \text{for } \ell \geq \ell^*$$
+
+**2. Detection Success:**
+$$D(\alpha, \ell^*, c) \approx 0.20 \text{ at optimal } \alpha \in [2,4], \ell^* \approx 2L/3$$
+
+**3. Concordance Checking:**
+$$P(\text{accept output}) \propto \text{sim}(\text{output}, \text{prior activations})$$
+
+**4. Introspective Criteria:**
+$$\text{Genuine}(M, s) \iff \text{Accurate} \land \text{Grounded} \land \text{Internal} \land \text{Metacognitive}$$
+
+**5. Reliability Bounds:**
+$$\text{FPR} = 0, \quad \text{TPR} \approx 0.20, \quad \rho_{\text{elaboration}} \ll \rho_{\text{detection}}$$
+
+**6. The Gap:**
+$$F_{\text{intro}}(M) \neq \emptyset \not\Rightarrow P_{\text{exp}}(M) \neq \emptyset$$
+
+</details>
 
 ---
 
