@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About Me
-description: AI Engineer & Systems Researcher specializing in Context Engineering, Malware Analysis, and Language Implementation.
+description: Interdisciplinary researcher exploring Neurosymbolic AI, Language Systems, and Binary Analysis through the lens of mathematics, cognitive science, and computational theory.
 permalink: /about/
 ---
 
@@ -12,45 +12,81 @@ permalink: /about/
     </div>
     <div class="about__bio">
       <p>
-        I'm an AI Engineer and Systems Researcher currently pursuing my MSc in Computer Science - AI & Robotics at the University of Camerino.
+        I'm an interdisciplinary researcher pursuing my MSc in Computer Science - AI & Robotics at the University of Camerino. My work explores the fundamental question: <em>how do intelligent systems reason?</em>
       </p>
       <p>
-        My work sits at the intersection of artificial intelligence, security research, and systems programming. I'm passionate about building intelligent systems that understand context, analyzing malware to protect digital infrastructure, and designing programming languages and virtual machines.
+        I believe the most profound insights emerge at the boundaries between disciplines. My research seeks common ground between <strong>Neurosymbolic AI</strong>, <strong>Programming Languages & Compilers</strong>, and <strong>Malware/Binary Analysis</strong> — drawing from mathematics, neuroscience, cognitive psychology, and even sociological theory.
       </p>
       <p>
-        I believe in understanding systems from source code to silicon - whether that's tracing the execution of a suspicious binary or designing the instruction set for a virtual machine.
+        I'm a deep mathematics lover, fascinated by how formal structures underpin both artificial and biological cognition. Understanding systems from source code to silicon — whether tracing the execution of a suspicious binary or exploring how LLMs construct reasoning chains — is what drives my work.
       </p>
     </div>
   </div>
 </div>
 
-## Current Focus
+## Research Focus
 
 <div class="expertise">
   <div class="expertise__card">
     <div class="expertise__icon">&#129504;</div>
-    <h3 class="expertise__title">Context Engineering</h3>
+    <h3 class="expertise__title">Neurosymbolic AI & Reasoning</h3>
     <p class="expertise__description">
-      Building next-generation AI systems with advanced context management, RAG architectures, and multi-agent orchestration using Claude Code, LangChain, and LangGraph.
-    </p>
-  </div>
-
-  <div class="expertise__card">
-    <div class="expertise__icon">&#128737;</div>
-    <h3 class="expertise__title">Malware Analysis</h3>
-    <p class="expertise__description">
-      Conducting static and dynamic analysis of malicious software using industry tools like Ghidra, IDA Pro, x64dbg, and Volatility. Developing automated analysis pipelines with AI assistance.
+      Investigating reasoning mechanisms in Large Language Models through context engineering. Exploring how symbolic and neural approaches can integrate to create more robust, interpretable AI systems. Studying how machines can develop and apply cognitive strategies.
     </p>
   </div>
 
   <div class="expertise__card">
     <div class="expertise__icon">&#128187;</div>
-    <h3 class="expertise__title">Language Systems</h3>
+    <h3 class="expertise__title">Languages, Compilers & VMs</h3>
     <p class="expertise__description">
-      Designing and implementing compilers, interpreters, and virtual machines. Exploring language design principles and low-level system implementation.
+      Designing and implementing compilers, interpreters, and virtual machines. Exploring formal language theory, type systems, and the mathematical foundations of computation. Understanding how we translate human intent into machine execution.
+    </p>
+  </div>
+
+  <div class="expertise__card">
+    <div class="expertise__icon">&#128270;</div>
+    <h3 class="expertise__title">Malware & Binary Analysis</h3>
+    <p class="expertise__description">
+      Conducting static and dynamic analysis of binaries using Ghidra, IDA Pro, x64dbg, and Volatility. Understanding program behavior at the lowest level of abstraction — where intent meets implementation in raw bytes.
     </p>
   </div>
 </div>
+
+## Interdisciplinary Foundations
+
+What makes my approach unique is the integration of seemingly disparate fields. I draw from:
+
+### Mathematics & Formal Theory
+The rigorous foundations that underpin all computational systems — from type theory and category theory to formal verification and proof systems. Mathematics provides the language for precise reasoning about both programs and cognition.
+
+### Cognitive Science & Neuroscience
+Understanding biological intelligence illuminates artificial intelligence. How do humans reason? How do we form concepts, make decisions, and construct mental models? These questions directly inform my research on machine reasoning.
+
+### Psychology & Decision-Making
+I've studied both cognitive and investigative psychology to understand decision-making mechanisms. This includes exploring rational choice theory, cognitive biases, and how humans process uncertainty — all relevant to building AI systems that reason reliably.
+
+### Sociology & Critical Theory
+My background includes engagement with criminal sociology and social theory through thinkers like:
+- **Foucault** — power structures and knowledge systems
+- **Bentham & the Panopticon** — surveillance, control, and behavioral modification
+- **Weber** — rationalization and bureaucratic reasoning
+- **Cantor** — foundations of mathematics and infinity
+- **Le Bon** — crowd psychology and collective behavior
+- **Malatesta** — anarchist theory and decentralized organization
+
+These perspectives inform how I think about AI systems, their societal implications, and the structures of control and autonomy they embody.
+
+### Law & Ethics
+Formal study of legal reasoning has shaped my understanding of rule-based systems, precedent, interpretation, and how societies codify decision-making processes — directly relevant to AI alignment and governance.
+
+## The Convergence
+
+These diverse threads converge in my research:
+
+- **Neurosymbolic AI** bridges formal symbolic systems with neural learning — the mathematical precision of compilers meets the pattern recognition of cognitive systems
+- **Context Engineering** in LLMs mirrors how humans construct meaning through contextual frames — drawing from cognitive psychology and linguistic theory
+- **Binary Analysis** requires understanding both formal semantics (what the code *means*) and adversarial psychology (what the author *intended*)
+- **Compiler Design** embodies the transformation of human cognitive structures into machine-executable form
 
 ## Technical Skills
 
@@ -90,7 +126,7 @@ permalink: /about/
 
 ## Get in Touch
 
-I'm always interested in discussing AI research, security analysis, or systems programming. Feel free to reach out!
+I'm always interested in discussing neurosymbolic AI, reasoning systems, language implementation, or the intersection of computation and cognition. Feel free to reach out!
 
 <div style="margin-top: 2rem;">
   <a href="/contact/" class="btn btn--primary">Contact Me</a>
