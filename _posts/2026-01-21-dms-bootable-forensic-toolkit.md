@@ -7,37 +7,26 @@ tags: [Forensics, Malware Analysis, Linux, Security, Incident Response, ClamAV, 
 excerpt: "The story behind DMS---a forensic toolkit born from frustration with the scattered state of malware analysis tools, and how it evolved into a bootable operating system."
 ---
 
-It started, as many projects do, with frustration.
+It started with frustration.
 
-I was sitting in front of a laptop suspected of harboring malware. The client was anxious. The clock was ticking. And I was doing what I always did: switching between terminal windows, running ClamAV here, YARA there, strings somewhere else, trying to remember which tool's output format I needed to cross-reference with which other tool's results.
+Switching between terminal windows. ClamAV here, YARA there, strings somewhere else. Different output formats to correlate. The same dance on every investigation.
 
-That's when it hit me: I'd done this exact dance dozens of times before. The same sequence of commands. The same mental juggling. The same context-switching overhead that ate into the time I should have been spending actually *analyzing* threats.
-
-What if there was one tool that just... did all of it?
+What if one tool just did all of it?
 
 ---
 
-## The Problem With Forensic Tools
+## What DMS Does
 
-Here's the dirty secret of digital forensics: the tools are excellent individually, but terrible together.
+**DMS (Drive Malware Scan)** combines 12+ scanning engines into a single interface:
 
-ClamAV gives you world-class signature detection with over a million malware signatures. YARA lets you write custom pattern rules that can catch entire malware families. Foremost can carve deleted files from raw disk. Binwalk extracts embedded payloads. Each tool is a precision instrument, honed over years of development.
+- **ClamAV** - 1M+ malware signatures
+- **YARA rules** - Pattern matching across Windows, Linux, Android, documents
+- **Entropy analysis** - Catches packed/encrypted payloads
+- **File carving** - Recovers deleted files from raw disk
+- **Binwalk** - Extracts embedded payloads
+- **Bulk extractor** - Pulls emails, URLs, credit cards from corrupted data
 
-But integrating them? That's your problem.
-
-You write shell scripts. You parse different output formats. You build mental maps of which tool finds what and where that output lives. Every investigation becomes a bespoke integration project.
-
-And that's before you even get to the *real* problem.
-
----
-
-## What Traditional Scanners Miss
-
-Most antivirus tools operate at the filesystem level. They ask the operating system "what files exist here?" and then scan what the OS shows them.
-
-Attackers know this.
-
-They hide malware in deleted files---technically gone from the filesystem, but still physically present on the disk until overwritten. They tuck payloads into slack space, the gaps between file boundaries and disk cluster boundaries. They inject code into boot sectors that execute before the operating system even loads.
+The key difference: DMS operates at the **raw disk level**, not the filesystem level.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -50,44 +39,18 @@ They hide malware in deleted files---technically gone from the filesystem, but s
 │   Packed Binaries   Encrypted/compressed, signatures don't match    │
 │   Alternate Streams NTFS hidden storage most scanners ignore        │
 │                                                                     │
-│   A filesystem-level scanner sees NONE of this.                     │
+│   A filesystem-level scanner sees NONE of this. DMS sees all of it. │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-It's like searching a house but only looking in rooms the owner shows you.
-
-I wanted a tool that would look everywhere. One that would operate at the raw disk level, reading bytes directly from the storage medium without the operating system mediating what it could and couldn't see.
-
 ---
 
-## Birth of DMS
+## Detection Methods
 
-DMS---Drive Malware Scan---started as a weekend project. A bash script that automated my usual forensic workflow. Run ClamAV on raw disk chunks. Run YARA rules. Check entropy levels for packed executables. Generate one unified report.
+**Signature matching**: ClamAV and YARA catch known threats.
 
-That first version was rough. Hard-coded paths. Brittle error handling. But it worked, and more importantly, it saved me hours on every investigation.
-
-Then I added support for forensic images. EWF files (the `.E01` format that's industry standard for disk acquisition) needed special handling, so I integrated ewfmount. While I was at it, I added hash verification---the ability to confirm that an evidence image hadn't been tampered with since acquisition.
-
-Then came the interactive TUI, because sometimes you want to adjust settings without memorizing CLI flags. Then parallel scanning for performance. Then file carving for deleted data recovery. Then document analysis with oledump for malicious Office files.
-
-The "weekend project" grew teeth.
-
----
-
-## How It Actually Works
-
-At its core, DMS does something deceptively simple: it reads storage devices in chunks and throws every detection engine it has at each chunk.
-
-When you point DMS at a drive or forensic image, it first figures out what it's dealing with. Is this a raw block device? A partition? An EWF forensic image? A raw `.dd` dump? Each type gets handled appropriately---EWF images get mounted to virtual block devices, partitions get mounted read-only (or not at all, for pure raw scanning).
-
-Then the scanning begins. Each chunk of data passes through the detection gauntlet:
-
-**ClamAV** checks against its signature database---over a million known malware samples. This catches the known threats, the mass-distributed malware that's already been identified and catalogued.
-
-**YARA rules** look for patterns. Not specific files, but characteristics. A YARA rule might say "find any PE executable that imports VirtualProtect and CreateRemoteThread and contains the string 'cmd.exe'"---capturing an entire class of process injection techniques rather than a specific sample.
-
-**Entropy analysis** flags suspiciously random data. Normal files have predictable entropy patterns:
+**Entropy analysis**: Packed or encrypted malware has high entropy. DMS flags anything above 7.5 bits/byte:
 
 ```
 Normal text file:    ████░░░░░░░░░░░░  ~4.5 bits/byte
@@ -97,27 +60,17 @@ Encrypted payload:   ████████████████  ~7.99 bit
                     DMS alert threshold: 7.5
 ```
 
-When DMS sees a region with entropy above 7.5 in an unexpected context---say, inside what claims to be a text file---that's a red flag.
+**Binary structure detection**: Finds executables hiding as other file types.
 
-**Binary structure detection** identifies executables hiding in disguise. That "vacation-photo.jpg" with a PE header? DMS notices.
-
-All these engines run, their outputs get correlated, and at the end you get a single unified report that tells you what was found, where, and what it might mean.
+**Forensic recovery**: Carves deleted files by searching for headers/footers in raw disk data.
 
 ---
 
-## The Forensic Artifact Problem
+## Windows Forensic Artifacts
 
-Raw malware detection is only part of the story.
+DMS analyzes the traces attacks leave behind:
 
-Modern attacks leave traces throughout a Windows system, breadcrumbs that tell you not just *what* was there, but *what it did*. Registry keys that survive malware deletion. Prefetch files that prove execution. Scheduled tasks that reveal persistence mechanisms.
-
-Traditional antivirus doesn't look at these. Why would it? Its job is to find and remove threats, not reconstruct attack timelines.
-
-But for forensic investigators, these artifacts are gold. They're how you prove that an attacker maintained access for six months. They're how you identify patient zero in a network-wide compromise. They're how you build a legal case.
-
-So DMS grew forensic analysis modules.
-
-The **persistence scanner** digs through registry hives looking for autorun entries---the Run keys, the Services, the scheduled tasks that attackers use to survive reboots. It parses Windows Task Scheduler XML files. It examines WMI subscriptions that can trigger code execution on system events.
+**Persistence**: Registry Run keys, Services, Scheduled Tasks, WMI subscriptions.
 
 | MITRE ATT&CK | Technique | What DMS Finds |
 |--------------|-----------|----------------|
@@ -126,33 +79,13 @@ The **persistence scanner** digs through registry hives looking for autorun entr
 | T1053.005 | Scheduled Task | Persistence via task scheduler |
 | T1546.003 | WMI Subscription | Fileless persistence |
 
-The **execution artifact analyzer** processes Prefetch files (Windows' attempt to speed up program launches, which conveniently records what programs actually ran and when). It parses Amcache, which logs executable metadata including SHA1 hashes. It examines Shimcache, which records programs that *existed* even if they've since been deleted.
+**Execution**: Prefetch files, Amcache, Shimcache---proof of what actually ran.
 
-The **file anomaly detector** looks for evasion techniques. Timestomping---when attackers modify file timestamps to blend in. Alternate Data Streams---NTFS's hidden file storage that many scanners ignore. Double extensions designed to fool users into clicking executables disguised as documents.
-
-Each module maps its findings to MITRE ATT&CK technique IDs, connecting artifacts to known adversary behaviors.
+**Evasion**: Timestomping detection, Alternate Data Streams, double extensions.
 
 ---
 
-## The Deployment Dilemma
-
-I hit a wall when I tried to use DMS in the field.
-
-The tool worked beautifully on my forensic workstation with all tools pre-installed. But at a client site, on their compromised system? I couldn't just install a bunch of forensic packages on evidence. That would modify the system, contaminating the very thing I was trying to investigate.
-
-The first solution was **portable mode**. DMS could download its dependencies to a temporary directory, running self-contained without touching the host system's package manager. This worked if you had network access.
-
-But what about air-gapped environments? Sensitive networks where you can't just download software from the internet?
-
-That led to **USB Kit mode**. You build a complete offline kit on a USB drive---all the binaries, all the signature databases, everything needed to run without network access. Plug in the USB, run the launcher script, and you're scanning.
-
-Then came the question: what if you don't trust the host operating system at all?
-
-If a system is deeply compromised, running any tool on it is suspect. The malware might be hiding itself from any scanner running under the infected OS. Rootkits do exactly this---they intercept system calls to hide their files, processes, and network connections.
-
-The only way to get a clean view is to boot from external media. Don't trust the installed OS at all. Boot your own operating system that the malware never had a chance to infect.
-
-That's how DMS became a **bootable forensic OS**.
+## Deployment Options
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -167,21 +100,11 @@ That's how DMS became a **bootable forensic OS**.
 └───────────────┴─────────┴─────────┴──────────┴─────────────────────┘
 ```
 
----
+**Portable mode**: Downloads tools to temp directory. Works with network access.
 
-## Building a Forensic Operating System
+**USB Kit mode**: Complete offline kit. All binaries and signatures bundled.
 
-The bootable ISO took the project in a direction I hadn't originally planned.
-
-The concept is straightforward: package DMS and all its dependencies into a Debian-based live system that boots from USB. The evidence drive's operating system never loads. DMS runs from RAM, reading the evidence drive directly as a raw block device.
-
-The implementation was... educational.
-
-Live Linux distributions have their quirks. You need to balance image size against functionality. You need to handle UEFI and legacy BIOS boot. You need to think about persistence---investigators might want to save their work across reboots. And you need to be forensically sound by default, which means not automounting any drives.
-
-The build process downloads a minimal Debian Live base, injects DMS and its tools, adds forensic utilities (sleuthkit, ewf-tools, dc3dd), configures the boot menu with options for different scenarios, and produces a hybrid ISO that can be burned to DVD or flashed to USB.
-
-The result is a ~2.5 GB image that boots into a clean Linux environment with DMS ready to run. No installation. No configuration. Just boot and scan.
+**Bootable ISO**: Full forensic OS based on Debian. The evidence drive's OS never loads---maximum forensic safety.
 
 ---
 
