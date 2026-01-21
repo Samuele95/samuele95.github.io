@@ -332,6 +332,158 @@ This table shows how different malware evasion techniques fare against different
 ╚══════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
+### Engine Implementation Details
+
+Let me pull back the curtain on how each engine actually works inside DMS:
+
+#### 1. ClamAV: `scan_clamav()`
+
+The workhorse signature scanner. DMS doesn't just run ClamAV on files---it streams raw chunks through `clamscan` via stdin, enabling scanning of data that has no file representation.
+
+```
+Implementation:
+  • Chunk size: $CHUNK_SIZE MB (default: 500)
+  • Database location: $CLAMDB_DIR (/tmp/clamdb)
+  • Method: dd piped to clamscan --stdin
+  • Update command: freshclam --datadir=$CLAMDB_DIR
+
+Statistics tracked:
+  • STATS[clamav_scanned]      - Total bytes processed
+  • STATS[clamav_infected]     - Detection count
+  • STATS[clamav_signatures]   - Matched signature names
+```
+
+#### 2. YARA: `scan_yara()` and `scan_yara_category()`
+
+Pattern matching for behaviors, not just signatures. DMS ships with four distinct rule categories:
+
+```
+Rule Categories and Paths:
+  • Windows:   /opt/Qu1cksc0pe/Systems/Windows/YaraRules_Windows/  (~2,000 rules)
+  • Linux:     /opt/Qu1cksc0pe/Systems/Linux/YaraRules_Linux/       (~500 rules)
+  • Android:   /opt/Qu1cksc0pe/Systems/Android/YaraRules/           (~300 rules)
+  • Documents: /opt/oledump/                                         (~400 rules)
+
+Performance optimization:
+  • Rules compiled and cached to $YARA_CACHE_DIR
+  • Default sample: 500MB from device
+  • Parallel execution when --parallel enabled
+
+Statistics tracked:
+  • STATS[yara_rules_checked]  - Rules evaluated
+  • STATS[yara_matches]        - Total matches
+  • STATS[yara_match_details]  - Rule name, offset, matched string
+```
+
+#### 3. Entropy Analysis: `scan_entropy()`
+
+Pure mathematics. Shannon entropy reveals encryption and packing that signatures miss entirely.
+
+```
+Implementation:
+  • Algorithm: Shannon entropy via Python
+  • Scan regions: 20 evenly-distributed chunks
+  • Chunk size: 50MB per region
+  • High threshold: > 7.5 bits/byte (suspicious)
+  • Max possible: 8.0 bits/byte (uniform random)
+
+Entropy calculation:
+  H(B) = -Σ p(bᵢ) × log₂(p(bᵢ)) for i=0 to 255
+  where p(bᵢ) = frequency of byte value i / total bytes
+
+Statistics tracked:
+  • STATS[entropy_regions_scanned]
+  • STATS[entropy_high_count]
+  • STATS[entropy_avg], STATS[entropy_max]
+  • STATS[entropy_high_offsets]  - Comma-separated suspicious regions
+```
+
+#### 4. Strings Extraction: `scan_strings()`
+
+Pattern recognition in text. Not as sophisticated as YARA, but fast and effective for IOC hunting.
+
+```
+Implementation:
+  • Minimum string length: 8 characters
+  • Tool: GNU strings
+
+Patterns extracted:
+  • URLs: http://, https://
+  • Executables: .exe, .dll, .bat, .ps1, .vbs
+  • Credentials: password, passwd, admin, root
+  • Ransomware: bitcoin, wallet, encrypt, decrypt
+  • Malware keywords: trojan, keylog, backdoor
+  • Shell commands: cmd.exe, powershell, wscript
+
+Statistics tracked:
+  • STATS[strings_total]
+  • STATS[strings_urls]
+  • STATS[strings_executables]
+  • STATS[strings_credentials]
+```
+
+#### 5. File Carving: `scan_file_carving()`
+
+Resurrecting the deleted. This is where DMS finds what attackers thought was gone.
+
+```
+Implementation:
+  • Primary tool: Foremost
+  • Alternatives: Photorec, Scalpel (configurable)
+  • Configuration: CARVING_TOOLS=foremost
+  • Max files: MAX_CARVED_FILES=1000
+
+Process:
+  1. Extract unallocated space (via Sleuth Kit's blkls)
+  2. Run foremost to recover files by header/footer signatures
+  3. Scan recovered files with ClamAV
+  4. Catalog by file type
+  5. Flag executables for priority analysis
+
+Statistics tracked:
+  • STATS[carved_total]
+  • STATS[carved_by_type]     - Breakdown by extension
+  • STATS[carved_executables] - PE/ELF binaries recovered
+```
+
+#### 6. Bulk Extractor: `scan_bulk_extractor()`
+
+Artifact extraction at scale. Finds the breadcrumbs---email addresses, URLs, credit cards, PE artifacts.
+
+```
+Implementation:
+  • Tool: bulk_extractor
+  • Timeout: 600 seconds
+
+Artifacts extracted:
+  • email.txt    - Email addresses found
+  • url.txt      - URLs extracted
+  • ccn.txt      - Potential credit card numbers
+  • winpe.txt    - Windows PE artifacts
+  • json.txt     - JSON fragments
+
+Statistics tracked:
+  • STATS[bulk_emails]
+  • STATS[bulk_urls]
+  • STATS[bulk_ccn]
+```
+
+#### 7. Executable Detection: `scan_executables()`
+
+Direct header hunting. Finds every PE and ELF binary on the disk, whether the filesystem knows about them or not.
+
+```
+Implementation:
+  • PE detection: Search for MZ header (4d5a hex)
+  • ELF detection: Search for \x7fELF magic
+
+Statistics tracked:
+  • STATS[pe_headers]   - Windows executables
+  • STATS[elf_headers]  - Linux executables
+  • STATS[pe_offsets]   - Location of each PE header
+  • STATS[elf_offsets]  - Location of each ELF header
+```
+
 ---
 
 ## Part V: Technical Formalism
@@ -437,9 +589,9 @@ Windows systems are remarkably verbose about their own history. They keep execut
 
 DMS's forensic modules read this scattered evidence and synthesize it into a coherent narrative.
 
-### The Persistence Module
+### The Persistence Module: `scan_persistence_artifacts()`
 
-Persistence is how attackers survive reboots. They need something to reload their malware when the system restarts. DMS hunts for these mechanisms across five major categories:
+Persistence is how attackers survive reboots. They need something to reload their malware when the system restarts. DMS hunts for these mechanisms across five sub-modules:
 
 ```
 ╔════════════════════════════════════════════════════════════════════════════════╗
@@ -491,9 +643,21 @@ Persistence is how attackers survive reboots. They need something to reload thei
 ╚════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### The Execution Artifact Module
+### The Execution Artifact Module: `scan_execution_artifacts()`
 
 Windows logs more about program execution than most users realize. These artifacts prove that something *ran*, even after it's deleted.
+
+DMS implements six dedicated sub-modules for execution artifacts:
+
+```
+Sub-module Functions:
+  • scan_prefetch_artifacts()     - Prefetch file analysis
+  • scan_amcache_artifacts()      - Application compatibility cache
+  • scan_shimcache_artifacts()    - AppCompatCache registry data
+  • scan_userassist_artifacts()   - ROT13-encoded execution history
+  • scan_srum_artifacts()         - System Resource Usage Monitor
+  • scan_bam_artifacts()          - Background Activity Moderator
+```
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────┐
@@ -591,6 +755,56 @@ The power is in correlation. A malicious executable might be deleted, but if DMS
 
 ...then the deletion becomes evidence itself. The attempt to hide proves there was something to hide.
 
+### The MITRE ATT&CK Mapping
+
+Every DMS finding is mapped to the MITRE ATT&CK framework, giving defenders a common language and enabling integration with threat intelligence platforms.
+
+```
+╔════════════════════════════════════════════════════════════════════════════════════╗
+║                    DMS MITRE ATT&CK TECHNIQUE MAPPINGS                              ║
+╠════════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                     ║
+║  PERSISTENCE TECHNIQUES                                                             ║
+║  ─────────────────────────────────────────────────────────────────────────────     ║
+║  Registry Run Keys      │ T1547.001 │ Boot or Logon Autostart Execution            ║
+║  Windows Services       │ T1543.003 │ Create or Modify System Process: Service     ║
+║  Scheduled Tasks        │ T1053.005 │ Scheduled Task/Job: Scheduled Task           ║
+║  Startup Folders        │ T1547.001 │ Boot or Logon Autostart Execution            ║
+║  WMI Event Subscription │ T1546.003 │ Event Triggered Execution: WMI               ║
+║  DLL Search Hijacking   │ T1574.001 │ Hijack Execution Flow: DLL Search Order      ║
+║                                                                                     ║
+║  EXECUTION EVIDENCE                                                                 ║
+║  ─────────────────────────────────────────────────────────────────────────────     ║
+║  Prefetch Execution     │ T1059     │ Command and Scripting Interpreter            ║
+║  Suspicious Exec Path   │ T1204.002 │ User Execution: Malicious File               ║
+║  LOLBin Usage           │ T1218     │ System Binary Proxy Execution                ║
+║                                                                                     ║
+║  DEFENSE EVASION                                                                    ║
+║  ─────────────────────────────────────────────────────────────────────────────     ║
+║  Double Extension       │ T1036.007 │ Masquerading: Double File Extension          ║
+║  Name/Type Mismatch     │ T1036.005 │ Masquerading: Match Legitimate Name          ║
+║  General Masquerading   │ T1036     │ Masquerading                                 ║
+║  Timestomping           │ T1070.006 │ Indicator Removal: Timestomp                 ║
+║                                                                                     ║
+║  PROCESS INJECTION                                                                  ║
+║  ─────────────────────────────────────────────────────────────────────────────     ║
+║  Process Hollowing      │ T1055.012 │ Process Injection: Process Hollowing         ║
+║  General Injection      │ T1055     │ Process Injection                            ║
+║                                                                                     ║
+║  CREDENTIAL ACCESS                                                                  ║
+║  ─────────────────────────────────────────────────────────────────────────────     ║
+║  Credential Dumping     │ T1003     │ OS Credential Dumping                        ║
+║  LSASS Memory           │ T1003.001 │ OS Credential Dumping: LSASS Memory          ║
+║                                                                                     ║
+╚════════════════════════════════════════════════════════════════════════════════════╝
+```
+
+These mappings appear in every DMS report, enabling security teams to:
+- Correlate findings with threat intelligence
+- Map incidents to known adversary playbooks
+- Communicate findings in standardized terminology
+- Feed data into SIEM/SOAR platforms
+
 ```
 ╭────────────────────────────────────────────────────────────────────────────────╮
 │                    ARTIFACT CORRELATION EXAMPLE                                 │
@@ -617,9 +831,18 @@ The power is in correlation. A malicious executable might be deleted, but if DMS
 
 ---
 
-## Part VII: The File Anomaly Detective
+## Part VII: The File Anomaly Detective: `scan_file_anomalies()`
 
-Sometimes malware hides in plain sight. The file exists, visible in the filesystem, but disguised to avoid suspicion. DMS's anomaly detection module catches these masquerades.
+Sometimes malware hides in plain sight. The file exists, visible in the filesystem, but disguised to avoid suspicion. DMS's anomaly detection module catches these masquerades through five detection sub-modules:
+
+```
+Sub-module Functions:
+  • detect_magic_mismatch()           - File signature vs. extension
+  • detect_alternate_data_streams()   - Hidden NTFS ADS
+  • detect_timestomping()             - $SI/$FN timestamp anomalies
+  • detect_packed_executables()       - High-entropy code sections
+  • detect_suspicious_paths()         - Unusual installation directories
+```
 
 ### Timestomping Detection
 
@@ -770,7 +993,61 @@ Packers compress or encrypt executables, changing their appearance to evade sign
 
 ---
 
-## Part VIII: Deployment Models
+## Part VIII: The Interactive Interface
+
+For investigators who prefer guided workflows over command-line flags, DMS provides a full-featured text user interface (TUI) via the `--interactive` flag.
+
+```
+╔══════════════════════════════════════════════════════════════════════════════════╗
+║               DMS - DRIVE MALWARE SCAN v2.1.0                                     ║
+║          Use ↑↓ to navigate, Space/Enter to toggle, S to start                    ║
+╠══════════════════════════════════════════════════════════════════════════════════╣
+║  INPUT SOURCE                                                                     ║
+║  ▶ Path: /dev/nvme0n1 [block_device] 512GB                                        ║
+║    Detected: Samsung NVMe SSD, GPT partition table                                ║
+║    Partitions: 3 (EFI System, Microsoft Reserved, Windows NTFS)                   ║
+╟──────────────────────────────────────────────────────────────────────────────────╢
+║  SCAN TYPE                                                                        ║
+║    ( ) Quick Scan       Sample-based triage                     ~5 min            ║
+║    (●) Standard Scan    ClamAV + YARA + Strings                 ~30 min           ║
+║    ( ) Deep Scan        Full analysis + carving                 ~90 min           ║
+║    ( ) Slack Only       Unallocated space focus                 ~45 min           ║
+╟──────────────────────────────────────────────────────────────────────────────────╢
+║  FORENSIC ANALYSIS MODULES                                                        ║
+║    [✓] Persistence artifacts    Registry, tasks, services, WMI                    ║
+║    [✓] Execution artifacts      Prefetch, Amcache, Shimcache, SRUM, BAM           ║
+║    [✓] File anomalies           Timestomping, ADS, magic mismatches               ║
+║    [ ] MFT analysis             Master File Table parsing                         ║
+║    [ ] RE triage                Imports, Capa, shellcode detection                ║
+╟──────────────────────────────────────────────────────────────────────────────────╢
+║  OUTPUT OPTIONS                                                                   ║
+║    [✓] Generate baseline hash   SHA256 of entire device (chain of custody)        ║
+║    [✓] HTML report              Formatted for legal/management                    ║
+║    [✓] JSON report              Machine-readable for SIEM                         ║
+║    [✓] Preserve carved files    Keep recovered files for analysis                 ║
+║    Output path: /mnt/output/case_20260121_093000/                                 ║
+╟──────────────────────────────────────────────────────────────────────────────────╢
+║  PERFORMANCE                                                                      ║
+║    [✓] Parallel scanning        Use all CPU cores                                 ║
+║    [ ] Auto-chunk sizing        Calculate optimal chunk size                      ║
+║    Chunk size: 500 MB                                                             ║
+╠══════════════════════════════════════════════════════════════════════════════════╣
+║      [S] Start Scan        [I] Change Input        [C] Config        [Q] Quit     ║
+╚══════════════════════════════════════════════════════════════════════════════════╝
+```
+
+The TUI provides:
+
+- **Device auto-detection**: Enumerates available block devices, shows sizes and types
+- **Partition analysis**: Displays partition table and filesystem information
+- **Module toggles**: Enable/disable individual forensic modules
+- **Time estimates**: Approximate scan duration based on device size and options
+- **Progress display**: Real-time scan progress with statistics
+- **Interactive reports**: Browse findings before export
+
+---
+
+## Part IX: Deployment Models
 
 I built DMS to work anywhere, under any conditions. This led to a tiered deployment model where the tool adapts to its environment.
 
@@ -841,6 +1118,55 @@ sudo ./malware_scan.sh --build-minimal-kit --kit-target /media/usb
 sudo ./malware_scan.sh --build-full-kit --kit-target /media/usb
 ```
 
+The full kit creates a complete directory structure:
+
+```
+/media/usb/
+├── dms/
+│   ├── malware_scan.sh              # Main scanner (9,136 lines)
+│   ├── lib/
+│   │   ├── kit_builder.sh           # Kit creation (547 lines)
+│   │   ├── iso_builder.sh           # ISO generation (751 lines)
+│   │   ├── usb_mode.sh              # Environment detection (481 lines)
+│   │   ├── output_storage.sh        # Case management (549 lines)
+│   │   └── update_manager.sh        # Database updates (449 lines)
+│   ├── tools/bin/                   # Portable binaries
+│   │   ├── clamav/                  # ClamAV scanner
+│   │   ├── yara/                    # YARA engine
+│   │   ├── foremost                 # File carving
+│   │   └── ...                      # Other tools
+│   ├── databases/
+│   │   ├── clamav/                  # Signature database (~350MB)
+│   │   │   ├── main.cvd
+│   │   │   ├── daily.cvd
+│   │   │   └── bytecode.cvd
+│   │   └── yara/                    # YARA rules (~100MB)
+│   │       ├── windows/
+│   │       ├── linux/
+│   │       ├── android/
+│   │       └── documents/
+│   └── cache/                       # Compiled YARA rules
+├── .dms_kit_manifest.json           # Kit metadata & version
+├── run-dms.sh                       # Quick launcher
+└── output/                          # Default results location
+```
+
+The `.dms_kit_manifest.json` file contains:
+
+```json
+{
+  "version": "2.1.0",
+  "kit_type": "full",
+  "created": "2026-01-21T10:30:00Z",
+  "clamav_db_date": "2026-01-21",
+  "yara_rules_version": "2026.01",
+  "tools_included": [
+    "clamav", "yara", "foremost", "binwalk",
+    "bulk_extractor", "sleuthkit", "ssdeep"
+  ]
+}
+```
+
 ### Mode 3: Bootable ISO
 
 The ultimate in forensic integrity. A complete Linux operating system that boots from USB, never touching the evidence drive's installed OS.
@@ -896,7 +1222,7 @@ sudo dd if=~/dms-forensic.iso of=/dev/sdX bs=4M status=progress
 
 ---
 
-## Part IX: A Day in the Field
+## Part X: A Day in the Field
 
 Let me walk you through an actual investigation workflow, showing how DMS operates from arrival to final report.
 
@@ -1121,9 +1447,9 @@ Let me walk you through an actual investigation workflow, showing how DMS operat
 
 ---
 
-## Part X: The Architecture
+## Part XI: The Architecture
 
-DMS is a ~9,000 line Bash script, which might seem unconventional for a security tool. The choice was deliberate.
+DMS is a **9,136-line Bash script** with an additional **2,777 lines** across five library modules. This might seem unconventional for a security tool. The choice was deliberate.
 
 ### Why Bash?
 
@@ -1134,6 +1460,34 @@ DMS is a ~9,000 line Bash script, which might seem unconventional for a security
 **Portability**: Copy one file to a USB drive and you have a forensic toolkit. No virtual environments, no package managers, no dependency hell.
 
 **Shell Integration**: Forensic work involves coordinating many command-line tools. Bash is the natural glue language for this.
+
+### Core Metrics
+
+```
+╭───────────────────────────────────────────────────────────────────────────╮
+│                         DMS v2.1 SPECIFICATIONS                            │
+├───────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│  COMPONENT                     LINES        SIZE       PURPOSE             │
+│  ─────────────────────────────────────────────────────────────────────    │
+│  malware_scan.sh               9,136       ~320KB     Main scanner         │
+│  lib/kit_builder.sh              547        ~18KB     USB kit creation     │
+│  lib/iso_builder.sh              751        ~25KB     Bootable ISO         │
+│  lib/usb_mode.sh                 481        ~16KB     Kit detection        │
+│  lib/output_storage.sh           549        ~18KB     Case management      │
+│  lib/update_manager.sh           449        ~15KB     Database updates     │
+│  ─────────────────────────────────────────────────────────────────────    │
+│  TOTAL                        11,913       ~412KB                          │
+│                                                                            │
+│  SCANNING ENGINES:              12+                                        │
+│  YARA RULE CATEGORIES:           4                                         │
+│  FORENSIC MODULES:               6                                         │
+│  TRACKED STATISTICS:            60+                                        │
+│  SUPPORTED PLATFORMS:  Tsurugi, Debian, Ubuntu, Fedora, RHEL, Arch        │
+│  BASH REQUIREMENT:     4.0+ (associative array support)                   │
+│                                                                            │
+╰───────────────────────────────────────────────────────────────────────────╯
+```
 
 ### The Modular Architecture
 
@@ -1201,9 +1555,10 @@ DMS uses a cascading configuration system that balances smart defaults with full
 Priority (highest to lowest):
 1. Command-line flags        --chunk-size 1024
 2. Environment variables     DMS_CHUNK_SIZE=1024
-3. User config file          ~/.config/malscan/malscan.conf
+3. User config file          ~/.malscan.conf
 4. System config file        /etc/malscan.conf
-5. Built-in defaults         CHUNK_SIZE=500
+5. Current directory         ./malscan.conf
+6. Built-in defaults         CHUNK_SIZE=500
 ```
 
 This means:
@@ -1212,9 +1567,86 @@ This means:
 - Enterprises can deploy system-wide configs
 - Any default can be overridden at runtime
 
+### The Configuration Deep Dive
+
+Every aspect of DMS behavior can be tuned via configuration. Here's a complete reference:
+
+```
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         DMS CONFIGURATION REFERENCE                           ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  PERFORMANCE TUNING                                                           ║
+║  ─────────────────────────────────────────────────────────────────────────── ║
+║  CHUNK_SIZE=500              │ MB per scan chunk (memory/speed tradeoff)     ║
+║  MAX_PARALLEL_JOBS=4         │ Concurrent threads (defaults to CPU cores)    ║
+║  SLACK_EXTRACT_TIMEOUT=600   │ Maximum seconds for slack space extraction    ║
+║  SLACK_MIN_SIZE_MB=10        │ Skip slack spaces smaller than this           ║
+║  MAX_CARVED_FILES=1000       │ Limit recovered files from carving            ║
+║                                                                               ║
+║  SCAN ENGINE PATHS                                                            ║
+║  ─────────────────────────────────────────────────────────────────────────── ║
+║  CLAMDB_DIR=/tmp/clamdb                                                       ║
+║  YARA_RULES_BASE=/opt/Qu1cksc0pe/Systems                                      ║
+║  OLEDUMP_RULES=/opt/oledump                                                   ║
+║  YARA_CACHE_DIR=/tmp/yara_cache                                               ║
+║  CARVING_TOOLS=foremost       │ Options: foremost, photorec, scalpel         ║
+║                                                                               ║
+║  EWF/FORENSIC IMAGING                                                         ║
+║  ─────────────────────────────────────────────────────────────────────────── ║
+║  EWF_SUPPORT=true            │ Enable Expert Witness Format support          ║
+║  EWF_VERIFY_HASH=false       │ Verify image integrity on mount               ║
+║  EWF_MOUNT_OPTIONS=""        │ Additional ewfmount parameters                ║
+║  TEMP_MOUNT_BASE=/tmp        │ Temporary mount point directory               ║
+║                                                                               ║
+║  VIRUSTOTAL INTEGRATION                                                       ║
+║  ─────────────────────────────────────────────────────────────────────────── ║
+║  VT_API_KEY=                 │ Your VirusTotal API key (optional)            ║
+║  VT_RATE_LIMIT=4             │ Requests per minute (free API: 4)             ║
+║                                                                               ║
+║  PORTABLE MODE                                                                ║
+║  ─────────────────────────────────────────────────────────────────────────── ║
+║  PORTABLE_TOOLS_DIR=/tmp/malscan_portable_tools                               ║
+║  YARA_VERSION=4.5.0          │ Version to download                           ║
+║  CLAMAV_VERSION=1.3.1        │ Version to download                           ║
+║                                                                               ║
+║  USB KIT SETTINGS                                                             ║
+║  ─────────────────────────────────────────────────────────────────────────── ║
+║  USB_MODE=auto               │ Options: auto, minimal, full                  ║
+║  KIT_MIN_FREE_SPACE_MB=2000  │ Required for full kit build                   ║
+║  USB_TOOLS_DIR=tools         │ Relative to USB root                          ║
+║  USB_DATABASES_DIR=databases │ Signature storage location                    ║
+║                                                                               ║
+║  ISO BUILDER                                                                  ║
+║  ─────────────────────────────────────────────────────────────────────────── ║
+║  DEBIAN_LIVE_URL=https://cdimage.debian.org/.../debian-live-12.5.0-amd64.iso ║
+║  ISO_OUTPUT_PATTERN=dms-forensic-VERSION.iso                                  ║
+║  ISO_EXTRA_PACKAGES="sleuthkit ewf-tools dc3dd exiftool testdisk"            ║
+║  ISO_WORK_DIR=/tmp/dms-iso-build    │ Requires ~5GB free                     ║
+║  ISO_INCLUDE_CLAMAV_DB=true         │ Adds ~350MB to ISO                     ║
+║  ISO_INCLUDE_YARA_RULES=true        │ Adds ~100MB to ISO                     ║
+║                                                                               ║
+║  OUTPUT STORAGE                                                               ║
+║  ─────────────────────────────────────────────────────────────────────────── ║
+║  OUTPUT_MOUNT_POINT=/mnt/dms-output                                           ║
+║  CASE_NAME_PATTERN=case_%Y%m%d_%H%M%S                                         ║
+║  OUTPUT_TMPFS_WARN=true      │ Warn before using RAM for output              ║
+║                                                                               ║
+║  FORENSIC ANALYSIS (all default to false)                                     ║
+║  ─────────────────────────────────────────────────────────────────────────── ║
+║  FORENSIC_ANALYSIS=false     │ Master switch for all forensic modules        ║
+║  PERSISTENCE_SCAN=false      │ Registry, tasks, services, WMI                ║
+║  EXECUTION_SCAN=false        │ Prefetch, Amcache, Shimcache, SRUM, BAM       ║
+║  FILE_ANOMALIES=false        │ Timestomping, ADS, magic mismatches           ║
+║  RE_TRIAGE=false             │ Reverse engineering triage                    ║
+║  MFT_ANALYSIS=false          │ Master File Table analysis                    ║
+║                                                                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+```
+
 ---
 
-## Part XI: Practical Templates
+## Part XII: Practical Templates
 
 Here are ready-to-use command templates for common scenarios:
 
@@ -1313,7 +1745,319 @@ Produces hybrid ISO bootable on UEFI and legacy BIOS systems
 
 ---
 
-## Part XII: Open Questions
+## Part XIII: The Complete Command Reference
+
+For those who want to understand every capability, here's the complete command-line interface:
+
+```
+╔══════════════════════════════════════════════════════════════════════════════════╗
+║                         DMS COMMAND-LINE REFERENCE                                ║
+╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                   ║
+║  USAGE: ./malware_scan.sh [OPTIONS] <input>                                       ║
+║                                                                                   ║
+║  BASIC OPTIONS                                                                    ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  <input>              │ Device or image path (e.g., /dev/sda, image.E01)         ║
+║  -m, --mount          │ Mount device before scanning                             ║
+║  -u, --update         │ Update ClamAV signature databases                        ║
+║  -d, --deep           │ Enable deep forensic scan (all engines)                  ║
+║  -o, --output FILE    │ Custom output file path                                  ║
+║  -i, --interactive    │ Launch interactive TUI mode                              ║
+║  -h, --help           │ Display help message                                     ║
+║                                                                                   ║
+║  INPUT FORMAT OPTIONS                                                             ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --verify-hash        │ Verify EWF image integrity (chain of custody)            ║
+║  --input-format TYPE  │ Force input type: auto, block, ewf, raw                  ║
+║                                                                                   ║
+║  SCAN SCOPE                                                                       ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --scan-mode MODE     │ Scan mode: full (entire disk) or slack (unallocated)     ║
+║  --slack              │ Shortcut for --scan-mode slack                           ║
+║  --slack-only         │ Alias for --slack                                        ║
+║                                                                                   ║
+║  PERFORMANCE OPTIONS                                                              ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  -p, --parallel       │ Enable parallel scanning (ClamAV, YARA, etc.)            ║
+║  --auto-chunk         │ Auto-calculate chunk size based on RAM                   ║
+║  --quick              │ Fast sample-based scan (~5 min for 500GB)                ║
+║                                                                                   ║
+║  FEATURE OPTIONS                                                                  ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --virustotal         │ Enable VirusTotal hash lookup                            ║
+║  --rootkit            │ Run rootkit detection (requires --mount)                 ║
+║  --timeline           │ Generate file timeline with fls/mactime                  ║
+║  --resume FILE        │ Resume interrupted scan from checkpoint                  ║
+║  --carve-all          │ Recover all carved files (not just executables)          ║
+║                                                                                   ║
+║  FORENSIC ANALYSIS                                                                ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --forensic-analysis  │ Enable ALL forensic modules                              ║
+║  --forensic-all       │ Alias for --forensic-analysis                            ║
+║  --persistence-scan   │ Persistence mechanisms only                              ║
+║  --execution-scan     │ Execution artifacts only                                 ║
+║  --file-anomalies     │ File anomaly detection only                              ║
+║  --re-triage          │ Reverse engineering triage only                          ║
+║  --mft-analysis       │ MFT/filesystem forensics only                            ║
+║  --attack-mapping     │ Include MITRE ATT&CK IDs (default: on)                   ║
+║  --no-attack-mapping  │ Disable ATT&CK technique mapping                         ║
+║                                                                                   ║
+║  OUTPUT OPTIONS                                                                   ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --html               │ Generate HTML report                                     ║
+║  --json               │ Generate JSON report (for SIEM integration)              ║
+║  --report-format FMT  │ Comma-separated: text,html,json                          ║
+║  -q, --quiet          │ Minimal output (errors only)                             ║
+║  -v, --verbose        │ Debug-level output                                       ║
+║                                                                                   ║
+║  DISPLAY OPTIONS                                                                  ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --no-color           │ Disable colored terminal output                          ║
+║  --high-contrast      │ Bold text only (accessibility)                           ║
+║                                                                                   ║
+║  ADVANCED OPTIONS                                                                 ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --dry-run            │ Preview actions without executing                        ║
+║  --config FILE        │ Use custom configuration file                            ║
+║  --log-file FILE      │ Write logs to specified file                             ║
+║  --keep-output        │ Preserve temporary directory after scan                  ║
+║                                                                                   ║
+║  PORTABLE MODE                                                                    ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --portable           │ Auto-download missing tools                              ║
+║  --portable-keep      │ Keep downloaded tools after scan                         ║
+║  --portable-dir DIR   │ Custom directory for portable tools                      ║
+║                                                                                   ║
+║  USB KIT OPERATIONS                                                               ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --update-kit         │ Update kit signature databases                           ║
+║  --build-full-kit     │ Build complete offline kit (~1.2GB)                      ║
+║  --build-minimal-kit  │ Build script-only kit (~10MB)                            ║
+║  --kit-target DIR     │ Kit destination directory                                ║
+║                                                                                   ║
+║  ISO/LIVE IMAGE                                                                   ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --build-iso          │ Build bootable forensic ISO (~2.5GB)                     ║
+║  --iso-output FILE    │ ISO output file path                                     ║
+║  --flash-iso DEV      │ Flash ISO directly to USB device                         ║
+║  --create-persistence │ Add writable persistence partition                       ║
+║  --force              │ Override safety checks                                   ║
+║                                                                                   ║
+║  OUTPUT STORAGE                                                                   ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  --output-device DEV  │ Specific device for storing results                      ║
+║  --output-path PATH   │ Specific directory for results                           ║
+║  --output-tmpfs       │ Store results in RAM (lost on reboot)                    ║
+║  --case-name NAME     │ Custom case directory name                               ║
+║                                                                                   ║
+║  EXIT CODES                                                                       ║
+║  ─────────────────────────────────────────────────────────────────────────────── ║
+║  0                    │ Successful completion                                    ║
+║  1                    │ Error or scan failed                                     ║
+║  130                  │ Interrupted (Ctrl+C / SIGINT)                            ║
+║  143                  │ Terminated (SIGTERM)                                     ║
+║                                                                                   ║
+╚══════════════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## Part XIV: The Statistics Engine
+
+DMS tracks over 60 metrics during every scan, providing forensic investigators with precise quantitative data for their reports.
+
+### Statistics Categories
+
+```
+╭────────────────────────────────────────────────────────────────────────────────────╮
+│                         DMS STATISTICS TRACKING SYSTEM                              │
+├────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                     │
+│  CLAMAV STATISTICS                                                                  │
+│    STATS[clamav_scanned]       │ Total bytes scanned                               │
+│    STATS[clamav_infected]      │ Detection count                                   │
+│    STATS[clamav_signatures]    │ Matched signature names                           │
+│                                                                                     │
+│  YARA STATISTICS                                                                    │
+│    STATS[yara_rules_checked]   │ Total rules evaluated                             │
+│    STATS[yara_matches]         │ Total matches found                               │
+│    STATS[yara_match_details]   │ Rule name, offset, matched string                 │
+│                                                                                     │
+│  ENTROPY STATISTICS                                                                 │
+│    STATS[entropy_regions_scanned] │ Regions analyzed                               │
+│    STATS[entropy_high_count]   │ High-entropy regions (>7.5)                       │
+│    STATS[entropy_avg]          │ Average entropy across disk                       │
+│    STATS[entropy_max]          │ Peak entropy value                                │
+│    STATS[entropy_high_offsets] │ Locations of suspicious regions                   │
+│                                                                                     │
+│  STRINGS STATISTICS                                                                 │
+│    STATS[strings_total]        │ Total strings extracted                           │
+│    STATS[strings_urls]         │ URLs found                                        │
+│    STATS[strings_executables]  │ Executable references                             │
+│    STATS[strings_credentials]  │ Credential patterns                               │
+│                                                                                     │
+│  FILE CARVING STATISTICS                                                            │
+│    STATS[carved_total]         │ Files recovered                                   │
+│    STATS[carved_by_type]       │ Breakdown by extension                            │
+│    STATS[carved_executables]   │ PE/ELF binaries found                             │
+│                                                                                     │
+│  SLACK SPACE STATISTICS                                                             │
+│    STATS[slack_size_mb]        │ Unallocated space extracted                       │
+│    STATS[slack_data_recovered_mb] │ Data recovered                                 │
+│    STATS[slack_files_recovered]│ Files reconstructed                               │
+│                                                                                     │
+│  PERSISTENCE ARTIFACT STATISTICS                                                    │
+│    STATS[persistence_findings] │ Total persistence indicators                      │
+│    STATS[persistence_registry_run] │ Registry run keys                             │
+│    STATS[persistence_services] │ Suspicious services                               │
+│    STATS[persistence_tasks]    │ Scheduled task anomalies                          │
+│    STATS[persistence_startup]  │ Startup folder entries                            │
+│    STATS[persistence_wmi]      │ WMI subscriptions                                 │
+│                                                                                     │
+│  EXECUTION ARTIFACT STATISTICS                                                      │
+│    STATS[execution_findings]   │ Total execution indicators                        │
+│    STATS[execution_prefetch]   │ Suspicious prefetch entries                       │
+│    STATS[execution_amcache]    │ Amcache anomalies                                 │
+│    STATS[execution_shimcache]  │ Shimcache entries                                 │
+│    STATS[execution_userassist] │ UserAssist records                                │
+│    STATS[execution_srum]       │ SRUM entries (network/energy usage)               │
+│    STATS[execution_bam]        │ BAM/DAM records                                   │
+│                                                                                     │
+│  FILE ANOMALY STATISTICS                                                            │
+│    STATS[file_anomalies]       │ Total anomalies detected                          │
+│    STATS[file_timestomping]    │ Timestomped files                                 │
+│    STATS[file_ads]             │ Files with Alternate Data Streams                 │
+│    STATS[file_extension_mismatch] │ Magic/extension mismatches                     │
+│    STATS[file_suspicious_paths]│ Files in unusual locations                        │
+│    STATS[file_packed]          │ Packed executables                                │
+│                                                                                     │
+│  RE TRIAGE STATISTICS                                                               │
+│    STATS[re_triaged_files]     │ Files analyzed                                    │
+│    STATS[re_packed_files]      │ Packed files detected                             │
+│    STATS[re_suspicious_imports]│ Dangerous API imports found                       │
+│    STATS[re_capa_matches]      │ MITRE ATT&CK techniques                           │
+│    STATS[re_shellcode_detected]│ Potential shellcode count                         │
+│                                                                                     │
+│  FILESYSTEM FORENSICS STATISTICS                                                    │
+│    STATS[mft_deleted_recovered]│ Deleted files found via MFT                       │
+│    STATS[mft_timestomping]     │ $SI/$FN timestamp anomalies                       │
+│    STATS[usn_entries]          │ USN journal entries parsed                        │
+│    STATS[filesystem_anomalies] │ Filesystem inconsistencies                        │
+│                                                                                     │
+╰────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+### The Scan Processing Pipeline
+
+Every scan follows a deterministic pipeline, ensuring consistent and complete analysis:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│                          DMS SCAN PROCESSING PIPELINE                                 │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                       │
+│  PHASE 1: INPUT VALIDATION                                                            │
+│  ─────────────────────────────────────────────────────────────────────────────────── │
+│  ┌──────────────────┐                                                                │
+│  │ Detect input type│───► block device? ───► /dev/sda, /dev/nvme0n1                 │
+│  │ (auto/manual)    │───► EWF image?    ───► .E01, .Ex01 (ewfmount)                 │
+│  └──────────────────┘───► raw image?    ───► .dd, .raw, .img                        │
+│           │                                                                          │
+│           ▼                                                                          │
+│  ┌──────────────────┐                                                                │
+│  │ Mount if needed  │───► EWF: ewfmount → /tmp/ewf_mount                            │
+│  │ (read-only!)     │───► --verify-hash: Validate image integrity                   │
+│  └──────────────────┘                                                                │
+│                                                                                       │
+│  PHASE 2: STANDARD SCANS (always run)                                                 │
+│  ─────────────────────────────────────────────────────────────────────────────────── │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐                   │
+│  │ ClamAV           │  │ YARA (4 cats)    │  │ Binwalk          │                   │
+│  │ scan_clamav()    │  │ scan_yara()      │  │ scan_binwalk()   │                   │
+│  │ ~1M signatures   │  │ ~3,200 rules     │  │ embedded files   │                   │
+│  └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘                   │
+│           │                     │                      │                             │
+│           │    ┌────────────────┴────────────────┐     │                             │
+│           └────┤   Parallel if --parallel flag   ├─────┘                             │
+│                └────────────────┬────────────────┘                                   │
+│                                 ▼                                                    │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐   │
+│  │ scan_strings() ─── Extract IOCs: URLs, executables, credentials, keywords    │   │
+│  └──────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                       │
+│  PHASE 3: QUICK MODE (if --quick)                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────── │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐   │
+│  │ Sample-based rapid assessment ─── ~5 minutes for 500GB                        │   │
+│  │ Scans representative chunks, generates confidence-weighted results            │   │
+│  └──────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                       │
+│  PHASE 4: DEEP SCANS (if --deep)                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────── │
+│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐         │
+│  │ scan_entropy()│  │ scan_file_   │  │ scan_        │  │ scan_boot_   │         │
+│  │ Shannon       │  │ carving()    │  │ executables()│  │ sector()     │         │
+│  │ entropy       │  │ foremost     │  │ PE/ELF hunt  │  │ MBR/VBR      │         │
+│  └───────────────┘  └───────────────┘  └───────────────┘  └───────────────┘         │
+│         │                  │                  │                  │                   │
+│         └──────────────────┴──────────────────┴──────────────────┘                   │
+│                                    │                                                 │
+│  ┌───────────────┐  ┌───────────────┐                                               │
+│  │ scan_bulk_   │  │ scan_hashes()│                                               │
+│  │ extractor()  │  │ MD5/SHA/ssdeep│                                               │
+│  └───────────────┘  └───────────────┘                                               │
+│                                                                                       │
+│  PHASE 5: SLACK SPACE (if --slack or --scan-mode slack)                               │
+│  ─────────────────────────────────────────────────────────────────────────────────── │
+│  ┌──────────────────────────────────────────────────────────────────────────────┐   │
+│  │ extract_slack_space() ─── Sleuth Kit's blkls                                  │   │
+│  │       ↓                                                                       │   │
+│  │ Reconstruct deleted files ─── foremost on extracted slack                     │   │
+│  │       ↓                                                                       │   │
+│  │ Scan recovered data ─── ClamAV + YARA on carved files                         │   │
+│  └──────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                       │
+│  PHASE 6: FORENSIC ANALYSIS (if --forensic-analysis)                                  │
+│  ─────────────────────────────────────────────────────────────────────────────────── │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐                      │
+│  │ scan_persistence│  │ scan_execution_ │  │ scan_file_     │                      │
+│  │ _artifacts()    │  │ artifacts()     │  │ anomalies()    │                      │
+│  │ Registry, Tasks │  │ Prefetch, SRUM  │  │ Timestomping   │                      │
+│  │ Services, WMI   │  │ Amcache, BAM    │  │ ADS, Magic     │                      │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘                      │
+│         │                     │                     │                               │
+│         └─────────────────────┴─────────────────────┘                               │
+│                              │                                                       │
+│  ┌─────────────────┐  ┌─────────────────┐                                           │
+│  │ scan_re_triage()│  │ scan_filesystem_│                                           │
+│  │ Imports, Capa   │  │ forensics()     │                                           │
+│  │ Shellcode       │  │ MFT, USN Journal│                                           │
+│  └─────────────────┘  └─────────────────┘                                           │
+│                                                                                       │
+│  PHASE 7: OPTIONAL ENHANCEMENTS                                                       │
+│  ─────────────────────────────────────────────────────────────────────────────────── │
+│  ┌───────────────────────────────────────────────────────────────────────────────┐  │
+│  │ --virustotal  ───► scan_virustotal() ───► Hash reputation lookup              │  │
+│  │ --rootkit     ───► scan_rootkit() ───► chkrootkit/rkhunter (needs mount)      │  │
+│  │ --timeline    ───► generate_timeline() ───► fls + mactime                     │  │
+│  └───────────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                       │
+│  PHASE 8: REPORT GENERATION                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────── │
+│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐                            │
+│  │ Text Report   │  │ HTML Report   │  │ JSON Report   │                            │
+│  │ (always)      │  │ (if --html)   │  │ (if --json)   │                            │
+│  │ scan_report   │  │ Styled,       │  │ SIEM-ready,   │                            │
+│  │ _TIMESTAMP.txt│  │ interactive   │  │ automatable   │                            │
+│  └───────────────┘  └───────────────┘  └───────────────┘                            │
+│                                                                                       │
+└──────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Part XV: Open Questions
 
 Building DMS has surfaced questions I haven't fully answered. These are the frontiers where the tool's current capabilities meet the limits of what's possible.
 
@@ -1385,7 +2129,7 @@ DMS finds the traces that even fileless attacks leave behind. It's not a memory 
 
 ---
 
-## Part XIII: Getting Started
+## Part XVI: Getting Started
 
 ### Quickstart: 60 Seconds to First Scan
 
@@ -1438,7 +2182,7 @@ sudo dd if=~/dms-forensic.iso of=/dev/sdX bs=4M status=progress sync
 
 ---
 
-## Part XIV: The Philosophy of Forensics
+## Part XVII: The Philosophy of Forensics
 
 I want to end with something larger than the tool itself.
 
