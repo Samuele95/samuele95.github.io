@@ -79,12 +79,12 @@ permalink: /research/
 
     <div class="pdf-viewer-wrapper">
       <object
-        data="/assets/papers/symbolic_reasoning_llm.pdf#toolbar=1&navpanes=1&scrollbar=1&page=1&view=FitH"
+        data="/assets/papers/symbolic_reasoning_llm.pdf#toolbar=1&navpanes=0&scrollbar=1&page=1&view=FitH"
         type="application/pdf"
         class="pdf-viewer-object"
         title="Symbolic Reasoning in Large Language Models">
         <iframe
-          src="/assets/papers/symbolic_reasoning_llm.pdf#toolbar=1&navpanes=1&scrollbar=1&page=1&view=FitH"
+          src="/assets/papers/symbolic_reasoning_llm.pdf#toolbar=1&navpanes=0&scrollbar=1&page=1&view=FitH"
           class="pdf-viewer-iframe"
           title="Symbolic Reasoning in Large Language Models">
         </iframe>
