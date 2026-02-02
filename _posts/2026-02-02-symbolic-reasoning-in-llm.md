@@ -762,19 +762,50 @@ In upcoming articles in this series, we'll delve into:
 ## Primary References
 
 <div class="references">
+  <ul>
+    <li>
+      <strong>Olsson, C. et al.</strong> (2022). "In-context Learning and Induction Heads." <em>Transformer Circuits Thread</em>, Anthropic. <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/" target="_blank">Link</a>
+    </li>
+    <li>
+      <strong>Elhage, N. et al.</strong> (2021). "A Mathematical Framework for Transformer Circuits." <em>Transformer Circuits Thread</em>, Anthropic. <a href="https://transformer-circuits.pub/2021/framework/" target="_blank">Link</a>
+    </li>
+    <li>
+      <strong>Yang, Y. et al.</strong> (2025). "Emergent Symbolic Reasoning in Large Language Models." <em>Princeton University</em>.
+    </li>
+    <li>
+      <strong>Todd, E. et al.</strong> (2024). "Function Vectors in Large Language Models." <em>Northeastern University / MIT</em>.
+    </li>
+    <li>
+      <strong>Ebouky, B. et al.</strong> (2025). "Cognitive Tools for Language Models." <em>IBM Research</em>.
+    </li>
+    <li>
+      <strong>Wei, J. et al.</strong> (2022). "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models." <em>NeurIPS 2022</em>.
+    </li>
+  </ul>
+</div>
 
-- **Olsson, C. et al.** (2022). "In-context Learning and Induction Heads." *Transformer Circuits Thread*, Anthropic. [Link](https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/)
+---
 
-- **Elhage, N. et al.** (2021). "A Mathematical Framework for Transformer Circuits." *Transformer Circuits Thread*, Anthropic. [Link](https://transformer-circuits.pub/2021/framework/)
+## Acknowledgments
 
-- **Yang, Y. et al.** (2025). "Emergent Symbolic Reasoning in Large Language Models." *Princeton University*.
-
-- **Todd, E. et al.** (2024). "Function Vectors in Large Language Models." *Northeastern University / MIT*.
-
-- **Ebouky, B. et al.** (2025). "Cognitive Tools for Language Models." *IBM Research*.
-
-- **Wei, J. et al.** (2022). "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models." *NeurIPS 2022*.
-
+<div class="acknowledgments">
+  <p>
+    <strong>Special thanks to <a href="https://github.com/davidkimai" target="_blank">David Kimai</a></strong> for the foundational work on Context Engineering that inspired this research.
+  </p>
+  <p>
+    The <a href="https://github.com/davidkimai/Context-Engineering" target="_blank"><strong>Context-Engineering repository</strong></a> has been an invaluable resource, providing deep insights into practical prompt engineering patterns and systematic approaches to context management. David's comprehensive documentation and examples have shaped many of the practical strategies presented in this article.
+  </p>
+  <p>
+    This work builds upon his pioneering efforts to bridge the gap between theoretical understanding of LLMs and practical engineering techniques. We are grateful for his contributions to the community and for making context engineering accessible to practitioners.
+  </p>
+  <div class="acknowledgment-cta">
+    <a href="https://github.com/davidkimai/Context-Engineering" class="btn btn--secondary" target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+      </svg>
+      Visit Repository
+    </a>
+  </div>
 </div>
 
 ---
@@ -1185,23 +1216,53 @@ In upcoming articles in this series, we'll delve into:
 .strategies-section {
   background: #141414;
   border-radius: 0.75rem;
-  padding: 2rem;
+  padding: 2.5rem;
   margin: 3rem 0;
   border: 2px solid #262626;
 }
 
 .strategies-section h3 {
   color: #f87171;
-  font-size: 1.25rem;
-  margin: 2rem 0 1rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 2.5rem 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(248, 113, 113, 0.2);
 }
 
-.strategies-section h3:first-child {
+.strategies-section h3:first-of-type {
   margin-top: 0;
 }
 
-.strategies-section pre, .strategies-section code {
-  background: #0d0d0d;
+.strategies-section p {
+  color: #a3a3a3;
+  line-height: 1.7;
+  margin: 0.75rem 0;
+}
+
+.strategies-section strong {
+  color: #f5f5f5;
+}
+
+.strategies-section pre {
+  background: #0d0d0d !important;
+  border: 2px solid #262626 !important;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.strategies-section code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.9em;
+}
+
+.strategies-section :not(pre) > code {
+  background: #1a1a1a;
+  color: #22d3ee;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
   border: 1px solid #262626;
 }
 
@@ -1292,6 +1353,55 @@ In upcoming articles in this series, we'll delve into:
 .references a:hover {
   color: #60a5fa;
   text-decoration: underline;
+}
+
+/* Acknowledgments */
+.acknowledgments {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(147, 51, 234, 0.05) 100%);
+  border: 2px solid #a855f7;
+  border-left: 6px solid #a855f7;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin: 3rem 0;
+}
+
+.acknowledgments p {
+  color: #a3a3a3;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.acknowledgments p:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+.acknowledgments strong {
+  color: #c084fc;
+}
+
+.acknowledgments a {
+  color: #a855f7;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(168, 85, 247, 0.3);
+  transition: all 0.2s ease;
+}
+
+.acknowledgments a:hover {
+  color: #c084fc;
+  border-bottom-color: #c084fc;
+}
+
+.acknowledgment-cta {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(168, 85, 247, 0.2);
+}
+
+.acknowledgment-cta .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Details/Summary Styling */

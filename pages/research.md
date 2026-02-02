@@ -70,9 +70,26 @@ Developing automated pipelines that combine traditional analysis tools with AI c
             <line x1="16" y1="17" x2="8" y2="17"/>
             <polyline points="10 9 9 9 8 9"/>
           </svg>
-          <span>PDF Document</span>
+          <span>PDF Document Preview</span>
         </div>
-        <embed src="/assets/papers/symbolic_reasoning_llm.pdf" type="application/pdf" width="100%" height="500px" />
+        <div class="pdf-preview__container">
+          <iframe
+            src="/assets/papers/symbolic_reasoning_llm.pdf#view=FitH"
+            type="application/pdf"
+            class="pdf-preview__iframe"
+            title="Symbolic Reasoning in Large Language Models - PDF Preview">
+          </iframe>
+          <div class="pdf-preview__fallback">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <p>PDF preview not available in your browser</p>
+            <a href="/assets/papers/symbolic_reasoning_llm.pdf" class="btn btn--primary btn--sm" download>
+              Download PDF
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -202,6 +219,7 @@ Developing automated pipelines that combine traditional analysis tools with AI c
   border: 2px solid #262626;
   border-radius: 0.5rem;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .pdf-preview__header {
@@ -213,11 +231,58 @@ Developing automated pipelines that combine traditional analysis tools with AI c
   color: #a3a3a3;
   font-size: 0.85rem;
   font-weight: 600;
-  border-bottom: 1px solid #262626;
+  border-bottom: 2px solid #262626;
 }
 
 .pdf-preview__header svg {
   color: #f87171;
+  flex-shrink: 0;
+}
+
+.pdf-preview__container {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  background: #0d0d0d;
+}
+
+.pdf-preview__iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.pdf-preview__fallback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: #0d0d0d;
+  padding: 2rem;
+  text-align: center;
+}
+
+.pdf-preview__fallback svg {
+  color: #737373;
+  opacity: 0.5;
+}
+
+.pdf-preview__fallback p {
+  color: #a3a3a3;
+  margin: 0;
+}
+
+/* Show fallback if iframe fails to load */
+.pdf-preview__iframe:not([src]),
+.pdf-preview__iframe[src=""] + .pdf-preview__fallback {
+  display: flex;
 }
 
 .featured-publication__title {
@@ -315,6 +380,19 @@ Developing automated pipelines that combine traditional analysis tools with AI c
   .featured-publication__stats {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .pdf-preview__container {
+    height: 400px;
+  }
+
+  .featured-publication__actions {
+    flex-direction: column;
+  }
+
+  .featured-publication__actions .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>
