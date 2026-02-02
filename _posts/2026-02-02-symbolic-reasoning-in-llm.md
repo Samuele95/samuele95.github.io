@@ -618,7 +618,7 @@ Each level builds capabilities on top of the previous one, creating increasingly
 
 For those working daily with Large Language Models, these discoveries have transformative implications. Understanding that models possess symbolic mechanisms changes prompt engineering from trial-and-error to principle-based design.
 
-<div class="strategies-section">
+<div class="strategies-section" markdown="1">
 
 ### 1. Activate Symbol Abstraction
 
