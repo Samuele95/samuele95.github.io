@@ -16,7 +16,7 @@ excerpt: "A comprehensive guide on how Large Language Models spontaneously devel
     <div class="series-title">Context Engineering: Advanced Strategies for LLM and Artificial Intelligence</div>
 
     <p>
-        <strong>The following article represents a synthesis of a more in-depth research document, available in the Download Area and accessible via the link...</strong>
+        <strong>The following article represents a synthesis of a more in-depth research document. <a href="/assets/papers/symbolic_reasoning_llm.pdf" style="color: #06b6d4; text-decoration: underline;" target="_blank">Download the full PDF paper here</a>.</strong>
     </p>
 
     <p>
