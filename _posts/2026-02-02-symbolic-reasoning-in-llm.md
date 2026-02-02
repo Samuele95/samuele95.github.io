@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Symbolic Reasoning in LLM"
+title: "Symbolic Reasoning in Large Language Models"
 date: 2026-02-02
 category: AI & Context Engineering
 tags: [AI, LLM, Context Engineering, Symbolic Reasoning, Transformers, Mechanistic Interpretability]
