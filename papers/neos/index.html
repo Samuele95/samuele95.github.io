@@ -57,7 +57,7 @@ code { font-family: var(--mono); font-size: 0.88em; background: var(--bg3); padd
 /* Layout */
 .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 section { padding: 6rem 0; position: relative; z-index: 1; }
-section:nth-child(even) { background: rgba(12, 12, 20, 0.92); }
+section:nth-child(even) { background: var(--bg2); }
 
 /* Section numbering */
 .sec-num { font-family: var(--font-display); font-size: 0.8rem; color: var(--purple); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.5rem; display: block; }
@@ -163,9 +163,9 @@ tr:hover td { background: rgba(0,212,255,0.03); }
 #hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; padding: 2rem; }
 /* Flowing background */
 #starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-#hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 45% at 50% 45%, rgba(0,212,255,0.06), transparent 70%), radial-gradient(ellipse 35% 35% at 25% 65%, rgba(123,97,255,0.04), transparent 60%); pointer-events: none; z-index: 0; }
-#cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(123,97,255,0.04), transparent 65%), radial-gradient(ellipse 40% 40% at 70% 60%, rgba(0,212,255,0.03), transparent 55%); pointer-events: none; z-index: 0; }
-.hero-dots { position: absolute; inset: -50%; background-image: radial-gradient(circle 1.5px at center, rgba(0,212,255,0.12) 1px, transparent 1px); background-size: 40px 40px; animation: grid-drift 25s linear infinite; opacity: 0.35; pointer-events: none; z-index: 1; }
+#hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 40% at 50% 50%, rgba(0,180,255,0.04), transparent 70%); pointer-events: none; z-index: 0; }
+#cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(100,80,220,0.03), transparent 65%); pointer-events: none; z-index: 0; }
+.hero-dots { position: absolute; inset: -50%; background-image: radial-gradient(circle 1px at center, rgba(0,180,255,0.08) 0.5px, transparent 0.5px); background-size: 48px 48px; animation: grid-drift 30s linear infinite; opacity: 0.25; pointer-events: none; z-index: 1; }
 @keyframes grid-drift { 0% { transform: translate(0,0) rotate(0deg); } 100% { transform: translate(40px,40px) rotate(3deg); } }
 .hero-content { position: relative; z-index: 2; }
 #hero h1 { text-shadow: 0 0 40px rgba(0,212,255,0.15), 0 0 80px rgba(123,97,255,0.08); }
@@ -1894,18 +1894,16 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 <script>
 const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Flowing gradient background
+// Neural field activation landscape
 (function() {
   const canvas = document.getElementById('starfield');
   if (!canvas || !motionOK) return;
   const ctx = canvas.getContext('2d');
   let w, h;
-  const orbs = [
-    { cx: 0.2, cy: 0.3, r: 350, color: [0, 212, 255], a: 0.045, xAmp: 120, yAmp: 80, xFreq: 0.0003, yFreq: 0.0002, phase: 0 },
-    { cx: 0.8, cy: 0.5, r: 300, color: [123, 97, 255], a: 0.04, xAmp: 100, yAmp: 130, xFreq: 0.00025, yFreq: 0.00035, phase: 2 },
-    { cx: 0.5, cy: 0.7, r: 280, color: [255, 61, 142], a: 0.025, xAmp: 140, yAmp: 90, xFreq: 0.00018, yFreq: 0.00028, phase: 4 },
-    { cx: 0.3, cy: 0.8, r: 250, color: [0, 212, 255], a: 0.03, xAmp: 90, yAmp: 110, xFreq: 0.00032, yFreq: 0.00022, phase: 1.5 },
-    { cx: 0.7, cy: 0.2, r: 320, color: [123, 97, 255], a: 0.035, xAmp: 110, yAmp: 70, xFreq: 0.00022, yFreq: 0.0003, phase: 3.5 },
+  // Two field attractors — like Ψ and α1 in the NEOS field topology
+  const fields = [
+    { cx: 0.35, cy: 0.4, r: 0.55, color: [0, 180, 255], a: 0.025 },
+    { cx: 0.65, cy: 0.6, r: 0.45, color: [100, 80, 220], a: 0.02 },
   ];
   function resize() {
     w = canvas.width = window.innerWidth;
@@ -1914,14 +1912,19 @@ const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   resize();
   function draw(t) {
     ctx.clearRect(0, 0, w, h);
-    orbs.forEach(o => {
-      const x = o.cx * w + Math.sin(t * o.xFreq + o.phase) * o.xAmp;
-      const y = o.cy * h + Math.cos(t * o.yFreq + o.phase) * o.yAmp;
-      const pulse = 0.85 + 0.15 * Math.sin(t * 0.0004 + o.phase);
-      const grad = ctx.createRadialGradient(x, y, 0, x, y, o.r * pulse);
-      grad.addColorStop(0, 'rgba(' + o.color.join(',') + ',' + (o.a * pulse).toFixed(4) + ')');
-      grad.addColorStop(0.5, 'rgba(' + o.color.join(',') + ',' + (o.a * 0.3 * pulse).toFixed(4) + ')');
-      grad.addColorStop(1, 'rgba(' + o.color.join(',') + ',0)');
+    const s = t * 0.00008; // very slow evolution
+    fields.forEach(f => {
+      // Smooth drift — like a field attractor basin slowly migrating
+      const x = f.cx * w + Math.sin(s + f.cx * 6) * w * 0.06;
+      const y = f.cy * h + Math.cos(s * 0.7 + f.cy * 4) * h * 0.05;
+      const r = Math.min(w, h) * f.r;
+      // Breathing — field activation pulsing as coherence oscillates
+      const breath = 0.9 + 0.1 * Math.sin(s * 1.2 + f.cx * 3);
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, r * breath);
+      const a = f.a * breath;
+      grad.addColorStop(0, 'rgba(' + f.color.join(',') + ',' + a.toFixed(4) + ')');
+      grad.addColorStop(0.4, 'rgba(' + f.color.join(',') + ',' + (a * 0.4).toFixed(4) + ')');
+      grad.addColorStop(1, 'rgba(' + f.color.join(',') + ',0)');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
     });
