@@ -526,6 +526,79 @@ function toggleFullscreen() {
 
 ---
 
+<div class="featured-publication-hero" style="border-color: #00d4ff; box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);">
+  <div class="featured-publication-hero__badge" style="background: linear-gradient(135deg, #00d4ff 0%, #7b61ff 100%);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20M2 12h20"/>
+    </svg>
+    <span>Interactive Paper</span>
+  </div>
+
+  <div class="featured-publication-hero__header">
+    <h2 class="featured-publication-hero__title">
+      NEOS: The Operating System for Machine Intelligence
+    </h2>
+    <p class="featured-publication-hero__meta">
+      <strong style="color: #00d4ff;">Samuele</strong> &bull; February 2026 &bull; Neural Field Operating System Series
+    </p>
+    <p class="featured-publication-hero__description">
+      The first specification for an operating system that manages meaning instead of files. NEOS unifies neural field dynamics, symbolic reasoning, and quantum semantics into a coherent cognitive computing framework &mdash; with interactive visualizations, parameter playgrounds, and animated walkthroughs.
+    </p>
+
+    <div class="featured-publication-hero__actions">
+      <a href="/papers/neos/" class="btn btn--primary" style="background: #00d4ff; color: #0a0a0f; border-color: #00d4ff;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+        Read Interactive Paper
+      </a>
+    </div>
+
+    <div class="featured-publication-hero__topics">
+      <span class="topic-tag" style="background: rgba(0, 212, 255, 0.1); color: #67e8f9; border-color: rgba(0, 212, 255, 0.3);">Neural Fields</span>
+      <span class="topic-tag" style="background: rgba(123, 97, 255, 0.1); color: #c4b5fd; border-color: rgba(123, 97, 255, 0.3);">Cognitive Computing</span>
+      <span class="topic-tag" style="background: rgba(0, 255, 136, 0.1); color: #6ee7b7; border-color: rgba(0, 255, 136, 0.3);">Quantum Semantics</span>
+      <span class="topic-tag" style="background: rgba(255, 215, 0, 0.1); color: #fde68a; border-color: rgba(255, 215, 0, 0.3);">OS Design</span>
+      <span class="topic-tag" style="background: rgba(255, 61, 142, 0.1); color: #fda4af; border-color: rgba(255, 61, 142, 0.3);">Interactive Visualization</span>
+    </div>
+  </div>
+
+  <div class="featured-publication-hero__stats">
+    <div class="stat-card">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      <div class="stat-card__content">
+        <span class="stat-card__value">20</span>
+        <span class="stat-card__label">Sections</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+      <div class="stat-card__content">
+        <span class="stat-card__value">26</span>
+        <span class="stat-card__label">SVG Diagrams</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+      </svg>
+      <div class="stat-card__content">
+        <span class="stat-card__value">3</span>
+        <span class="stat-card__label">Interactive Elements</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 ## Research Interests
 
 My research focuses on the intersection of artificial intelligence, security, and systems programming:
