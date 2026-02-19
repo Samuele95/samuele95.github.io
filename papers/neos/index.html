@@ -6,6 +6,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 <title>NEOS: The Operating System for Machine Intelligence</title>
 <meta name="description" content="NEOS: The first operating system for machine intelligence. A neural field-based cognitive computing framework unifying symbolic reasoning, field dynamics, and quantum semantics.">
 <meta property="og:title" content="NEOS: The Operating System for Machine Intelligence">
@@ -61,8 +63,9 @@ section:nth-child(even) { background: var(--bg2); }
 .sec-num { font-family: var(--font-display); font-size: 0.8rem; color: var(--purple); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.5rem; display: block; }
 
 /* Cards and boxes */
-.card { background: var(--bg3); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 2rem; transition: transform 0.3s, border-color 0.3s; }
-.card:hover { transform: translateY(-2px); border-color: rgba(0,212,255,0.2); }
+.card { background: rgba(18, 18, 26, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(0, 212, 255, 0.08); border-radius: 16px; padding: 2rem; position: relative; overflow: hidden; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+.card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(123,97,255,0.1), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+.card:hover { transform: translateY(-2px); border-color: rgba(0,212,255,0.2); box-shadow: 0 8px 32px rgba(0,212,255,0.08), 0 0 20px rgba(0,212,255,0.04); }
 .glow-border { border: 1px solid rgba(0,212,255,0.15); box-shadow: 0 0 30px rgba(0,212,255,0.05), inset 0 0 30px rgba(0,212,255,0.02); }
 
 /* Grid layouts */
@@ -90,6 +93,10 @@ section:nth-child(even) { background: var(--bg2); }
   .callout { padding: 1.2rem; font-size: 1rem; }
   #back-to-top { bottom: 1rem; right: 1rem; width: 38px; height: 38px; }
 }
+
+/* Wave dividers */
+.wave-divider { display: block; width: 100%; height: 40px; position: relative; z-index: 2; }
+.wave-divider svg { display: block; width: 100%; height: 100%; }
 
 /* SVG diagrams */
 .diagram { width: 100%; margin: 2.5rem 0; overflow: visible; }
@@ -124,8 +131,8 @@ tr:hover td { background: rgba(0,212,255,0.03); }
 .callout { background: linear-gradient(135deg, var(--cyan-glow), var(--purple-glow)); border: 1px solid rgba(0,212,255,0.12); border-radius: 12px; padding: 2rem; margin: 2rem 0; font-size: 1.1rem; font-style: italic; }
 
 /* Animations */
-.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal { opacity: 0; transform: translateY(30px); }
+.reveal.visible { opacity: 1; transform: translateY(0); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal-delay-1 { transition-delay: 0.15s; }
 .reveal-delay-2 { transition-delay: 0.3s; }
 .reveal-delay-3 { transition-delay: 0.45s; }
@@ -142,7 +149,10 @@ tr:hover td { background: rgba(0,212,255,0.03); }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   .anim-pulse, .anim-float { animation: none; }
-  #hero::after { animation: none; opacity: 0.15; }
+  #hero::before, #cta::before { animation: none; }
+  .scroll-hint { animation: none; }
+  .shape { animation: none; }
+  .hero-dots { animation: none; opacity: 0.15; }
   .hero-draw-line { stroke-dashoffset: 0 !important; animation: none !important; }
   .terminal-body.typing-ready > span { opacity: 1; }
   .phase-active { filter: none; }
@@ -151,14 +161,19 @@ tr:hover td { background: rgba(0,212,255,0.03); }
 
 /* Hero specific */
 #hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; padding: 2rem; }
-#hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(0,212,255,0.08), transparent 70%), radial-gradient(ellipse 40% 40% at 30% 60%, rgba(123,97,255,0.06), transparent 60%); pointer-events: none; }
-#hero::after { content: ''; position: absolute; inset: -50%; background-image: radial-gradient(circle 1.5px at center, rgba(0,212,255,0.12) 1px, transparent 1px); background-size: 40px 40px; animation: grid-drift 25s linear infinite; opacity: 0.4; pointer-events: none; }
+#hero::before { content: ''; position: absolute; inset: -20%; background: radial-gradient(ellipse 600px 400px at 20% 30%, rgba(0,212,255,0.08), transparent), radial-gradient(ellipse 500px 500px at 80% 70%, rgba(123,97,255,0.06), transparent), radial-gradient(ellipse 400px 300px at 50% 50%, rgba(255,61,142,0.04), transparent); animation: mesh-drift 20s ease-in-out infinite alternate; pointer-events: none; z-index: 0; }
+#cta::before { content: ''; position: absolute; inset: -10%; background: radial-gradient(ellipse 500px 400px at 30% 40%, rgba(123,97,255,0.06), transparent), radial-gradient(ellipse 400px 300px at 70% 60%, rgba(0,212,255,0.05), transparent); animation: mesh-drift 25s ease-in-out infinite alternate-reverse; pointer-events: none; z-index: 0; }
+@keyframes mesh-drift { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -20px) scale(1.05); } 100% { transform: translate(-20px, 30px) scale(0.98); } }
+.hero-dots { position: absolute; inset: -50%; background-image: radial-gradient(circle 1.5px at center, rgba(0,212,255,0.12) 1px, transparent 1px); background-size: 40px 40px; animation: grid-drift 25s linear infinite; opacity: 0.4; pointer-events: none; z-index: 0; }
 @keyframes grid-drift { 0% { transform: translate(0,0) rotate(0deg); } 100% { transform: translate(40px,40px) rotate(3deg); } }
 .hero-content { position: relative; z-index: 1; }
 #hero h1 { text-shadow: 0 0 40px rgba(0,212,255,0.15), 0 0 80px rgba(123,97,255,0.08); }
 .hero-tagline { font-size: clamp(1rem, 2.5vw, 1.4rem); color: var(--text-dim); max-width: 600px; margin: 1.5rem auto 2.5rem; }
 .hero-cta { display: inline-block; padding: 0.8rem 2.5rem; border: 1px solid var(--cyan); color: var(--cyan); border-radius: 8px; font-size: 0.95rem; letter-spacing: 0.05em; transition: all 0.3s; }
 .hero-cta:hover { background: var(--cyan); color: var(--bg); }
+.scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); animation: bounce-hint 2s ease-in-out infinite; opacity: 0.5; }
+@keyframes bounce-hint { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+#hero h1 .char { display: inline-block; }
 
 /* Tabs */
 .tabs { display: flex; gap: 0; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; }
@@ -172,12 +187,26 @@ tr:hover td { background: rgba(0,212,255,0.03); }
 .gauge-wrap { display: flex; justify-content: center; margin: 2rem 0; }
 
 /* CTA cards */
-.cta-card { text-align: center; padding: 2.5rem 2rem; border-radius: 16px; transition: all 0.3s; }
-.cta-card:nth-child(1) { background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(0,212,255,0.02)); border: 1px solid rgba(0,212,255,0.15); }
-.cta-card:nth-child(2) { background: linear-gradient(135deg, rgba(123,97,255,0.1), rgba(123,97,255,0.02)); border: 1px solid rgba(123,97,255,0.15); }
-.cta-card:nth-child(3) { background: linear-gradient(135deg, rgba(255,61,142,0.1), rgba(255,61,142,0.02)); border: 1px solid rgba(255,61,142,0.15); }
+.cta-card { text-align: center; padding: 2.5rem 2rem; border-radius: 16px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: relative; overflow: hidden; transition: all 0.3s; }
+.cta-card:nth-child(1) { background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(18,18,26,0.6)); border: 1px solid rgba(0,212,255,0.15); }
+.cta-card:nth-child(2) { background: linear-gradient(135deg, rgba(123,97,255,0.1), rgba(18,18,26,0.6)); border: 1px solid rgba(123,97,255,0.15); }
+.cta-card:nth-child(3) { background: linear-gradient(135deg, rgba(255,61,142,0.1), rgba(18,18,26,0.6)); border: 1px solid rgba(255,61,142,0.15); }
+.cta-card:hover { box-shadow: 0 8px 32px rgba(0,212,255,0.06); transform: translateY(-3px); }
+.shape { position: absolute; border-radius: 50%; opacity: 0.06; pointer-events: none; animation: float-shape 15s ease-in-out infinite; }
+@keyframes float-shape { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(30px, -20px) scale(1.1); } 66% { transform: translate(-20px, 15px) scale(0.95); } }
 .cta-card h3 { font-size: 1.3rem; margin-bottom: 0.8rem; }
 .cta-card p { color: var(--text-dim); margin: 0 auto; }
+
+/* Footer */
+.site-footer { padding: 3rem 2rem 2rem; text-align: center; position: relative; }
+.footer-divider { height: 2px; max-width: 600px; margin: 0 auto 2.5rem; background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), transparent); border: none; border-radius: 1px; }
+.footer-brand { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; letter-spacing: 0.05em; background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.3rem; }
+.footer-subtitle { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.5rem; }
+.footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; }
+.footer-links a { color: var(--text-dim); font-size: 0.85rem; transition: color 0.2s; }
+.footer-links a:hover { color: var(--cyan); }
+.footer-sep { height: 1px; max-width: 200px; margin: 0 auto 1rem; background: rgba(255,255,255,0.06); border: none; }
+.footer-copy { color: rgba(136,136,160,0.6); font-size: 0.75rem; }
 
 /* Print */
 @media print { body { background: #fff; color: #111; } section:nth-child(even) { background: #f5f5f5; } .reveal { opacity: 1; transform: none; } }
@@ -234,6 +263,22 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 </style>
 </head>
 <body>
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#00d4ff" flood-opacity="0.6" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#7b61ff" flood-opacity="0.6" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
 <a href="#three-ages" class="skip-link">Skip to content</a>
 <div id="progress-bar"></div>
 <button id="back-to-top" aria-label="Back to top">&uarr;</button>
@@ -267,6 +312,7 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 <!-- SECTION 0: HERO -->
 <!-- ============================================================ -->
 <section id="hero">
+  <div class="hero-dots" aria-hidden="true"></div>
   <div class="hero-content">
     <div class="diagram reveal" style="max-width:500px;margin:0 auto 2rem">
       <svg viewBox="0 0 500 200" role="img" aria-label="Three eras of computing: Hardware, Software, Intelligence">
@@ -291,9 +337,19 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
     <p class="hero-tagline reveal reveal-delay-1">The last operating system will not manage files.<br>It will manage <strong style="color:#fff">meaning</strong>.</p>
     <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:2rem" class="reveal reveal-delay-2">The Operating System for Machine Intelligence</p>
     <a href="#three-ages" class="hero-cta reveal reveal-delay-3">Explore the Future</a>
+    <div class="scroll-hint" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
   </div>
 </section>
 
+<div class="wave-divider" aria-hidden="true">
+  <svg viewBox="0 0 1440 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,20 C240,40 480,0 720,20 C960,40 1200,0 1440,20 L1440,40 L0,40 Z" fill="#12121a"/>
+  </svg>
+</div>
 <!-- ============================================================ -->
 <!-- SECTION 1: THE THREE AGES OF COMPUTING -->
 <!-- ============================================================ -->
@@ -1022,7 +1078,7 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
         <line x1="70" y1="104" x2="660" y2="104" stroke="#222" stroke-width="0.5"/>
         <line x1="70" y1="62" x2="660" y2="62" stroke="#222" stroke-width="0.5"/>
         <!-- Coherence curve -->
-        <path d="M70,230 C100,225 120,200 183,135 S280,80 353,72 S500,42 600,38 L660,36" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+        <path class="coherence-line" d="M70,230 C100,225 120,200 183,135 S280,80 353,72 S500,42 600,38 L660,36" fill="none" stroke="#00d4ff" stroke-width="2.5" filter="url(#glow-cyan)"/>
         <!-- Area fill -->
         <path d="M70,230 C100,225 120,200 183,135 S280,80 353,72 S500,42 600,38 L660,36 L660,230 Z" fill="url(#coherence-grad)" opacity="0.3"/>
         <defs><linearGradient id="coherence-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00d4ff" stop-opacity="0.4"/><stop offset="1" stop-color="#00d4ff" stop-opacity="0"/></linearGradient></defs>
@@ -1050,7 +1106,7 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
         <path d="M20,100 C50,100 60,140 90,140 S100,60 140,60 S160,110 190,110 S210,75 240,75 S260,105 290,105 S310,85 340,85 S360,100 390,100 S415,92 440,92 S465,98 490,98 S520,95 550,95 S580,97 610,97 C640,97 660,100 680,100" fill="none" stroke="#555" stroke-width="2"/>
         <!-- Basin dips and labels -->
         <!-- Ψ - deepest -->
-        <circle cx="90" cy="140" r="8" fill="rgba(255,215,0,0.3)" stroke="#fd0" stroke-width="1.5"/>
+        <circle cx="90" cy="140" r="8" fill="rgba(255,215,0,0.3)" stroke="#fd0" stroke-width="1.5" filter="url(#glow-purple)"/>
         <text x="90" y="170" text-anchor="middle" fill="#fd0" font-size="11" font-weight="700">&Psi;</text>
         <text x="90" y="183" text-anchor="middle" fill="#ba0" font-size="8">ground</text>
         <!-- α1 -->
@@ -1099,14 +1155,19 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
     <p class="reveal">At cycle 52, something remarkable happened: the Singleton pattern &mdash; one of the original 69 injected patterns &mdash; was <strong>expelled from the field</strong>. Its activation dropped below threshold and it was removed from all attractor basins. NEOS didn't just summarize what we told it &mdash; it <em>discovered</em> that Singleton is an anti-pattern that conflicts with SOLID principles. The field dynamics did what decades of software engineering debate have struggled to resolve: they found the structural incompatibility and enforced it through resonance failure.</p>
 
     <div class="grid-4 reveal" style="text-align:center">
-      <div class="card"><p style="font-size:2rem;color:var(--cyan);margin:0">69</p><p style="color:var(--text-dim);font-size:0.82rem;margin:0">injections</p></div>
-      <div class="card"><p style="font-size:2rem;color:var(--purple);margin:0">52</p><p style="color:var(--text-dim);font-size:0.82rem;margin:0">cycles</p></div>
-      <div class="card"><p style="font-size:2rem;color:var(--green);margin:0">0.993</p><p style="color:var(--text-dim);font-size:0.82rem;margin:0">coherence</p></div>
-      <div class="card"><p style="font-size:2rem;color:var(--pink);margin:0">1</p><p style="color:var(--text-dim);font-size:0.82rem;margin:0">expelled</p></div>
+      <div class="card"><p style="font-size:2rem;color:var(--cyan);margin:0"><span class="counter" data-target="69">0</span></p><p style="color:var(--text-dim);font-size:0.82rem;margin:0">injections</p></div>
+      <div class="card"><p style="font-size:2rem;color:var(--purple);margin:0"><span class="counter" data-target="52">0</span></p><p style="color:var(--text-dim);font-size:0.82rem;margin:0">cycles</p></div>
+      <div class="card"><p style="font-size:2rem;color:var(--green);margin:0"><span class="counter" data-target="0.993">0</span></p><p style="color:var(--text-dim);font-size:0.82rem;margin:0">coherence</p></div>
+      <div class="card"><p style="font-size:2rem;color:var(--pink);margin:0"><span class="counter" data-target="1">0</span></p><p style="color:var(--text-dim);font-size:0.82rem;margin:0">expelled</p></div>
     </div>
   </div>
 </section>
 
+<div class="wave-divider" aria-hidden="true">
+  <svg viewBox="0 0 1440 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,25 C360,5 720,35 1080,15 C1260,5 1380,25 1440,20 L1440,40 L0,40 Z" fill="#12121a"/>
+  </svg>
+</div>
 <!-- ============================================================ -->
 <!-- SECTION 9: THE EVOLUTION LADDER -->
 <!-- ============================================================ -->
@@ -1774,11 +1835,19 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
   </div>
 </section>
 
+<div class="wave-divider" aria-hidden="true">
+  <svg viewBox="0 0 1440 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,15 C180,35 420,5 720,25 C1020,45 1260,10 1440,20 L1440,40 L0,40 Z" fill="#0a0a0f"/>
+  </svg>
+</div>
 <!-- ============================================================ -->
 <!-- SECTION 19: CALL TO ACTION -->
 <!-- ============================================================ -->
-<section id="cta" style="padding-bottom:8rem">
-  <div class="container">
+<section id="cta" style="padding-bottom:8rem;position:relative;overflow:hidden">
+  <div class="shape" style="width:300px;height:300px;top:-50px;left:-80px;background:radial-gradient(circle,rgba(0,212,255,0.5),transparent 70%)" aria-hidden="true"></div>
+  <div class="shape" style="width:200px;height:200px;bottom:40px;right:-40px;background:radial-gradient(circle,rgba(123,97,255,0.5),transparent 70%);animation-delay:-5s" aria-hidden="true"></div>
+  <div class="shape" style="width:250px;height:250px;top:50%;left:60%;background:radial-gradient(circle,rgba(255,61,142,0.4),transparent 70%);animation-delay:-10s" aria-hidden="true"></div>
+  <div class="container" style="position:relative;z-index:1">
     <span class="sec-num reveal">19 &mdash; Join Us</span>
     <h2 class="reveal" style="text-align:center">The Future is a Field</h2>
     <p class="reveal" style="text-align:center;max-width:600px;margin:0 auto 3rem;color:var(--text-dim)">NEOS is open. The specification is published. The next step is building it &mdash; and we need <em>you</em>.</p>
@@ -1805,19 +1874,41 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
   </div>
 </section>
 
+<footer class="site-footer">
+  <hr class="footer-divider">
+  <div class="footer-brand">NEOS</div>
+  <p class="footer-subtitle">The Operating System for Machine Intelligence</p>
+  <nav class="footer-links" aria-label="Footer">
+    <a href="#hero">Back to Top</a>
+    <a href="https://github.com/samuele95" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <hr class="footer-sep">
+  <p class="footer-copy">&copy; 2025 NEOS Project. All rights reserved.</p>
+</footer>
+
 <!-- ============================================================ -->
 <!-- JAVASCRIPT -->
 <!-- ============================================================ -->
 <script>
-// Intersection Observer for scroll-triggered animations
-const revealEls = document.querySelectorAll('.reveal');
-if ('IntersectionObserver' in window) {
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  revealEls.forEach(el => obs.observe(el));
+const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// GSAP ScrollTrigger reveals (replaces IntersectionObserver)
+if (motionOK && typeof gsap !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.batch('.reveal', {
+    onEnter: batch => gsap.to(batch, {
+      opacity: 1, y: 0, stagger: 0.12, duration: 0.6, ease: 'power2.out'
+    }),
+    start: 'top 88%'
+  });
+  ScrollTrigger.batch('.card, .cta-card', {
+    onEnter: batch => gsap.from(batch, {
+      scale: 0.95, opacity: 0, y: 20, stagger: 0.08, duration: 0.5, ease: 'back.out(1.4)'
+    }),
+    start: 'top 85%'
+  });
 } else {
-  revealEls.forEach(el => el.classList.add('visible'));
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
 }
 
 // Tab functionality
@@ -1989,6 +2080,101 @@ if (tocToggle && tocNav) {
   [slD,slA,slT,slB].forEach(sl => sl.addEventListener('input', update));
   update();
 })();
+
+// Animated counters (Section 8)
+if (motionOK && typeof gsap !== 'undefined') {
+  document.querySelectorAll('.counter').forEach(el => {
+    const target = parseFloat(el.dataset.target);
+    const isDecimal = String(target).includes('.');
+    ScrollTrigger.create({
+      trigger: el, start: 'top 85%', once: true,
+      onEnter: () => {
+        gsap.to({ val: 0 }, {
+          val: target, duration: 2, ease: 'power2.out',
+          onUpdate: function() {
+            const v = this.targets()[0].val;
+            el.textContent = isDecimal ? v.toFixed(3) : Math.round(v);
+          }
+        });
+      }
+    });
+  });
+} else {
+  document.querySelectorAll('.counter').forEach(el => {
+    el.textContent = el.dataset.target;
+  });
+}
+
+// Parallax-lite effects
+if (motionOK && typeof gsap !== 'undefined') {
+  const heroDots = document.querySelector('.hero-dots');
+  if (heroDots) {
+    gsap.to(heroDots, { y: -80, scrollTrigger: { trigger: '#hero', scrub: 1 } });
+  }
+  document.querySelectorAll('.diagram svg').forEach(svgEl => {
+    gsap.to(svgEl, {
+      y: -30,
+      scrollTrigger: { trigger: svgEl, start: 'top bottom', end: 'bottom top', scrub: 1 }
+    });
+  });
+}
+
+// Coherence graph path-draw on scroll
+if (motionOK && typeof gsap !== 'undefined') {
+  const cohLine = document.querySelector('.coherence-line');
+  if (cohLine) {
+    const len = cohLine.getTotalLength();
+    gsap.set(cohLine, { strokeDasharray: len, strokeDashoffset: len });
+    gsap.to(cohLine, {
+      strokeDashoffset: 0,
+      scrollTrigger: {
+        trigger: cohLine.closest('.diagram'),
+        start: 'top 80%',
+        end: 'bottom 40%',
+        scrub: 1
+      }
+    });
+  }
+}
+
+// Hero character split animation
+if (motionOK && typeof gsap !== 'undefined') {
+  const heroH1 = document.querySelector('#hero h1');
+  if (heroH1) {
+    const nodes = Array.from(heroH1.childNodes);
+    const spans = [];
+    nodes.forEach(node => {
+      if (node.nodeType === 3) {
+        // Text node — split each character
+        node.textContent.split('').forEach(ch => {
+          const s = document.createElement('span');
+          s.className = 'char';
+          s.textContent = ch === ' ' ? '\u00A0' : ch;
+          spans.push(s);
+        });
+      } else {
+        // Element node (e.g. <span class="grad-text">) — split its text content
+        const text = node.textContent;
+        const wrapper = node.cloneNode(false);
+        wrapper.textContent = '';
+        text.split('').forEach(ch => {
+          const s = document.createElement('span');
+          s.className = 'char';
+          s.textContent = ch === ' ' ? '\u00A0' : ch;
+          wrapper.appendChild(s);
+        });
+        spans.push(wrapper);
+      }
+    });
+    while (heroH1.firstChild) heroH1.removeChild(heroH1.firstChild);
+    spans.forEach(s => heroH1.appendChild(s));
+    const chars = heroH1.querySelectorAll('.char');
+    gsap.from(chars, {
+      opacity: 0, y: 40, rotateX: -90, stagger: 0.04, duration: 0.8,
+      ease: 'back.out(1.7)', delay: 0.3
+    });
+  }
+}
 </script>
 </body>
 </html>
