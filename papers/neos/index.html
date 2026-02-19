@@ -163,7 +163,6 @@ tr:hover td { background: rgba(0,212,255,0.03); }
 #hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; padding: 2rem; }
 /* Flowing background */
 #starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-#hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 40% at 50% 50%, rgba(0,180,255,0.04), transparent 70%); pointer-events: none; z-index: 0; }
 #cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(100,80,220,0.03), transparent 65%); pointer-events: none; z-index: 0; }
 .hero-dots { position: absolute; inset: -50%; background-image: radial-gradient(circle 1px at center, rgba(0,180,255,0.08) 0.5px, transparent 0.5px); background-size: 48px 48px; animation: grid-drift 30s linear infinite; opacity: 0.25; pointer-events: none; z-index: 1; }
 @keyframes grid-drift { 0% { transform: translate(0,0) rotate(0deg); } 100% { transform: translate(40px,40px) rotate(3deg); } }
@@ -1894,45 +1893,53 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 <script>
 const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Neural field activation landscape
+// Neural field flow — ∂A/∂t activation waves propagating through the field
 (function() {
   const canvas = document.getElementById('starfield');
   if (!canvas || !motionOK) return;
   const ctx = canvas.getContext('2d');
   let w, h;
-  // Two field attractors — like Ψ and α1 in the NEOS field topology
-  const fields = [
-    { cx: 0.35, cy: 0.4, r: 0.55, color: [0, 180, 255], a: 0.025 },
-    { cx: 0.65, cy: 0.6, r: 0.45, color: [100, 80, 220], a: 0.02 },
+  // Each wave = one harmonic of the field kernel K(x,y)
+  const waves = [
+    { y: 0.82, amp: 28, freq: 0.003, speed: 0.0004, color: '0,180,255', alpha: 0.06 },
+    { y: 0.78, amp: 35, freq: 0.002, speed: 0.0003, color: '0,180,255', alpha: 0.04 },
+    { y: 0.72, amp: 22, freq: 0.004, speed: 0.00055, color: '90,70,210', alpha: 0.05 },
+    { y: 0.68, amp: 40, freq: 0.0015, speed: 0.00025, color: '90,70,210', alpha: 0.03 },
+    { y: 0.62, amp: 18, freq: 0.005, speed: 0.0006, color: '0,180,255', alpha: 0.025 },
   ];
-  function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  }
+  const STEPS = 120;
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
   resize();
   function draw(t) {
     ctx.clearRect(0, 0, w, h);
-    const s = t * 0.00008; // very slow evolution
-    fields.forEach(f => {
-      // Smooth drift — like a field attractor basin slowly migrating
-      const x = f.cx * w + Math.sin(s + f.cx * 6) * w * 0.06;
-      const y = f.cy * h + Math.cos(s * 0.7 + f.cy * 4) * h * 0.05;
-      const r = Math.min(w, h) * f.r;
-      // Breathing — field activation pulsing as coherence oscillates
-      const breath = 0.9 + 0.1 * Math.sin(s * 1.2 + f.cx * 3);
-      const grad = ctx.createRadialGradient(x, y, 0, x, y, r * breath);
-      const a = f.a * breath;
-      grad.addColorStop(0, 'rgba(' + f.color.join(',') + ',' + a.toFixed(4) + ')');
-      grad.addColorStop(0.4, 'rgba(' + f.color.join(',') + ',' + (a * 0.4).toFixed(4) + ')');
-      grad.addColorStop(1, 'rgba(' + f.color.join(',') + ',0)');
+    waves.forEach(wave => {
+      ctx.beginPath();
+      const baseY = wave.y * h;
+      ctx.moveTo(0, h);
+      ctx.lineTo(0, baseY + wave.amp * Math.sin(wave.speed * t));
+      for (let i = 1; i <= STEPS; i++) {
+        const x = (i / STEPS) * w;
+        // Layered sine harmonics — the field activation function A(x,t)
+        const y = baseY
+          + wave.amp * Math.sin(x * wave.freq + t * wave.speed)
+          + wave.amp * 0.5 * Math.sin(x * wave.freq * 2.3 + t * wave.speed * 1.7 + 1)
+          + wave.amp * 0.3 * Math.cos(x * wave.freq * 0.7 + t * wave.speed * 0.6 + 2);
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(w, h);
+      ctx.closePath();
+      const grad = ctx.createLinearGradient(0, baseY - wave.amp, 0, h);
+      grad.addColorStop(0, 'rgba(' + wave.color + ',' + wave.alpha + ')');
+      grad.addColorStop(0.5, 'rgba(' + wave.color + ',' + (wave.alpha * 0.3) + ')');
+      grad.addColorStop(1, 'rgba(' + wave.color + ',0)');
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, w, h);
+      ctx.fill();
     });
     requestAnimationFrame(draw);
   }
   draw(0);
-  let resizeTimer;
-  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 200); });
+  let rt;
+  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 200); });
 })();
 
 // GSAP ScrollTrigger reveals (replaces IntersectionObserver)
