@@ -149,8 +149,6 @@ tr:hover td { background: rgba(0,212,255,0.03); }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   .anim-pulse, .anim-float { animation: none; }
-  #hero::before, #cta::before { animation: none; }
-  .aurora { animation: none !important; opacity: 0.3 !important; }
   #starfield { display: none; }
   .scroll-hint { animation: none; }
   .shape { animation: none; }
@@ -163,14 +161,10 @@ tr:hover td { background: rgba(0,212,255,0.03); }
 
 /* Hero specific */
 #hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; padding: 2rem; }
-/* Deep-space aurora system */
+/* Flowing background */
 #starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-.aurora { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; mix-blend-mode: screen; will-change: transform, opacity; z-index: 0; }
-#hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 45% at 50% 45%, rgba(0,212,255,0.07), transparent 70%), radial-gradient(ellipse 35% 35% at 25% 65%, rgba(123,97,255,0.05), transparent 60%); pointer-events: none; z-index: 0; }
-#cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(123,97,255,0.05), transparent 65%), radial-gradient(ellipse 40% 40% at 70% 60%, rgba(0,212,255,0.04), transparent 55%); pointer-events: none; z-index: 0; }
-@keyframes aurora-drift-1 { 0% { transform: translate(0,0) scale(1); opacity: 0.5; } 33% { transform: translate(60px,-40px) scale(1.15); opacity: 0.8; } 66% { transform: translate(-30px,50px) scale(0.9); opacity: 0.4; } 100% { transform: translate(0,0) scale(1); opacity: 0.5; } }
-@keyframes aurora-drift-2 { 0% { transform: translate(0,0) scale(1); opacity: 0.6; } 50% { transform: translate(-50px,30px) scale(1.2); opacity: 0.3; } 100% { transform: translate(0,0) scale(1); opacity: 0.6; } }
-@keyframes aurora-drift-3 { 0% { transform: translate(0,0) scale(0.9); opacity: 0.4; } 40% { transform: translate(40px,60px) scale(1.1); opacity: 0.7; } 80% { transform: translate(-60px,-20px) scale(1); opacity: 0.3; } 100% { transform: translate(0,0) scale(0.9); opacity: 0.4; } }
+#hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 45% at 50% 45%, rgba(0,212,255,0.06), transparent 70%), radial-gradient(ellipse 35% 35% at 25% 65%, rgba(123,97,255,0.04), transparent 60%); pointer-events: none; z-index: 0; }
+#cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(123,97,255,0.04), transparent 65%), radial-gradient(ellipse 40% 40% at 70% 60%, rgba(0,212,255,0.03), transparent 55%); pointer-events: none; z-index: 0; }
 .hero-dots { position: absolute; inset: -50%; background-image: radial-gradient(circle 1.5px at center, rgba(0,212,255,0.12) 1px, transparent 1px); background-size: 40px 40px; animation: grid-drift 25s linear infinite; opacity: 0.35; pointer-events: none; z-index: 1; }
 @keyframes grid-drift { 0% { transform: translate(0,0) rotate(0deg); } 100% { transform: translate(40px,40px) rotate(3deg); } }
 .hero-content { position: relative; z-index: 2; }
@@ -271,9 +265,6 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 </head>
 <body>
 <canvas id="starfield" aria-hidden="true"></canvas>
-<div class="aurora" style="width:600px;height:600px;top:5vh;left:10%;background:rgba(0,212,255,0.04);animation:aurora-drift-1 25s ease-in-out infinite" aria-hidden="true"></div>
-<div class="aurora" style="width:500px;height:500px;top:15vh;right:5%;background:rgba(123,97,255,0.035);animation:aurora-drift-2 30s ease-in-out infinite" aria-hidden="true"></div>
-<div class="aurora" style="width:450px;height:450px;top:50vh;left:30%;background:rgba(255,61,142,0.02);animation:aurora-drift-3 35s ease-in-out infinite" aria-hidden="true"></div>
 <svg style="position:absolute;width:0;height:0" aria-hidden="true">
   <defs>
     <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
@@ -1903,55 +1894,42 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 <script>
 const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Deep-space starfield
+// Flowing gradient background
 (function() {
   const canvas = document.getElementById('starfield');
   if (!canvas || !motionOK) return;
   const ctx = canvas.getContext('2d');
-  let w, h, stars = [];
-  const STAR_COUNT = 140;
-  const colors = ['rgba(0,212,255,', 'rgba(123,97,255,', 'rgba(255,255,255,', 'rgba(200,200,220,'];
+  let w, h;
+  const orbs = [
+    { cx: 0.2, cy: 0.3, r: 350, color: [0, 212, 255], a: 0.045, xAmp: 120, yAmp: 80, xFreq: 0.0003, yFreq: 0.0002, phase: 0 },
+    { cx: 0.8, cy: 0.5, r: 300, color: [123, 97, 255], a: 0.04, xAmp: 100, yAmp: 130, xFreq: 0.00025, yFreq: 0.00035, phase: 2 },
+    { cx: 0.5, cy: 0.7, r: 280, color: [255, 61, 142], a: 0.025, xAmp: 140, yAmp: 90, xFreq: 0.00018, yFreq: 0.00028, phase: 4 },
+    { cx: 0.3, cy: 0.8, r: 250, color: [0, 212, 255], a: 0.03, xAmp: 90, yAmp: 110, xFreq: 0.00032, yFreq: 0.00022, phase: 1.5 },
+    { cx: 0.7, cy: 0.2, r: 320, color: [123, 97, 255], a: 0.035, xAmp: 110, yAmp: 70, xFreq: 0.00022, yFreq: 0.0003, phase: 3.5 },
+  ];
   function resize() {
     w = canvas.width = window.innerWidth;
-    h = canvas.height = document.documentElement.scrollHeight;
+    h = canvas.height = window.innerHeight;
   }
-  function init() {
-    resize();
-    stars = [];
-    for (let i = 0; i < STAR_COUNT; i++) {
-      stars.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        r: 0.3 + Math.random() * 1.5,
-        baseA: 0.15 + Math.random() * 0.45,
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.003 + Math.random() * 0.008,
-        drift: (Math.random() - 0.5) * 0.15,
-        color: colors[Math.floor(Math.random() * colors.length)]
-      });
-    }
-  }
-  let raf;
+  resize();
   function draw(t) {
     ctx.clearRect(0, 0, w, h);
-    stars.forEach(s => {
-      const a = s.baseA * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = s.color + a.toFixed(3) + ')';
-      ctx.fill();
-      s.x += s.drift;
-      s.y -= 0.02;
-      if (s.x < -10) s.x = w + 10;
-      if (s.x > w + 10) s.x = -10;
-      if (s.y < -10) s.y = h + 10;
+    orbs.forEach(o => {
+      const x = o.cx * w + Math.sin(t * o.xFreq + o.phase) * o.xAmp;
+      const y = o.cy * h + Math.cos(t * o.yFreq + o.phase) * o.yAmp;
+      const pulse = 0.85 + 0.15 * Math.sin(t * 0.0004 + o.phase);
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, o.r * pulse);
+      grad.addColorStop(0, 'rgba(' + o.color.join(',') + ',' + (o.a * pulse).toFixed(4) + ')');
+      grad.addColorStop(0.5, 'rgba(' + o.color.join(',') + ',' + (o.a * 0.3 * pulse).toFixed(4) + ')');
+      grad.addColorStop(1, 'rgba(' + o.color.join(',') + ',0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
     });
-    raf = requestAnimationFrame(draw);
+    requestAnimationFrame(draw);
   }
-  init();
   draw(0);
   let resizeTimer;
-  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(init, 200); });
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 200); });
 })();
 
 // GSAP ScrollTrigger reveals (replaces IntersectionObserver)
@@ -1959,15 +1937,9 @@ if (motionOK && typeof gsap !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.batch('.reveal', {
     onEnter: batch => gsap.to(batch, {
-      opacity: 1, y: 0, stagger: 0.12, duration: 0.6, ease: 'power2.out'
+      opacity: 1, y: 0, stagger: 0.12, duration: 0.7, ease: 'power2.out'
     }),
     start: 'top 88%'
-  });
-  ScrollTrigger.batch('.card, .cta-card', {
-    onEnter: batch => gsap.from(batch, {
-      scale: 0.95, opacity: 0, y: 20, stagger: 0.08, duration: 0.5, ease: 'back.out(1.4)'
-    }),
-    start: 'top 85%'
   });
 } else {
   document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
