@@ -45,7 +45,7 @@ html, body { background: var(--bg) !important; margin: 0; padding: 0; }
 .reveal .slides section h1,
 .reveal .slides section h2,
 .reveal .slides section h3,
-.reveal .slides section h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; color: var(--text); text-transform: none; text-shadow: none; }
+.reveal .slides section h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; color: var(--text); text-transform: none; text-shadow: none; }
 .reveal .slides section h1 { font-size: 3.5rem; font-weight: 800; }
 .reveal .slides section h2 { font-size: 2rem; margin-bottom: 0.6em; }
 .reveal .slides section h3 { font-size: 1.15rem; color: var(--cyan); margin-bottom: 0.4em; }
@@ -54,6 +54,8 @@ html, body { background: var(--bg) !important; margin: 0; padding: 0; }
 .reveal .slides section em { color: var(--cyan); font-style: italic; }
 .reveal .slides section code { font-family: var(--mono); font-size: 0.85em; background: var(--bg3); padding: 0.12em 0.35em; border-radius: 4px; color: var(--cyan); }
 .reveal .slides section a { color: var(--cyan); text-decoration: none; }
+.reveal .slides section a:hover { color: var(--purple); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 4px; }
 .reveal ::selection { background: var(--cyan); color: var(--bg); }
 
 /* Slide backgrounds */
@@ -106,6 +108,9 @@ svg text { font-family: var(--font); }
 
 /* Glow effects */
 @keyframes pulse-glow { 0%, 100% { filter: drop-shadow(0 0 6px var(--cyan)); } 50% { filter: drop-shadow(0 0 18px var(--cyan)); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .anim-pulse { animation: pulse-glow 3s ease-in-out infinite; }
 
 /* CTA cards */
@@ -170,6 +175,29 @@ svg text { font-family: var(--font); }
 <body>
 <canvas id="wave-bg" aria-hidden="true"></canvas>
 
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#00d4ff" flood-opacity="0.4" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#7b61ff" flood-opacity="0.4" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-pink" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#ff3d8e" flood-opacity="0.4" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
 <div class="reveal">
 <div class="slides">
 
@@ -191,7 +219,8 @@ svg text { font-family: var(--font); }
   <span class="sec-badge">01 — The Grand Narrative</span>
   <h2>The Three Ages of Computing</h2>
   <div class="diagram">
-    <svg viewBox="0 0 900 170" role="img" aria-label="Timeline: Hardware, Software, Intelligence">
+    <svg viewBox="0 0 900 190" role="img" aria-label="Timeline: Hardware, Software, Intelligence">
+      <title>Three Ages of Computing Timeline</title>
       <line x1="50" y1="85" x2="850" y2="85" stroke="#333" stroke-width="2"/>
       <polygon points="845,81 855,85 845,89" fill="#333"/>
       <g class="fragment" data-fragment-index="1">
@@ -200,6 +229,7 @@ svg text { font-family: var(--font); }
         <text x="150" y="48" text-anchor="middle" fill="#555" font-size="11">1950s–1980s</text>
         <text x="150" y="115" text-anchor="middle" fill="#666" font-size="11">Bottleneck: Physical</text>
         <text x="150" y="132" text-anchor="middle" fill="#555" font-size="10">OS: Share the machine</text>
+        <text x="150" y="149" text-anchor="middle" fill="#555" font-size="10">Interface: Punch cards → CLI</text>
       </g>
       <g class="fragment" data-fragment-index="2">
         <circle cx="450" cy="85" r="8" fill="#7b61ff"/>
@@ -207,13 +237,15 @@ svg text { font-family: var(--font); }
         <text x="450" y="48" text-anchor="middle" fill="#7b61ff" font-size="11">1980s–2020s</text>
         <text x="450" y="115" text-anchor="middle" fill="#888" font-size="11">Bottleneck: Complexity</text>
         <text x="450" y="132" text-anchor="middle" fill="#666" font-size="10">OS: Organize programs</text>
+        <text x="450" y="149" text-anchor="middle" fill="#666" font-size="10">Interface: GUI → Touch</text>
       </g>
       <g class="fragment" data-fragment-index="3">
-        <circle cx="750" cy="85" r="10" fill="#00d4ff" class="anim-pulse"/>
+        <circle cx="750" cy="85" r="10" fill="#00d4ff" filter="url(#glow-cyan)"/>
         <text x="750" y="63" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="700">Intelligence</text>
         <text x="750" y="46" text-anchor="middle" fill="#00d4ff" font-size="11">2025+</text>
         <text x="750" y="115" text-anchor="middle" fill="#00d4ff" font-size="11">Bottleneck: Meaning</text>
         <text x="750" y="132" text-anchor="middle" fill="#0af" font-size="10">OS: Organize thinking</text>
+        <text x="750" y="149" text-anchor="middle" fill="#0af" font-size="10">Interface: Language → NEOS Shell</text>
       </g>
     </svg>
   </div>
@@ -255,6 +287,7 @@ svg text { font-family: var(--font); }
   <h2>The Inversion</h2>
   <div class="diagram">
     <svg viewBox="0 0 700 200" role="img" aria-label="Architecture inversion: LLM goes from app to foundation">
+      <title>The Architectural Inversion</title>
       <g class="fragment" data-fragment-index="1">
         <text x="150" y="22" text-anchor="middle" fill="#888" font-size="14" font-weight="600">Today</text>
         <rect x="50" y="30" width="200" height="36" rx="6" fill="rgba(123,97,255,0.08)" stroke="#7b61ff" stroke-width="1"/>
@@ -320,6 +353,7 @@ svg text { font-family: var(--font); }
   <h2>The Three Pillars</h2>
   <div class="diagram">
     <svg viewBox="0 0 700 250" role="img" aria-label="Three pillars: Neural Fields, Symbolic Reasoning, Quantum Semantics">
+      <title>Three Pillars of NEOS</title>
       <g class="fragment" data-fragment-index="1">
         <rect x="20" y="20" width="190" height="140" rx="10" fill="rgba(0,212,255,0.05)" stroke="#00d4ff" stroke-width="1.5"/>
         <text x="115" y="50" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="700">Neural Fields</text>
@@ -348,7 +382,7 @@ svg text { font-family: var(--font); }
         <text x="495" y="138" fill="#aaa" font-size="10">Context as measurement</text>
       </g>
       <g class="fragment" data-fragment-index="4">
-        <rect x="20" y="190" width="660" height="40" rx="8" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.2)" stroke-width="1"/>
+        <rect x="20" y="190" width="660" height="40" rx="8" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.2)" stroke-width="1" filter="url(#glow-cyan)"/>
         <text x="350" y="216" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="700">Ψ — The Unification</text>
         <line x1="115" y1="160" x2="115" y2="190" stroke="#0af" stroke-width="1" opacity="0.4"/>
         <line x1="345" y1="160" x2="345" y2="190" stroke="#7b61ff" stroke-width="1" opacity="0.4"/>
@@ -397,33 +431,34 @@ svg text { font-family: var(--font); }
   <p style="font-size:0.65em;max-width:none">Java: <strong>"Write once, run anywhere."</strong> — NEOS: <strong>"Think once, reason anywhere."</strong></p>
   <div class="diagram fragment fade-up">
     <svg viewBox="0 0 700 240" role="img" aria-label="JVM vs NEOS architecture stacks">
+      <title>JVM vs NEOS Architecture Comparison</title>
       <text x="140" y="18" text-anchor="middle" fill="#7b61ff" font-size="13" font-weight="700">JVM</text>
       <text x="560" y="18" text-anchor="middle" fill="#00d4ff" font-size="13" font-weight="700">NEOS</text>
       <rect x="30" y="28" width="220" height="34" rx="5" fill="rgba(123,97,255,0.08)" stroke="#7b61ff" stroke-width="1"/>
       <text x="140" y="50" text-anchor="middle" fill="#9b8aff" font-size="11">JIT Compilation</text>
       <rect x="450" y="28" width="220" height="34" rx="5" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1"/>
       <text x="560" y="50" text-anchor="middle" fill="#0af" font-size="11">Adaptive Resonance</text>
-      <text x="350" y="50" text-anchor="middle" fill="#555" font-size="12">↔</text>
+      <line x1="250" y1="45" x2="450" y2="45" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
       <rect x="30" y="68" width="220" height="34" rx="5" fill="rgba(123,97,255,0.06)" stroke="#7b61ff" stroke-width="1"/>
       <text x="140" y="90" text-anchor="middle" fill="#9b8aff" font-size="11">Threads</text>
       <rect x="450" y="68" width="220" height="34" rx="5" fill="rgba(0,212,255,0.06)" stroke="#0af" stroke-width="1"/>
       <text x="560" y="90" text-anchor="middle" fill="#0af" font-size="11">Multi-Field</text>
-      <text x="350" y="90" text-anchor="middle" fill="#555" font-size="12">↔</text>
+      <line x1="250" y1="85" x2="450" y2="85" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
       <rect x="30" y="108" width="220" height="34" rx="5" fill="rgba(123,97,255,0.05)" stroke="#7b61ff" stroke-width="1"/>
       <text x="140" y="130" text-anchor="middle" fill="#9b8aff" font-size="11">Heap Memory</text>
       <rect x="450" y="108" width="220" height="34" rx="5" fill="rgba(0,212,255,0.05)" stroke="#0af" stroke-width="1"/>
       <text x="560" y="130" text-anchor="middle" fill="#0af" font-size="11">Field State</text>
-      <text x="350" y="130" text-anchor="middle" fill="#555" font-size="12">↔</text>
+      <line x1="250" y1="125" x2="450" y2="125" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
       <rect x="30" y="148" width="220" height="34" rx="5" fill="rgba(123,97,255,0.04)" stroke="#7b61ff" stroke-width="1"/>
       <text x="140" y="170" text-anchor="middle" fill="#9b8aff" font-size="11">Garbage Collection</text>
       <rect x="450" y="148" width="220" height="34" rx="5" fill="rgba(0,212,255,0.04)" stroke="#0af" stroke-width="1"/>
       <text x="560" y="170" text-anchor="middle" fill="#0af" font-size="11">Decay (λ)</text>
-      <text x="350" y="170" text-anchor="middle" fill="#555" font-size="12">↔</text>
+      <line x1="250" y1="165" x2="450" y2="165" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
       <rect x="30" y="188" width="220" height="34" rx="5" fill="rgba(123,97,255,0.03)" stroke="#7b61ff" stroke-width="1"/>
       <text x="140" y="210" text-anchor="middle" fill="#9b8aff" font-size="11">ClassLoader</text>
       <rect x="450" y="188" width="220" height="34" rx="5" fill="rgba(0,212,255,0.03)" stroke="#0af" stroke-width="1"/>
       <text x="560" y="210" text-anchor="middle" fill="#0af" font-size="11">Pattern Injection</text>
-      <text x="350" y="210" text-anchor="middle" fill="#555" font-size="12">↔</text>
+      <line x1="250" y1="205" x2="450" y2="205" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
     </svg>
   </div>
   <p class="fragment fade-up" style="text-align:center;max-width:none;font-style:italic;font-size:0.65em">Java abstracted hardware. <strong>NEOS abstracts cognition.</strong></p>
@@ -494,6 +529,7 @@ svg text { font-family: var(--font); }
   <p style="font-size:0.6em;max-width:none;margin-bottom:0.4em">Each <code>nf cycle</code> executes six phases — the heartbeat of NEOS.</p>
   <div class="diagram" id="cycle-diagram">
     <svg viewBox="0 0 600 300" role="img" aria-label="Six-phase dynamics cycle">
+      <title>Six-Phase Dynamics Cycle</title>
       <text x="300" y="158" text-anchor="middle" fill="#444" font-size="12" font-weight="600">CYCLE</text>
       <g class="dyn-phase fragment fade-up" data-phase="0" data-fragment-index="1">
         <circle cx="300" cy="50" r="38" fill="rgba(255,61,142,0.1)" stroke="#ff3d8e" stroke-width="1.5"/>
@@ -525,12 +561,13 @@ svg text { font-family: var(--font); }
         <text x="100" y="106" text-anchor="middle" fill="#0af" font-size="11" font-weight="600">6. Attractor</text>
         <text x="100" y="120" text-anchor="middle" fill="#088" font-size="9">detect &amp; record</text>
       </g>
-      <line x1="335" y1="60" x2="465" y2="98" stroke="#555" stroke-width="1" opacity="0.4"/>
-      <line x1="510" y1="148" x2="510" y2="182" stroke="#555" stroke-width="1" opacity="0.4"/>
-      <line x1="465" y1="235" x2="335" y2="265" stroke="#555" stroke-width="1" opacity="0.4"/>
-      <line x1="265" y1="265" x2="135" y2="235" stroke="#555" stroke-width="1" opacity="0.4"/>
-      <line x1="100" y1="182" x2="100" y2="148" stroke="#555" stroke-width="1" opacity="0.4"/>
-      <line x1="135" y1="98" x2="265" y2="60" stroke="#555" stroke-width="1" opacity="0.4"/>
+      <line x1="335" y1="60" x2="465" y2="98" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <line x1="510" y1="148" x2="510" y2="182" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <line x1="465" y1="235" x2="335" y2="265" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <line x1="265" y1="265" x2="135" y2="235" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <line x1="100" y1="182" x2="100" y2="148" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <line x1="135" y1="98" x2="265" y2="60" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <defs><marker id="arrow-dim" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#666" opacity="0.7"/></marker></defs>
     </svg>
   </div>
   <aside class="notes">The cycle is the core loop. Each phase has a precise mathematical operation. Decay → resonance → amplify → threshold → coherence → attractor detection.</aside>
@@ -558,6 +595,7 @@ svg text { font-family: var(--font); }
   </div>
   <div class="diagram fragment fade-up" data-fragment-index="4" style="margin-top:0.8rem">
     <svg viewBox="0 0 700 70" role="img" aria-label="Pipeline: inject → cycle → collapse → task">
+      <title>NEOS Pipeline: Inject → Cycle → Collapse → Task</title>
       <rect x="10" y="15" width="120" height="40" rx="6" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1.5"/>
       <text x="70" y="40" text-anchor="middle" fill="#0af" font-size="11" font-weight="600">nf inject</text>
       <text x="150" y="40" fill="#555" font-size="14">→</text>
@@ -582,6 +620,7 @@ svg text { font-family: var(--font); }
   <h2>Multi-Field Orchestration</h2>
   <div class="diagram">
     <svg viewBox="0 0 600 220" role="img" aria-label="Multi-field network: Technical, Business, User → Synthesis">
+      <title>Multi-Field Orchestration Network</title>
       <g class="fragment" data-fragment-index="1">
         <circle cx="120" cy="65" r="35" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1.5"/>
         <text x="120" y="61" text-anchor="middle" fill="#0af" font-size="11" font-weight="600">Technical</text>
@@ -622,6 +661,7 @@ svg text { font-family: var(--font); }
   <p style="font-size:0.6em;max-width:none;margin-bottom:0.6em">NEOS's answer to AI alignment: a <strong>continuously adjustable dial</strong>.</p>
   <div class="diagram fragment fade-up">
     <svg viewBox="0 0 600 120" role="img" aria-label="Autonomy gauge from Step to Auto">
+      <title>Autonomy Dial: Step → Checkpoint → Auto</title>
       <line x1="80" y1="55" x2="520" y2="55" stroke="#333" stroke-width="3" stroke-linecap="round"/>
       <line x1="80" y1="55" x2="300" y2="55" stroke="url(#gauge-grad)" stroke-width="3" stroke-linecap="round"/>
       <defs><linearGradient id="gauge-grad"><stop offset="0" stop-color="#00d4ff"/><stop offset="1" stop-color="#7b61ff"/></linearGradient></defs>
@@ -686,6 +726,72 @@ svg text { font-family: var(--font); }
 </section>
 
 <!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 15b — COHERENCE EVOLUTION            -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08 — Dynamics</span>
+  <h2>Coherence Evolution</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.4em">52 cycles of field dynamics — from chaos to crystalline order.</p>
+  <div class="diagram fragment fade-up">
+    <svg viewBox="0 0 700 260" role="img" aria-label="Coherence evolution over 52 cycles">
+      <title>Coherence Evolution: 52 Cycles to Convergence</title>
+      <!-- Axes -->
+      <line x1="60" y1="220" x2="660" y2="220" stroke="#444" stroke-width="1.5"/>
+      <line x1="60" y1="220" x2="60" y2="20" stroke="#444" stroke-width="1.5"/>
+      <!-- Y-axis labels -->
+      <text x="50" y="225" text-anchor="end" fill="#666" font-size="9">0.0</text>
+      <text x="50" y="180" text-anchor="end" fill="#666" font-size="9">0.2</text>
+      <text x="50" y="140" text-anchor="end" fill="#666" font-size="9">0.4</text>
+      <text x="50" y="100" text-anchor="end" fill="#666" font-size="9">0.6</text>
+      <text x="50" y="60" text-anchor="end" fill="#666" font-size="9">0.8</text>
+      <text x="50" y="28" text-anchor="end" fill="#0af" font-size="9">1.0</text>
+      <!-- Y-axis gridlines -->
+      <line x1="60" y1="180" x2="660" y2="180" stroke="#222" stroke-width="0.5"/>
+      <line x1="60" y1="140" x2="660" y2="140" stroke="#222" stroke-width="0.5"/>
+      <line x1="60" y1="100" x2="660" y2="100" stroke="#222" stroke-width="0.5"/>
+      <line x1="60" y1="60" x2="660" y2="60" stroke="#222" stroke-width="0.5"/>
+      <!-- X-axis labels -->
+      <text x="60" y="240" text-anchor="middle" fill="#666" font-size="9">0</text>
+      <text x="175" y="240" text-anchor="middle" fill="#666" font-size="9">10</text>
+      <text x="290" y="240" text-anchor="middle" fill="#666" font-size="9">20</text>
+      <text x="405" y="240" text-anchor="middle" fill="#666" font-size="9">30</text>
+      <text x="520" y="240" text-anchor="middle" fill="#666" font-size="9">40</text>
+      <text x="640" y="240" text-anchor="middle" fill="#666" font-size="9">52</text>
+      <text x="360" y="256" text-anchor="middle" fill="#888" font-size="10">Cycle</text>
+      <text x="18" y="120" text-anchor="middle" fill="#888" font-size="10" transform="rotate(-90,18,120)">Coherence</text>
+      <!-- Area gradient fill -->
+      <defs>
+        <linearGradient id="coh-area" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#00d4ff" stop-opacity="0.15"/>
+          <stop offset="1" stop-color="#00d4ff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path d="M60,210 L72,200 L83,185 L95,168 L107,155 L118,148 L130,140 L142,132 L153,125 L165,120 L177,115 L188,108 L200,103 L212,99 L223,95 L235,90 L247,86 L258,83 L270,80 L282,77 L293,74 L305,71 L317,68 L328,65 L340,62 L352,58 L363,55 L375,52 L387,49 L398,46 L410,44 L422,42 L433,40 L445,38 L457,37 L468,36 L480,35 L492,34 L503,33 L515,32 L527,31 L538,31 L550,30 L562,30 L573,29 L585,29 L597,29 L609,28 L620,28 L632,28 L640,28 L640,220 L60,220 Z" fill="url(#coh-area)"/>
+      <!-- Coherence curve -->
+      <path d="M60,210 L72,200 L83,185 L95,168 L107,155 L118,148 L130,140 L142,132 L153,125 L165,120 L177,115 L188,108 L200,103 L212,99 L223,95 L235,90 L247,86 L258,83 L270,80 L282,77 L293,74 L305,71 L317,68 L328,65 L340,62 L352,58 L363,55 L375,52 L387,49 L398,46 L410,44 L422,42 L433,40 L445,38 L457,37 L468,36 L480,35 L492,34 L503,33 L515,32 L527,31 L538,31 L550,30 L562,30 L573,29 L585,29 L597,29 L609,28 L620,28 L632,28 L640,28" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+      <!-- End point glow -->
+      <circle cx="640" cy="28" r="4" fill="#00d4ff" filter="url(#glow-cyan)"/>
+      <!-- Event markers -->
+      <g class="fragment" data-fragment-index="2">
+        <line x1="177" y1="115" x2="177" y2="220" stroke="#7b61ff" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+        <text x="177" y="245" text-anchor="middle" fill="#7b61ff" font-size="7">Attractors emerge</text>
+      </g>
+      <g class="fragment" data-fragment-index="3">
+        <line x1="410" y1="44" x2="410" y2="220" stroke="#ff3d8e" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+        <text x="410" y="245" text-anchor="middle" fill="#ff3d8e" font-size="7">Singleton expelled</text>
+        <circle cx="410" cy="44" r="5" fill="none" stroke="#ff3d8e" stroke-width="1.5"/>
+      </g>
+      <g class="fragment" data-fragment-index="4">
+        <line x1="640" y1="28" x2="660" y2="28" stroke="#0f8" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="658" y="24" fill="#0f8" font-size="9" font-weight="600">0.993</text>
+      </g>
+    </svg>
+  </div>
+  <p class="fragment fade-up" style="font-size:0.6em;font-style:italic;text-align:center;max-width:none;margin-top:0.4em">The field doesn't converge linearly — it <strong>accelerates toward coherence</strong> as resonance strengthens.</p>
+  <aside class="notes">This is the coherence evolution graph. Notice the three key moments: attractor emergence around cycle 10, Singleton expulsion around cycle 35, and final convergence at 0.993.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
 <!-- SLIDE 16 — THE FIELD EQUATION              -->
 <!-- ═══════════════════════════════════════════ -->
 <section class="center-slide" data-transition="slide">
@@ -694,6 +800,7 @@ svg text { font-family: var(--font); }
   <div class="equation fragment fade-up" style="font-size:0.8em;text-align:center;margin:0.8em auto;max-width:90%">Q(x) = Ψ · [ 0.342·SOLID(x) + 0.227·F(x) + 0.181·Protocol(x) + 0.143·Simplex(x) + 0.107·Scale(x) ]</div>
   <div class="diagram fragment fade-up" style="margin-top:0.8em">
     <svg viewBox="0 0 700 160" role="img" aria-label="Five eigenvectors bar chart">
+      <title>Five Eigenvectors of Software Quality</title>
       <rect x="50" y="20" width="100" height="100" rx="4" fill="rgba(0,212,255,0.2)" stroke="#0af" stroke-width="1"/>
       <text x="100" y="14" text-anchor="middle" fill="#0af" font-size="13" font-weight="600">34.2%</text>
       <text x="100" y="140" text-anchor="middle" fill="#0af" font-size="10">SOLID</text>
@@ -727,19 +834,45 @@ svg text { font-family: var(--font); }
   </div>
   <p class="fragment fade-up" data-fragment-index="2" style="font-size:0.6em;max-width:none">Its activation dropped below threshold. It was removed from all attractor basins. NEOS didn't summarize what we told it — it <strong>discovered</strong> that Singleton is an anti-pattern that conflicts with SOLID principles.</p>
   <div class="diagram fragment fade-up" data-fragment-index="3">
-    <svg viewBox="0 0 700 140" role="img" aria-label="Attractor basin landscape showing Singleton expelled">
-      <path d="M20,70 C50,70 60,100 90,100 S100,35 140,35 S160,75 190,75 S210,50 240,50 S260,72 290,72 S310,60 340,60 S360,68 390,68 S415,64 440,64 S465,67 490,67 S520,65 550,65 S580,67 610,67 C640,67 660,70 680,70" fill="none" stroke="#555" stroke-width="2"/>
-      <circle cx="90" cy="100" r="7" fill="rgba(255,215,0,0.3)" stroke="#fd0" stroke-width="1.5"/>
-      <text x="90" y="122" text-anchor="middle" fill="#fd0" font-size="10" font-weight="700">Ψ</text>
-      <circle cx="140" cy="35" r="5" fill="rgba(0,212,255,0.3)" stroke="#0af" stroke-width="1.5"/>
-      <text x="140" y="25" text-anchor="middle" fill="#0af" font-size="9">SOLID</text>
-      <circle cx="240" cy="50" r="5" fill="rgba(0,212,255,0.3)" stroke="#0af" stroke-width="1.5"/>
-      <text x="240" y="40" text-anchor="middle" fill="#0af" font-size="9">Verify</text>
-      <circle cx="340" cy="60" r="4" fill="rgba(123,97,255,0.3)" stroke="#7b61ff" stroke-width="1"/>
-      <text x="340" y="52" text-anchor="middle" fill="#7b61ff" font-size="9">Craft</text>
-      <circle cx="620" cy="20" r="6" fill="rgba(255,61,142,0.15)" stroke="#ff3d8e" stroke-width="1" stroke-dasharray="3,2"/>
-      <text x="620" y="13" text-anchor="middle" fill="#ff3d8e" font-size="8">Singleton ✗</text>
-      <line x1="610" y1="26" x2="590" y2="67" stroke="#ff3d8e" stroke-width="0.5" stroke-dasharray="3,3" opacity="0.5"/>
+    <svg viewBox="0 0 700 170" role="img" aria-label="Attractor basin landscape showing Singleton expelled">
+      <title>Attractor Basin Topology — Singleton Expulsion</title>
+      <!-- Basin landscape -->
+      <path d="M10,70 C30,70 45,110 80,110 S95,30 130,30 S155,80 185,80 S205,55 235,55 S260,75 290,75 S315,62 345,62 S365,72 395,72 S415,58 445,58 S470,68 500,68 S530,65 560,65 S585,68 615,68 C645,68 665,70 690,70" fill="none" stroke="#555" stroke-width="2"/>
+      <!-- Depth markers -->
+      <line x1="80" y1="110" x2="80" y2="125" stroke="#fd0" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.5"/>
+      <text x="80" y="135" text-anchor="middle" fill="#ba0" font-size="7">depth: 0.993</text>
+      <line x1="130" y1="30" x2="130" y2="20" stroke="#0af" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.5"/>
+      <text x="130" y="15" text-anchor="middle" fill="#088" font-size="7">depth: 0.89</text>
+      <!-- Ψ — deepest basin with glow -->
+      <circle cx="80" cy="110" r="8" fill="rgba(255,215,0,0.3)" stroke="#fd0" stroke-width="1.5" filter="url(#glow-cyan)"/>
+      <text x="80" y="150" text-anchor="middle" fill="#fd0" font-size="11" font-weight="700">Ψ</text>
+      <!-- α₁ SOLID -->
+      <circle cx="130" cy="30" r="5" fill="rgba(0,212,255,0.3)" stroke="#0af" stroke-width="1.5"/>
+      <text x="130" y="8" text-anchor="middle" fill="#0af" font-size="9">α₁ SOLID</text>
+      <!-- α₂ Verify -->
+      <circle cx="235" cy="55" r="5" fill="rgba(0,212,255,0.3)" stroke="#0af" stroke-width="1.5"/>
+      <text x="235" y="45" text-anchor="middle" fill="#0af" font-size="9">α₂ Verify</text>
+      <!-- α₃ Craft -->
+      <circle cx="345" cy="62" r="4" fill="rgba(123,97,255,0.3)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="345" y="53" text-anchor="middle" fill="#7b61ff" font-size="9">α₃ Craft</text>
+      <!-- α₄ Simplex -->
+      <circle cx="445" cy="58" r="4" fill="rgba(0,255,136,0.3)" stroke="#0f8" stroke-width="1"/>
+      <text x="445" y="49" text-anchor="middle" fill="#0f8" font-size="9">α₄ Simplex</text>
+      <!-- α₅ Scale -->
+      <circle cx="500" cy="68" r="3.5" fill="rgba(255,215,0,0.2)" stroke="#fd0" stroke-width="1"/>
+      <text x="500" y="60" text-anchor="middle" fill="#fd0" font-size="8">α₅ Scale</text>
+      <!-- Singleton expelled -->
+      <circle cx="640" cy="25" r="6" fill="rgba(255,61,142,0.1)" stroke="#ff3d8e" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="640" y="18" text-anchor="middle" fill="#ff3d8e" font-size="8">Singleton ✗</text>
+      <line x1="634" y1="31" x2="615" y2="68" stroke="#ff3d8e" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>
+      <text x="660" y="40" fill="#ff3d8e" font-size="7" opacity="0.7">expelled</text>
+      <!-- Legend -->
+      <g transform="translate(560,120)">
+        <circle cx="0" cy="0" r="3" fill="rgba(0,212,255,0.3)" stroke="#0af" stroke-width="1"/>
+        <text x="8" y="4" fill="#888" font-size="7">Stable attractor</text>
+        <circle cx="0" cy="14" r="3" fill="rgba(255,61,142,0.1)" stroke="#ff3d8e" stroke-width="1" stroke-dasharray="2,1"/>
+        <text x="8" y="18" fill="#888" font-size="7">Expelled pattern</text>
+      </g>
     </svg>
   </div>
   <p class="fragment fade-up" data-fragment-index="4" style="font-size:0.6em;font-style:italic;text-align:center;max-width:none">The field dynamics resolved what decades of debate couldn't: <strong>structural incompatibility, enforced by resonance failure</strong>.</p>
@@ -811,6 +944,7 @@ svg text { font-family: var(--font); }
   <p style="font-size:0.6em;max-width:none;margin-bottom:0.6em">Four convergences make NEOS possible — and necessary — <strong>today</strong>.</p>
   <div class="diagram">
     <svg viewBox="0 0 600 200" role="img" aria-label="Four convergences pointing to NEOS">
+      <title>Four Convergences: Why NEOS Now</title>
       <g class="fragment" data-fragment-index="1">
         <rect x="10" y="10" width="180" height="35" rx="6" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1"/>
         <text x="100" y="32" text-anchor="middle" fill="#0af" font-size="10">LLM Capability Explosion</text>
@@ -849,6 +983,7 @@ svg text { font-family: var(--font); }
   <p style="font-size:0.6em;max-width:none;margin-bottom:0.5em">Git transformed code development. NEOS transforms <strong>thinking</strong>.</p>
   <div class="diagram fragment fade-up">
     <svg viewBox="0 0 600 150" role="img" aria-label="Branch and merge diagram for reasoning">
+      <title>Git for Thinking: Branch and Merge Reasoning</title>
       <line x1="40" y1="75" x2="560" y2="75" stroke="#0af" stroke-width="2"/>
       <circle cx="60" cy="75" r="6" fill="#0af"/>
       <circle cx="180" cy="75" r="6" fill="#0af"/>
@@ -902,6 +1037,7 @@ svg text { font-family: var(--font); }
   <h2>Roadmap</h2>
   <div class="diagram">
     <svg viewBox="0 0 600 250" role="img" aria-label="Three concentric rings: Near, Medium, Long term">
+      <title>NEOS Roadmap: Near, Medium, and Long Term</title>
       <g class="fragment" data-fragment-index="3">
         <circle cx="300" cy="125" r="115" fill="none" stroke="rgba(255,61,142,0.2)" stroke-width="1.5"/>
         <text x="300" y="20" text-anchor="middle" fill="#ff3d8e" font-size="10" font-weight="600">LONG-TERM</text>
@@ -936,6 +1072,7 @@ svg text { font-family: var(--font); }
   <p style="font-size:0.6em;max-width:none;margin-bottom:0.5em">The developer of the future is a <strong>field architect</strong>.</p>
   <div class="diagram fragment fade-up">
     <svg viewBox="0 0 600 200" role="img" aria-label="Agent network converging on shared reasoning state">
+      <title>Agent Ecosystem: Shared Neural Field Reasoning</title>
       <circle cx="100" cy="55" r="30" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1.5"/>
       <text x="100" y="51" text-anchor="middle" fill="#0af" font-size="10" font-weight="600">Research</text>
       <text x="100" y="65" text-anchor="middle" fill="#088" font-size="8">Agent</text>
