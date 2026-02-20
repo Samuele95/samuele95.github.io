@@ -80,18 +80,29 @@ section:nth-child(even) { background: var(--bg2); }
   section { padding: 4rem 0; }
   .container { padding: 0 1.2rem; }
   #param-playground .grid-2 { grid-template-columns: 1fr; }
+  .diagram { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .diagram svg { min-width: 500px; }
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  th, td { white-space: nowrap; font-size: 0.85rem; padding: 0.5rem 0.7rem; }
 }
 @media (max-width: 480px) {
   section { padding: 3rem 0; }
   h1 { font-size: 2rem; }
   h2 { font-size: 1.5rem; }
   .terminal-body { font-size: 0.75rem; padding: 0.8rem 1rem; }
-  .equation { font-size: 0.85rem; padding: 1rem; }
+  .equation { font-size: 0.75rem; padding: 1rem; white-space: pre-wrap; word-break: break-word; }
   .grid-2 { gap: 1rem; }
   .grid-3 { gap: 1rem; }
   .sec-num { font-size: 0.7rem; }
   .callout { padding: 1.2rem; font-size: 1rem; }
   #back-to-top { bottom: 1rem; right: 1rem; width: 38px; height: 38px; }
+  .container { padding: 0 1rem; }
+  .hero-diagram { margin-bottom: 1rem; }
+  .hero-diagram svg { min-width: 350px; }
+  .tab-btn { padding: 0.6rem 0.8rem; font-size: 0.8rem; }
+  .card { padding: 1.2rem; }
+  .cta-card { padding: 1.5rem 1.2rem; }
+  .footer-links { flex-wrap: wrap; gap: 1rem; }
 }
 
 /* SVG diagrams */
@@ -1866,7 +1877,7 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
   <p class="footer-subtitle">The Operating System for Machine Intelligence</p>
   <nav class="footer-links" aria-label="Footer">
     <a href="#hero">Back to Top</a>
-    <a href="https://github.com/samuele95" target="_blank" rel="noopener" aria-label="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+    <a href="https://github.com/Samuele95/neos" target="_blank" rel="noopener" aria-label="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
   </nav>
   <hr class="footer-sep">
   <p class="footer-copy">&copy; 2025 NEOS Project. All rights reserved.</p>
