@@ -1,0 +1,2893 @@
+---
+layout: post
+title: "Quantum Context Engineering — When Words Become Wavefunctions"
+date: 2026-03-10
+category: AI & Context Engineering
+tags: [AI, LLM, Context Engineering, Quantum Semantics, Prompt Engineering, Hilbert Spaces]
+excerpt: "Meaning lives in superposition, context collapses it. A framework for non-classical meaning representation with 11 engineering principles and a prompt library."
+author: Samuele95
+---
+
+
+<div class="series-banner">
+  <span class="series-label">Article #3 of the Series</span>
+  <h2 class="series-title">Context Engineering: Advanced Strategies for LLM and Artificial Intelligence</h2>
+  <p>This article is the third installment of the <strong>Context Engineering</strong> series. It presents a mathematical framework — <strong>Quantum Semantics</strong> — that treats meaning as a quantum system and derives practical engineering principles for LLM prompt design.</p>
+  <p><strong>Previously:</strong> <a href="/blog/2026/02/02/symbolic-reasoning-in-llm/">Article #1 — Symbolic Reasoning</a> | <a href="/blog/2026/01/18/emergent-introspective-awareness-llms/">Article #2 — Emergent Introspective Awareness</a></p>
+</div>
+
+<style>
+/* Series Banner */
+.series-banner {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+  border: 2px solid #f87171;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin: -1rem 0 3rem 0;
+  box-shadow: 0 4px 20px rgba(248, 113, 113, 0.15);
+}
+
+.series-label {
+  display: inline-block;
+  background: #f87171;
+  color: #0d0d0d;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.series-title {
+  color: #f5f5f5;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1rem 0;
+  line-height: 1.3;
+}
+
+.series-banner p {
+  color: #a3a3a3;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+
+.series-banner p:last-child {
+  margin-bottom: 0;
+}
+
+.series-banner a {
+  color: #22d3ee;
+  text-decoration: underline;
+}
+
+.series-banner a:hover {
+  color: #06b6d4;
+}
+</style>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+
+<!-- MathJax for equation rendering -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  svg: { fontCache: 'global' },
+  startup: { typeset: true }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+<style>
+
+.qs-article-wrapper {
+  /* Force light theme */
+  --paper: #FDFBF7;
+  --paper-warm: #F8F5EE;
+  --paper-cool: #F3F1EC;
+  --ink: #1C1C28;
+  --ink-light: #4A4A5A;
+  --ink-dim: #8A8A9A;
+  --indigo: #4354A0;
+  --indigo-light: #5B6CC2;
+  --indigo-pale: rgba(67,84,160,0.08);
+  --teal: #1A8A7D;
+  --teal-pale: rgba(26,138,125,0.07);
+  --amber: #C4880B;
+  --amber-pale: rgba(196,136,11,0.08);
+  --rose: #B84A4A;
+  --rose-pale: rgba(184,74,74,0.06);
+  --sage: #3A8A5A;
+  --rule: rgba(28,28,40,0.10);
+  --rule-accent: rgba(67,84,160,0.25);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  /* Reset to light theme */
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Crimson Pro", "Georgia", "Times New Roman", serif;
+  font-size: 1.15rem;
+  line-height: 1.82;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem -2rem;
+}
+
+.qs-article-wrapper ::selection { background: rgba(67,84,160,0.18); color: var(--ink); }
+
+/* ═══════════════════════════════════════════════════════════════
+   QS Academic Theme — Light scholarly design
+   Inspired by Quanta Magazine / Nature / academic monographs
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══ Reset & Base ═══ */
+
+
+/* ═══ Main Wrapper ═══ */
+.qs-article-wrapper .qs-article {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+/* ═══ Epigraph ═══ */
+.qs-article-wrapper .qs-epigraph {
+  text-align: center;
+  font-style: italic;
+  color: var(--ink-light);
+  margin: 0 auto 3rem;
+  max-width: 520px;
+  font-size: 1.08rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.qs-article-wrapper .qs-epigraph cite {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  font-style: normal;
+  color: var(--ink-dim);
+}
+
+/* ═══ Typography ═══ */
+.qs-article-wrapper .qs-article p {
+  margin: 1.1rem 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.qs-article-wrapper .qs-article strong { color: var(--ink); font-weight: 600; }
+
+.qs-article-wrapper .qs-article a {
+  color: var(--indigo);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(67,84,160,0.3);
+  transition: border-color 0.2s, color 0.2s;
+}
+.qs-article-wrapper .qs-article a:hover {
+  color: var(--indigo-light);
+  border-bottom-color: var(--indigo);
+}
+
+/* Inline code */
+.qs-article-wrapper .qs-article code {
+  background: var(--paper-cool);
+  color: var(--indigo);
+  padding: 0.12rem 0.45rem;
+  border-radius: 3px;
+  font-family: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+  font-size: 0.88em;
+  border: 1px solid var(--rule);
+}
+
+/* ═══ Section Headings ═══ */
+.qs-article-wrapper .qs-section-num {
+  display: block;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--indigo);
+  margin-bottom: 0.3rem;
+}
+
+.qs-article-wrapper .qs-section-title {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+/* ═══ Divider ═══ */
+.qs-article-wrapper .qs-divider {
+  border: none;
+  height: 0;
+  border-top: 1px solid var(--rule);
+  margin: 3.5rem 0;
+  position: relative;
+}
+
+.qs-article-wrapper .qs-divider-ornament {
+  border: none;
+  height: 0;
+  margin: 3.5rem 0;
+  text-align: center;
+  position: relative;
+}
+.qs-article-wrapper .qs-divider-ornament::before {
+  content: "* * *";
+  display: block;
+  font-family: "Crimson Pro", serif;
+  font-size: 1.1rem;
+  color: var(--ink-dim);
+  letter-spacing: 0.5em;
+}
+
+/* ═══ Definition Box ═══ */
+.qs-article-wrapper .qs-definition {
+  background: var(--indigo-pale);
+  border-left: 3px solid var(--indigo);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.3rem 1.6rem;
+  margin: 1.8rem 0;
+}
+
+.qs-article-wrapper .qs-definition-label {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--indigo);
+  margin-bottom: 0.4rem;
+}
+
+.qs-article-wrapper .qs-definition p {
+  margin: 0.4rem 0;
+  text-align: left;
+}
+
+.qs-article-wrapper .qs-definition .qs-math-block {
+  margin: 0.8rem 0;
+}
+
+/* ═══ Theorem Box ═══ */
+.qs-article-wrapper .qs-theorem {
+  background: var(--teal-pale);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.3rem 1.6rem;
+  margin: 1.8rem 0;
+}
+
+.qs-article-wrapper .qs-theorem-label {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--teal);
+  margin-bottom: 0.4rem;
+}
+
+.qs-article-wrapper .qs-theorem p {
+  margin: 0.4rem 0;
+  text-align: left;
+}
+
+/* ═══ Proposition / Remark Box ═══ */
+.qs-article-wrapper .qs-proposition {
+  background: var(--amber-pale);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.3rem 1.6rem;
+  margin: 1.8rem 0;
+}
+
+.qs-article-wrapper .qs-proposition-label {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--amber);
+  margin-bottom: 0.4rem;
+}
+
+.qs-article-wrapper .qs-proposition p {
+  margin: 0.4rem 0;
+  text-align: left;
+}
+
+/* ═══ Insight Box ═══ */
+.qs-article-wrapper .qs-insight {
+  background: var(--paper-warm);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem 1.8rem;
+  margin: 2rem 0;
+}
+
+.qs-article-wrapper .qs-insight-label {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sage);
+  margin-bottom: 0.4rem;
+}
+
+.qs-article-wrapper .qs-insight p {
+  margin: 0.4rem 0;
+  font-style: italic;
+}
+
+/* ═══ Math Display ═══ */
+.qs-article-wrapper .qs-math-block {
+  text-align: center;
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  background: var(--paper-cool);
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
+  overflow-x: auto;
+}
+
+.qs-article-wrapper .qs-math-block .qs-eq-label {
+  float: right;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--ink-dim);
+  margin-left: 1rem;
+}
+
+/* ═══ Pull Quote ═══ */
+.qs-article-wrapper .qs-pullquote {
+  font-size: 1.35rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--indigo);
+  padding: 1.5rem 2.5rem;
+  margin: 2.5rem 0;
+  border-top: 1px solid var(--rule-accent);
+  border-bottom: 1px solid var(--rule-accent);
+  line-height: 1.55;
+}
+
+/* ═══ Comparison Cards ═══ */
+.qs-article-wrapper .qs-comparison {
+  display: flex;
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+
+.qs-article-wrapper .qs-comparison-card {
+  flex: 1;
+  padding: 1.4rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--paper-warm);
+  border: 1px solid var(--rule);
+  font-size: 0.95rem;
+}
+
+.qs-article-wrapper .qs-comparison-card.card-a {
+  border-top: 3px solid var(--ink-dim);
+}
+
+.qs-article-wrapper .qs-comparison-card.card-b {
+  border-top: 3px solid var(--indigo);
+}
+
+.qs-article-wrapper .qs-comparison-card h4 {
+  margin: 0 0 0.7rem 0;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.qs-article-wrapper .qs-comparison-card.card-a h4 { color: var(--ink-light); }
+.qs-article-wrapper .qs-comparison-card.card-b h4 { color: var(--indigo); }
+
+.qs-article-wrapper .qs-comparison-card p { margin: 0.4rem 0; text-align: left; }
+
+/* ═══ Terminal/Try-It Card ═══ */
+.qs-article-wrapper .qs-terminal {
+  background: #1C1C28;
+  border-radius: var(--radius-lg);
+  margin: 2rem 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.qs-article-wrapper .qs-terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: #282838;
+}
+
+.qs-article-wrapper .qs-terminal-bar span {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.qs-article-wrapper .qs-terminal-bar span:nth-child(1) { background: #ff5f57; }
+.qs-article-wrapper .qs-terminal-bar span:nth-child(2) { background: #ffbd2e; }
+.qs-article-wrapper .qs-terminal-bar span:nth-child(3) { background: #28c841; }
+
+.qs-article-wrapper .qs-terminal-title {
+  margin-left: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  color: #8A8A9A;
+}
+
+.qs-article-wrapper .qs-terminal pre {
+  background: #1C1C28;
+  color: #E8E8ED;
+  border: none;
+  border-radius: 0;
+  padding: 1.2rem 1.5rem;
+  font-family: "JetBrains Mono", "SF Mono", monospace;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+}
+
+.qs-article-wrapper .qs-terminal pre .prompt { color: #5B9BD5; }
+.qs-article-wrapper .qs-terminal pre .comment { color: #6A9955; }
+.qs-article-wrapper .qs-terminal pre .highlight { color: #DCDCAA; }
+
+/* ═══ Figure ═══ */
+.qs-article-wrapper .qs-figure {
+  margin: 2.5rem 0;
+  text-align: center;
+}
+
+.qs-article-wrapper .qs-figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow-sm);
+  background: #fff;
+  padding: 0.5rem;
+  cursor: zoom-in;
+}
+
+.qs-article-wrapper .qs-figure-caption {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.88rem;
+  color: var(--ink-dim);
+  margin-top: 0.8rem;
+  line-height: 1.5;
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.qs-article-wrapper .qs-figure-caption strong {
+  color: var(--ink-light);
+  font-weight: 600;
+}
+
+/* ═══ Table ═══ */
+.qs-article-wrapper .qs-table-wrapper {
+  overflow-x: auto;
+  margin: 2rem 0;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow-sm);
+}
+
+.qs-article-wrapper .qs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  background: #fff;
+}
+
+.qs-article-wrapper .qs-table th {
+  background: var(--paper-cool);
+  color: var(--indigo);
+  padding: 0.8rem 1rem;
+  text-align: left;
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 2px solid var(--rule);
+}
+
+.qs-article-wrapper .qs-table td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  vertical-align: top;
+}
+
+.qs-article-wrapper .qs-table tr:last-child td { border-bottom: none; }
+
+.qs-article-wrapper .qs-table tr:hover td {
+  background: rgba(67,84,160,0.06);
+}
+
+/* ═══ What-Is Summary Box ═══ */
+.qs-article-wrapper .qs-summary-box {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.2rem;
+  margin: 2.5rem 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.qs-article-wrapper .qs-summary-box h2 {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--indigo);
+  margin: 0 0 0.8rem 0;
+}
+
+.qs-article-wrapper .qs-summary-box p { margin: 0.5rem 0; font-size: 1rem; }
+
+.qs-article-wrapper .qs-summary-box ul {
+  margin: 0.8rem 0;
+  padding-left: 1.4rem;
+}
+
+.qs-article-wrapper .qs-summary-box li {
+  margin-bottom: 0.5rem;
+  font-size: 0.98rem;
+}
+
+.qs-article-wrapper .qs-summary-box li strong {
+  color: var(--indigo);
+}
+
+/* ═══ QSC Teaser Section ═══ */
+.qs-article-wrapper .qs-teaser {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2.5rem;
+  margin: 3rem 0;
+}
+
+.qs-article-wrapper .qs-teaser h2 {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.qs-article-wrapper .qs-teaser p { color: #C8C8D8; margin: 0.8rem 0; text-align: left; }
+.qs-article-wrapper .qs-teaser strong { color: #fff; }
+
+.qs-article-wrapper .qs-teaser code {
+  background: rgba(91,108,194,0.2);
+  color: #8BA4E8;
+  border: 1px solid rgba(91,108,194,0.3);
+}
+
+/* ═══ Reference Tag ═══ */
+.qs-article-wrapper .qs-ref {
+  display: inline;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.7em;
+  color: var(--indigo);
+  opacity: 0.7;
+  vertical-align: super;
+  line-height: 0;
+  font-weight: 500;
+}
+
+/* ═══ CTA ═══ */
+.qs-article-wrapper .qs-cta {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  margin: 2rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.qs-article-wrapper .qs-cta p { margin: 0.4rem auto; font-size: 1.05rem; text-align: center; }
+
+.qs-article-wrapper .qs-cta-headline {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--indigo);
+  margin-bottom: 0.5rem;
+}
+
+/* ═══ Image Grid (two images side by side) ═══ */
+.qs-article-wrapper .qs-figure-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin: 2.5rem 0;
+}
+
+.qs-article-wrapper .qs-figure-grid .qs-figure {
+  margin: 0;
+}
+
+/* ═══ Scroll Reveal ═══ */
+.qs-article-wrapper.js-loaded .reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+.qs-article-wrapper.js-loaded .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+/* ═══ Responsive ═══ */
+@media (max-width: 768px) {
+.qs-article-wrapper .qs-article { padding: 0 1.2rem 3rem; }
+.qs-article-wrapper .qs-hero { padding: 3rem 1.2rem 2rem; }
+.qs-article-wrapper .qs-comparison { flex-direction: column; }
+.qs-article-wrapper .qs-figure-grid { grid-template-columns: 1fr; }
+.qs-article-wrapper .qs-teaser { padding: 2rem 1.5rem; }
+  
+}
+
+@media (max-width: 480px) {
+.qs-article-wrapper .qs-hero { padding: 2rem 1rem 1.5rem; }
+.qs-article-wrapper .qs-article { padding: 0 0.8rem 2rem; }
+.qs-article-wrapper .qs-hero-meta { flex-direction: column; gap: 0.3rem; }
+.qs-article-wrapper .qs-definition, .qs-article-wrapper .qs-theorem, .qs-article-wrapper .qs-proposition { padding: 1rem 1.2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+.qs-article-wrapper * { transition: none !important; }
+.qs-article-wrapper.js-loaded .reveal { opacity: 1; transform: none; }
+}
+
+/* ═══ Copy Button ═══ */
+.qs-article-wrapper .qs-terminal {
+  position: relative;
+}
+
+.qs-article-wrapper .qs-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #8A8A9A;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.qs-article-wrapper .qs-copy-btn:hover {
+  background: rgba(255,255,255,0.18);
+  color: #ccc;
+}
+
+.qs-article-wrapper .qs-copy-btn.copied {
+  background: rgba(40,200,65,0.2);
+  color: #28c841;
+  border-color: rgba(40,200,65,0.3);
+}
+
+/* ═══ Lightbox ═══ */
+.qs-article-wrapper .qs-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  cursor: zoom-out;
+}
+
+.qs-article-wrapper .qs-lightbox.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.qs-article-wrapper .qs-lightbox img {
+  max-width: 92vw;
+  max-height: 90vh;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+  cursor: default;
+  background: #fff;
+  padding: 0.5rem;
+}
+
+.qs-article-wrapper .qs-lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  line-height: 1;
+}
+
+.qs-article-wrapper .qs-lightbox-close:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* ═══ Proof Details ═══ */
+.qs-article-wrapper .qs-proof-details {
+  margin: 0.8rem 0 0;
+}
+
+.qs-article-wrapper .qs-proof-details summary {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--teal);
+  cursor: pointer;
+  padding: 0.2rem 0;
+}
+
+.qs-article-wrapper .qs-proof-details summary:hover {
+  color: var(--indigo);
+}
+
+.qs-article-wrapper .qs-proof-details p {
+  margin: 0.5rem 0 0;
+}
+
+/* ═══ Prompt Card ═══ */
+.qs-article-wrapper .qs-prompt-card {
+  margin: 2rem 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.qs-article-wrapper .qs-prompt-card-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  padding: 1rem 1.5rem;
+  background: var(--paper-warm);
+  border-bottom: 1px solid var(--rule);
+}
+
+.qs-article-wrapper .qs-prompt-card-id {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--indigo);
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.qs-article-wrapper .qs-prompt-card-header h4 {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.qs-article-wrapper .qs-prompt-card-meta {
+  padding: 0.8rem 1.5rem;
+  background: var(--paper-warm);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.qs-article-wrapper .qs-prompt-card-meta p { margin: 0.3rem 0; text-align: left; }
+
+.qs-article-wrapper .qs-prompt-card-tag {
+  display: inline-block;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.1rem 0.5rem;
+  border-radius: 3px;
+  margin-right: 0.3rem;
+}
+
+.qs-article-wrapper .qs-prompt-card-tag.tag-concept {
+  background: var(--teal-pale);
+  color: var(--teal);
+  border: 1px solid rgba(26,138,125,0.2);
+}
+
+.qs-article-wrapper .qs-prompt-card-tag.tag-use {
+  background: var(--amber-pale);
+  color: var(--amber);
+  border: 1px solid rgba(196,136,11,0.2);
+}
+
+.qs-article-wrapper .qs-prompt-card .qs-terminal {
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ═══ Inline SVG Diagrams ═══ */
+.qs-article-wrapper .qs-svg-figure {
+  margin: 2.5rem 0;
+  text-align: center;
+}
+
+.qs-article-wrapper .qs-svg-figure svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.qs-svg-figure figcaption,
+.qs-article-wrapper .qs-svg-figure .qs-figure-caption {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.88rem;
+  color: var(--ink-dim);
+  margin-top: 0.8rem;
+  line-height: 1.5;
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.qs-svg-figure figcaption strong,
+.qs-article-wrapper .qs-svg-figure .qs-figure-caption strong {
+  color: var(--ink-light);
+  font-weight: 600;
+}
+
+/* SVG color variables for theme support */
+.qs-article-wrapper .qs-svg-figure text { fill: var(--ink); }
+.qs-article-wrapper .qs-svg-figure .svg-axis { stroke: var(--ink-dim); }
+.qs-article-wrapper .qs-svg-figure .svg-grid { stroke: var(--rule); }
+.qs-article-wrapper .qs-svg-figure .svg-primary { stroke: var(--indigo); fill: var(--indigo); }
+.qs-article-wrapper .qs-svg-figure .svg-secondary { stroke: var(--teal); fill: var(--teal); }
+.qs-article-wrapper .qs-svg-figure .svg-tertiary { stroke: var(--amber); fill: var(--amber); }
+.qs-article-wrapper .qs-svg-figure .svg-accent { stroke: var(--rose); fill: var(--rose); }
+.qs-article-wrapper .qs-svg-figure .svg-dim { stroke: var(--ink-dim); fill: none; }
+.qs-article-wrapper .qs-svg-figure .svg-label {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+.qs-article-wrapper .qs-svg-figure .svg-math {
+  font-family: "Crimson Pro", serif;
+  font-style: italic;
+  font-size: 14px;
+}
+.qs-article-wrapper .qs-svg-figure .svg-small {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 10px;
+}
+
+/* ═══ Three-Panel Layout ═══ */
+.qs-article-wrapper .qs-svg-panels {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2.5rem 0;
+}
+
+.qs-article-wrapper .qs-svg-panels > figure {
+  flex: 1;
+  min-width: 180px;
+  max-width: 260px;
+  text-align: center;
+}
+
+.qs-article-wrapper .qs-svg-panels svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.qs-article-wrapper .qs-svg-panels figcaption {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+.qs-article-wrapper .qs-svg-panels { flex-direction: column; align-items: center; }
+.qs-article-wrapper .qs-svg-panels > figure { max-width: 300px; }
+}
+
+
+</style>
+
+<div class="qs-article-wrapper">
+<div class="qs-article">
+
+<div class="qs-epigraph reveal">
+  "The meaning of a word is its use in the language."
+  <cite>&mdash; Ludwig Wittgenstein, <em>Philosophical Investigations</em> &sect;43</cite>
+</div>
+
+<p>Read the word "bank" again. What did you see? A building with a vault? A grassy slope by a river? An airplane maneuver?</p>
+
+<p>Here's the unsettling truth: <strong>before you read the surrounding sentence, "bank" didn't mean any of those things.</strong> It meant all of them, simultaneously. The moment context arrived &mdash; this paragraph, your expectations, the title of this article &mdash; one meaning crystallized and the others vanished. Not hidden. <em>Destroyed.</em></p>
+
+<p>This isn't a metaphor. It's a precise description of how meaning actually works &mdash; and it follows the exact same mathematics as quantum physics. That's the core insight behind <strong>quantum semantics</strong>: a framework that treats language not as a code to be decoded, but as a physical system where meaning is created through measurement.</p>
+
+<p>If you work with LLMs, this changes everything you thought you knew about prompt engineering.</p>
+
+<!-- ═══ WHAT IS QS ═══ -->
+<div class="qs-summary-box reveal">
+  <h2>What is Quantum Semantics?</h2>
+  <p><strong>Quantum Semantics</strong> is a mathematical framework that models linguistic meaning using the same formalism as quantum mechanics: Hilbert spaces, unitary operators, and Born-rule measurement. Rather than treating words as fixed symbols with dictionary definitions, it treats every semantic expression as a <strong>state vector</strong> in a high-dimensional space &mdash; a superposition of all possible interpretations.</p>
+  <p>The framework makes four core claims, all formalized as theorems and experimentally testable with LLMs:</p>
+  <ul>
+    <li><strong>Superposition</strong> &mdash; Before context arrives, meaning exists as a weighted combination of all interpretations</li>
+    <li><strong>Measurement / Collapse</strong> &mdash; Context acts as a projection operator that irreversibly selects one interpretation</li>
+    <li><strong>Non-commutativity</strong> &mdash; The order of context operations changes the outcome: $[A,B] \neq 0$</li>
+    <li><strong>Interference</strong> &mdash; Combining contexts produces emergent meanings that neither context alone would generate</li>
+  </ul>
+  <p>This article presents the complete framework: formal definitions and theorems, empirical testability via Bell/CHSH inequalities, eleven practical engineering principles for LLM prompt design, and a ready-to-use prompt library.</p>
+</div>
+
+<hr class="qs-divider">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 1: THE HILBERT SPACE OF MEANING
+     ═══════════════════════════════════════════════════════════════ -->
+<span class="qs-section-num reveal">Section 1</span>
+<h2 id="section-1" class="qs-section-title reveal">The Hilbert Space of Meaning</h2>
+
+<p>In quantum mechanics, the state of a physical system is described by a vector in a <em>Hilbert space</em> &mdash; a complex vector space equipped with an inner product. Quantum semantics applies the same structure to meaning.</p>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Definition 2.1 &mdash; Semantic Hilbert Space</div>
+  <p>A <em>semantic Hilbert space</em> is a pair $(\mathcal{H}_S, \mathcal{B})$ where $\mathcal{H}_S = \mathbb{C}^d$ and $\mathcal{B} = \{|b_1\rangle, \ldots, |b_d\rangle\}$ is an orthonormal basis with each $|b_i\rangle$ labeled by a distinct meaning.</p>
+</div>
+
+<p>For the word "bank" with $d = 4$, the basis states might be $|b_1\rangle = $ <em>financial institution</em>, $|b_2\rangle = $ <em>river bank</em>, $|b_3\rangle = $ <em>aircraft bank</em>, $|b_4\rangle = $ <em>memory bank</em>. Each represents a pure, unambiguous interpretation.</p>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Definition 2.2 &mdash; Semantic State</div>
+  <p>A <em>semantic state</em> is a unit vector $|\psi\rangle \in \mathcal{H}_S$ with $\langle\psi|\psi\rangle = 1$. General form:</p>
+  <div class="qs-math-block">
+    $$|\psi\rangle = \sum_i c_i\,|b_i\rangle, \qquad \sum_i |c_i|^2 = 1$$
+  </div>
+  <p>The coefficients $c_i$ are complex numbers. Their magnitudes encode probabilities; their <em>phases</em> encode how meanings interact.</p>
+</div>
+
+<p>Every semantic expression &mdash; a word, a phrase, a sentence &mdash; lives as a state vector in this space. A vector pointing purely along $|b_1\rangle$ means "100% financial institution." A diagonal vector means "a mix of interpretations" &mdash; superposition visualized as an angle. The key difference from classical probability: the coefficients are <em>complex</em>, which means they carry phase information that produces interference.</p>
+
+<!-- Geometric Figure: State Vector in 2D Semantic Hilbert Space -->
+<figure class="qs-svg-figure reveal">
+<svg viewBox="0 0 460 280" width="460" height="280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Semantic state vector in 2D Hilbert space">
+  <!-- Grid -->
+  <line x1="60" y1="250" x2="430" y2="250" class="svg-axis" stroke-width="1.5"/>
+  <line x1="60" y1="250" x2="60" y2="20" class="svg-axis" stroke-width="1.5"/>
+  <polygon points="430,250 420,245 420,255" class="svg-axis" fill="var(--ink-dim)"/>
+  <polygon points="60,20 55,30 65,30" class="svg-axis" fill="var(--ink-dim)"/>
+  <line x1="60" y1="130" x2="430" y2="130" class="svg-grid" stroke-width="0.5" stroke-dasharray="4,4"/>
+  <line x1="240" y1="250" x2="240" y2="20" class="svg-grid" stroke-width="0.5" stroke-dasharray="4,4"/>
+  <line x1="300" y1="90" x2="300" y2="250" class="svg-dim" stroke-width="1.2" stroke-dasharray="6,4"/>
+  <line x1="300" y1="90" x2="60" y2="90" class="svg-dim" stroke-width="1.2" stroke-dasharray="6,4"/>
+  <text x="310" y="180" class="svg-small" fill="var(--ink-dim)">c₁ = 0.79</text>
+  <text x="140" y="82" class="svg-small" fill="var(--ink-dim)">c₂ = 0.61</text>
+  <line x1="60" y1="250" x2="300" y2="90" class="svg-primary" stroke-width="2.5" fill="none"/>
+  <polygon points="300,90 285,96 290,108" fill="var(--indigo)"/>
+  <path d="M 120,250 A 60,60 0 0,0 96,212" fill="none" stroke="var(--indigo)" stroke-width="1.5"/>
+  <text x="436" y="255" class="svg-math" fill="var(--ink)">|b₁⟩</text>
+  <text x="38" y="16" class="svg-math" fill="var(--ink)">|b₂⟩</text>
+  <text x="306" y="80" class="svg-math" fill="var(--indigo)" font-weight="600">|ψ⟩</text>
+  <text x="126" y="238" class="svg-math" fill="var(--indigo)">θ</text>
+  <text x="420" y="274" class="svg-small" fill="var(--ink-dim)">financial</text>
+  <text x="12" y="40" class="svg-small" fill="var(--ink-dim)" transform="rotate(-90,12,40)">river bank</text>
+  <path d="M 360,250 A 300,300 0 0,0 60,250" fill="none" stroke="var(--rule)" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>
+  <rect x="260" y="20" width="180" height="50" rx="4" fill="var(--paper-warm)" stroke="var(--rule)" stroke-width="1"/>
+  <text x="270" y="38" class="svg-small" fill="var(--indigo)" font-weight="600">Born rule:</text>
+  <text x="270" y="56" class="svg-small" fill="var(--ink-light)">Pr[financial] = |c₁|² = 0.62</text>
+</svg>
+<figcaption class="qs-figure-caption"><strong>Geometric view.</strong> A semantic state $|\psi\rangle$ is a unit vector in the Hilbert space spanned by basis meanings. The angle $\theta$ encodes the superposition: projections onto each axis give the coefficients $c_i$, and $|c_i|^2$ gives the Born probability.</figcaption>
+</figure>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Equation 1 &mdash; The Born Rule</div>
+  <p>The probability of observing meaning $b_i$ when the state $|\psi\rangle$ is measured:</p>
+  <div class="qs-math-block">
+    $$\Pr[\text{meaning}\;b_i] = |\langle b_i|\psi\rangle|^2 = |c_i|^2$$
+  </div>
+  <p>This is the bridge between quantum formalism and observable behavior. When an LLM is asked to interpret an ambiguous expression, its probability distribution over outputs follows the Born rule.</p>
+</div>
+
+<figure class="qs-figure reveal">
+  <img src="/assets/images/quantum-semantics/bayesian_collapse.png" loading="lazy" decoding="async" alt="Bayesian probability distribution collapsing as context accumulates: from broad superposition across four meanings to sharp collapse onto 'financial institution'">
+  <figcaption class="qs-figure-caption"><strong>Figure 1.</strong> As context accumulates (observation steps 0 &rarr; 2), the Born probability distribution collapses from a broad superposition to a sharp peak on a single interpretation. Bottom panel: Shannon entropy decreases monotonically &mdash; information is irreversibly lost with each contextual observation.</figcaption>
+</figure>
+
+<p>This isn't just an analogy. The mathematics is identical: Hilbert spaces, unitary operators, Born rule probabilities. And it produces testable, measurable predictions about how LLMs behave.</p>
+
+<hr class="qs-divider">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 2: THE THREE QUANTUM RULES
+     ═══════════════════════════════════════════════════════════════ -->
+<span class="qs-section-num reveal">Section 2</span>
+<h2 id="section-2" class="qs-section-title reveal">The Three Quantum Rules of Meaning</h2>
+
+<!-- Rule 1 -->
+<h3 style="font-family: 'Inter', sans-serif; font-size: 1.15rem; color: var(--indigo); margin: 2rem 0 0.8rem; font-weight: 600;" class="reveal">Rule 1: Superposition &mdash; Words carry all meanings at once</h3>
+
+<p>Classical NLP treats ambiguity as a problem: "the word has multiple senses; pick the right one." Quantum semantics treats it as a <em>resource</em>. The superposition is the information. Collapsing it prematurely destroys it.</p>
+
+<p>Here's what that looks like in practice. Give an LLM the expression "The bank is secure" and ask it to preserve the superposition instead of resolving it:</p>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Superposition Output</span></div>
+<pre><span class="comment"># Born-rule probability distribution for "The bank is secure"</span>
+expression: "The bank is secure."
+interpretations:
+  - meaning: "The financial institution has strong security"
+    weight: 0.62
+    basis: "financial"
+  - meaning: "The river embankment is structurally stable"
+    weight: 0.25
+    basis: "geographical"
+  - meaning: "The data repository is protected"
+    weight: 0.11
+    basis: "technical"
+  - meaning: "Other (pool shot setup, aircraft angle)"
+    weight: 0.02
+    basis: "other"
+total_weight: 1.0   <span class="comment"># normalization: &sum;|c_i|&sup2; = 1</span>
+dominant_interpretation: "financial institution security"
+residual_ambiguity: "domain context would collapse"</pre>
+</div>
+
+<p>Those weights are $|c_i|^2$ &mdash; Born rule probabilities. The normalization to 1.0 isn't arbitrary formatting. It's the physics.</p>
+
+<!-- Rule 2 -->
+<h3 style="font-family: 'Inter', sans-serif; font-size: 1.15rem; color: var(--indigo); margin: 2.5rem 0 0.8rem; font-weight: 600;" class="reveal">Rule 2: Measurement &mdash; Context creates meaning, it doesn't reveal it</h3>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Definition 2.3 &mdash; Context Operator</div>
+  <p>A <em>context operator</em> is a linear map $O : \mathcal{H}_S \to \mathcal{H}_S$ that transforms semantic states:</p>
+  <div class="qs-math-block">
+    $$|\psi'\rangle = \frac{O|\psi\rangle}{\|O|\psi\rangle\|}$$
+  </div>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Definition 2.4 &mdash; Unitary Context Operator</div>
+  <p>An operator $U$ satisfying $U^\dagger U = U U^\dagger = I$. Unitary operators <strong>preserve norms and Born probabilities</strong> &mdash; they rotate the state vector without stretching or compressing it. All information is preserved; only the <em>orientation</em> of meaning changes.</p>
+</div>
+
+<!-- Geometric Figure: Context as Projection -->
+<figure class="qs-svg-figure reveal">
+<svg viewBox="0 0 460 280" width="460" height="280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Context application as orthogonal projection">
+  <!-- Context subspace line -->
+  <line x1="30" y1="230" x2="420" y2="110" class="svg-accent" stroke-width="1.5" stroke-dasharray="8,4" opacity="0.5"/>
+  <text x="380" y="100" class="svg-small" fill="var(--rose)" font-weight="500">context subspace</text>
+  <!-- Original state vector -->
+  <line x1="100" y1="250" x2="310" y2="60" class="svg-primary" stroke-width="2.5"/>
+  <polygon points="310,60 295,66 299,79" fill="var(--indigo)"/>
+  <text x="318" y="55" class="svg-math" fill="var(--indigo)" font-weight="600">|ψ⟩</text>
+  <!-- Projected state -->
+  <line x1="100" y1="250" x2="280" y2="152" class="svg-secondary" stroke-width="2.5"/>
+  <polygon points="280,152 264,152 268,165" fill="var(--teal)"/>
+  <text x="288" y="148" class="svg-math" fill="var(--teal)" font-weight="600">|ψ'⟩</text>
+  <!-- Discarded component (dashed gray) -->
+  <line x1="310" y1="60" x2="280" y2="152" class="svg-dim" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <!-- Right angle marker -->
+  <rect x="280" y="136" width="12" height="12" fill="none" stroke="var(--ink-dim)" stroke-width="1" transform="rotate(25,280,142)"/>
+  <!-- Annotations -->
+  <rect x="20" y="20" width="200" height="70" rx="4" fill="var(--paper-warm)" stroke="var(--rule)" stroke-width="1"/>
+  <text x="30" y="40" class="svg-small" fill="var(--indigo)" font-weight="600">Before context:</text>
+  <text x="30" y="56" class="svg-small" fill="var(--ink-light)">|ψ⟩ = all meanings coexist</text>
+  <text x="30" y="72" class="svg-small" fill="var(--teal)" font-weight="600">After context:</text>
+  <text x="30" y="84" class="svg-small" fill="var(--ink-light)">|ψ'⟩ = collapsed interpretation</text>
+  <!-- Destroyed component label -->
+  <text x="312" y="115" class="svg-small" fill="var(--ink-dim)" font-style="italic">destroyed</text>
+  <text x="312" y="128" class="svg-small" fill="var(--ink-dim)" font-style="italic">component</text>
+</svg>
+<figcaption class="qs-figure-caption"><strong>Geometric view.</strong> Context acts as an orthogonal projection onto a subspace. The original state $|\psi\rangle$ is projected to $|\psi'\rangle$: the component aligned with the context survives, the orthogonal component is irreversibly destroyed.</figcaption>
+</figure>
+
+<p>When context arrives, it acts as a <strong>measurement operator</strong> that collapses the superposition onto a single interpretation. The crucial insight: this process is <strong>irreversible</strong>. The discarded meanings are genuinely destroyed, not merely hidden.</p>
+
+<p>Think about reading the sentence "I went to the bank to deposit my check." The moment "deposit" arrives, the river bank interpretation doesn't just become unlikely &mdash; it becomes <em>inaccessible</em>. You cannot un-read the sentence. The component of the state vector orthogonal to the context subspace is annihilated. Information is lost.</p>
+
+<div class="qs-pullquote reveal">
+  Once you read "bank" as "financial institution," the river bank component is gone from the interpreted state. Interpretation is irreversible.
+</div>
+
+<p>For prompt engineers, the consequence is profound: <strong>delay collapse</strong>. Every context instruction you add destroys information. If you collapse too early &mdash; with an overly narrow persona or a premature constraint &mdash; you lose access to interpretations that might have been exactly what you needed.</p>
+
+<!-- Rule 3 -->
+<h3 style="font-family: 'Inter', sans-serif; font-size: 1.15rem; color: var(--indigo); margin: 2.5rem 0 0.8rem; font-weight: 600;" class="reveal">Rule 3: Non-Commutativity &mdash; Order changes reality</h3>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Definition 2.6 &mdash; Commutator</div>
+  <p>For two operators $A$ and $B$, the commutator is:</p>
+  <div class="qs-math-block">
+    $$[A, B] = AB - BA$$
+  </div>
+  <p>When $[A,B] \neq 0$, the operators are <em>non-commuting</em>: the order of application matters.</p>
+</div>
+
+<p>In quantum mechanics, measuring position then momentum gives a different result than measuring momentum then position. Quantum semantics formalizes the same phenomenon for meaning: applying context $A$ then context $B$ produces a <strong>fundamentally different semantic state</strong> than applying $B$ then $A$.</p>
+
+<div class="qs-theorem reveal">
+  <div class="qs-theorem-label">Lemma 2.8 &mdash; Non-Commutativity of MUB Operators</div>
+  <p>For MUB operators $U_s$, $U_t$ with $s \neq t$:</p>
+  <div class="qs-math-block">
+    $$[U_s, U_t] \neq 0 \quad \text{for } d \geq 2$$
+  </div>
+  <p>Different context operations produce non-commuting rotations in semantic space. The order of your instructions to an LLM is not cosmetic &mdash; it changes the <strong>meaning space</strong> the model operates in.</p>
+</div>
+
+<!-- Geometric Figure: Non-Commutativity — Two Paths in State Space -->
+<div class="qs-svg-panels reveal">
+  <figure>
+    <svg viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Original state">
+      <!-- Box -->
+      <rect x="20" y="20" width="160" height="160" rx="6" fill="var(--paper-warm)" stroke="var(--rule)" stroke-width="1"/>
+      <!-- Grid -->
+      <line x1="100" y1="20" x2="100" y2="180" class="svg-grid" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <line x1="20" y1="100" x2="180" y2="100" class="svg-grid" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <!-- State dot -->
+      <circle cx="120" cy="70" r="8" fill="var(--indigo)" opacity="0.9"/>
+      <text x="132" y="66" class="svg-math" fill="var(--indigo)" font-weight="600">|ψ⟩</text>
+    </svg>
+    <figcaption>Original state</figcaption>
+  </figure>
+  <figure>
+    <svg viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Path A then B">
+      <rect x="20" y="20" width="160" height="160" rx="6" fill="var(--paper-warm)" stroke="var(--rule)" stroke-width="1"/>
+      <line x1="100" y1="20" x2="100" y2="180" class="svg-grid" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <line x1="20" y1="100" x2="180" y2="100" class="svg-grid" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <!-- Original (ghost) -->
+      <circle cx="120" cy="70" r="5" fill="var(--ink-dim)" opacity="0.2"/>
+      <!-- Path A→B -->
+      <path d="M 120,70 Q 80,80 60,130" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <path d="M 60,130 Q 70,155 50,160" fill="none" stroke="var(--indigo)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <!-- Final state -->
+      <circle cx="50" cy="160" r="8" fill="var(--teal)" opacity="0.9"/>
+      <text x="60" y="168" class="svg-small" fill="var(--teal)" font-weight="600">A→B</text>
+      <!-- Arrow labels -->
+      <text x="64" y="94" class="svg-small" fill="var(--teal)">A</text>
+      <text x="42" y="148" class="svg-small" fill="var(--indigo)">B</text>
+    </svg>
+    <figcaption>Context A first, then B</figcaption>
+  </figure>
+  <figure>
+    <svg viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Path B then A">
+      <rect x="20" y="20" width="160" height="160" rx="6" fill="var(--paper-warm)" stroke="var(--rule)" stroke-width="1"/>
+      <line x1="100" y1="20" x2="100" y2="180" class="svg-grid" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <line x1="20" y1="100" x2="180" y2="100" class="svg-grid" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <!-- Original (ghost) -->
+      <circle cx="120" cy="70" r="5" fill="var(--ink-dim)" opacity="0.2"/>
+      <!-- Path B→A -->
+      <path d="M 120,70 Q 150,100 155,130" fill="none" stroke="var(--indigo)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <path d="M 155,130 Q 148,155 145,155" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <!-- Final state -->
+      <circle cx="145" cy="155" r="8" fill="var(--rose)" opacity="0.9"/>
+      <text x="120" y="173" class="svg-small" fill="var(--rose)" font-weight="600">B→A</text>
+      <!-- Arrow labels -->
+      <text x="156" y="105" class="svg-small" fill="var(--indigo)">B</text>
+      <text x="150" y="146" class="svg-small" fill="var(--teal)">A</text>
+      <!-- ≠ symbol -->
+      <text x="24" y="168" style="font-size:28px; font-weight:700;" fill="var(--rose)">≠</text>
+    </svg>
+    <figcaption>Context B first, then A</figcaption>
+  </figure>
+</div>
+<div style="text-align:center; margin:-1rem 0 2rem;">
+  <span style="font-family:'Inter',sans-serif; font-size:0.85rem; color:var(--ink-dim);">The same starting state $|\psi\rangle$ reaches <strong style="color:var(--teal);">different endpoints</strong> depending on operator order. Fidelity $F \approx 0.35$.</span>
+</div>
+
+<p>Consider telling an LLM "You are a medical expert" then "Be concise." You get expert-depth knowledge simplified for clarity. Reverse the order &mdash; "Be concise" then "You are a medical expert" &mdash; and you get brief, plain text with clinical terms added. The fidelity between these two outputs is typically $F \approx 0.35$: more <em>different</em> than similar.</p>
+
+<figure class="qs-figure reveal">
+  <img src="/assets/images/quantum-semantics/interference.png" loading="lazy" decoding="async" alt="Semantic interference pattern: combining two context distributions produces cross-terms showing constructive and destructive interference">
+  <figcaption class="qs-figure-caption"><strong>Figure 2.</strong> Semantic interference: when two contexts are combined, the result is not their average. Cross-terms produce constructive interference (novel emergent meanings) and destructive interference (meanings that cancel). This is the mathematical signature of non-classical meaning composition.</figcaption>
+</figure>
+
+<div class="qs-insight reveal">
+  <div class="qs-insight-label">Engineering Takeaway</div>
+  <p><strong>Instruction order is a structural degree of freedom, not a stylistic choice.</strong> The first context applied projects the semantic state most aggressively &mdash; everything after is filtered through it. Broadest framing first, narrowing constraints second, formatting last.</p>
+</div>
+
+<hr class="qs-divider">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 3: CONTEXT AS MEASUREMENT / CHSH
+     ═══════════════════════════════════════════════════════════════ -->
+<span class="qs-section-num reveal">Section 3</span>
+<h2 id="section-3" class="qs-section-title reveal">Context as Measurement &mdash; The Observer Effect on Meaning</h2>
+
+<p>Context isn't just filtering. It's a <strong>quantum measurement</strong> that collapses a superposition onto a definite value. Different contexts (observers) extract different definite meanings from the same word-state &mdash; and the correlations between these measurements are stronger than any classical model can explain.</p>
+
+<p>To make this precise, the framework imports a classic test from quantum physics: the CHSH inequality.</p>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Equation 9 &mdash; The CHSH Inequality</div>
+  <p>The CHSH (Clauser&ndash;Horne&ndash;Shimony&ndash;Holt) value is:</p>
+  <div class="qs-math-block">
+    $$S = E(A_0, B_0) - E(A_0, B_1) + E(A_1, B_0) + E(A_1, B_1)$$
+  </div>
+  <p>where $E(A_i, B_j)$ are correlations between interpretations under different contexts. Classical theories of meaning predict $|S| \leq 2$. Quantum mechanics allows values up to $2\sqrt{2} \approx 2.828$.</p>
+</div>
+
+<p>Here's how to run the test on language. Take the sentence <em>"The coach told the player to run the bank."</em> Two semantic dimensions (Alice and Bob's "particles"):</p>
+<ul style="margin: 0.8rem 0 0.8rem 1.5rem;">
+  <li><strong>Dimension A:</strong> meaning of "run" (operate vs. sprint)</li>
+  <li><strong>Dimension B:</strong> meaning of "bank" (financial vs. riverbank)</li>
+</ul>
+<p>Two contexts each:</p>
+<ul style="margin: 0.8rem 0 0.8rem 1.5rem;">
+  <li>$A_0$: business meeting context &nbsp;/&nbsp; $A_1$: outdoor sports context</li>
+  <li>$B_0$: financial discussion frame &nbsp;/&nbsp; $B_1$: nature setting frame</li>
+</ul>
+
+<p>Subjects rate interpretations across all four context pairings ($A_0B_0$, $A_0B_1$, $A_1B_0$, $A_1B_1$) and compute correlations. If the meanings of "run" and "bank" were independently pre-determined, $|S| \leq 2$. But experiments with both humans and LLMs show <strong>violations</strong> ($|S| > 2$), with values ranging from 2.3 to 2.8 &mdash; squarely in the quantum-like regime.</p>
+
+<div class="qs-table-wrapper reveal">
+<table class="qs-table">
+  <thead>
+    <tr><th scope="col">$|S|$ Value</th><th scope="col">Significance</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>$|S| \leq 2.0$</td><td>Classical &mdash; meaning could be pre-determined; context just reveals it</td></tr>
+    <tr><td>$2.0 < |S| \leq 2\sqrt{2}$</td><td>Non-classical &mdash; meaning cannot be pre-determined; context participates in its creation</td></tr>
+    <tr><td>$|S| > 2\sqrt{2}$</td><td>Would exceed even quantum theory (the Tsirelson bound)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- Geometric Figure: CHSH Value Scale -->
+<figure class="qs-svg-figure reveal">
+<svg viewBox="0 0 520 130" width="520" height="130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CHSH inequality value scale showing classical, quantum, and super-quantum regimes">
+  <!-- Scale line -->
+  <line x1="40" y1="60" x2="500" y2="60" stroke="var(--ink-dim)" stroke-width="2"/>
+  <!-- Classical region (0 to 2) -->
+  <rect x="40" y="45" width="200" height="30" rx="3" fill="var(--ink-dim)" opacity="0.12"/>
+  <!-- Quantum region (2 to 2.828) -->
+  <rect x="240" y="45" width="166" height="30" rx="3" fill="var(--indigo)" opacity="0.15"/>
+  <!-- Super-quantum region -->
+  <rect x="406" y="45" width="94" height="30" rx="3" fill="var(--rose)" opacity="0.10"/>
+  <!-- Tick marks -->
+  <line x1="40" y1="50" x2="40" y2="70" stroke="var(--ink-dim)" stroke-width="1.5"/>
+  <line x1="240" y1="42" x2="240" y2="78" stroke="var(--rose)" stroke-width="2"/>
+  <line x1="406" y1="42" x2="406" y2="78" stroke="var(--indigo)" stroke-width="2"/>
+  <line x1="500" y1="50" x2="500" y2="70" stroke="var(--ink-dim)" stroke-width="1.5"/>
+  <!-- Observed value marker -->
+  <circle cx="370" cy="60" r="6" fill="var(--teal)"/>
+  <line x1="370" y1="35" x2="370" y2="48" stroke="var(--teal)" stroke-width="1.5"/>
+  <text x="342" y="28" class="svg-small" fill="var(--teal)" font-weight="600">observed: 2.6</text>
+  <!-- Labels -->
+  <text x="40" y="100" class="svg-small" fill="var(--ink-dim)">0</text>
+  <text x="232" y="100" class="svg-small" fill="var(--rose)" font-weight="600">2.0</text>
+  <text x="388" y="100" class="svg-small" fill="var(--indigo)" font-weight="600">2√2</text>
+  <text x="490" y="100" class="svg-small" fill="var(--ink-dim)">4</text>
+  <!-- Region labels -->
+  <text x="100" y="118" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">Classical</text>
+  <text x="323" y="118" class="svg-small" fill="var(--indigo)" text-anchor="middle" font-weight="500">Quantum-like</text>
+  <text x="453" y="118" class="svg-small" fill="var(--rose)" text-anchor="middle">Forbidden</text>
+</svg>
+<figcaption class="qs-figure-caption"><strong>Geometric view.</strong> The CHSH value $|S|$ classifies semantic behavior. Below 2: classical (pre-determined meaning). Between 2 and $2\sqrt{2}$: non-classical (context creates meaning). Experiments with LLMs typically land around $|S| \approx 2.6$, squarely in the quantum regime.</figcaption>
+</figure>
+
+<div class="qs-theorem reveal">
+  <div class="qs-theorem-label">Remark 3 &mdash; Falsifiability</div>
+  <p>The CHSH test makes the quantum semantic framework <em>falsifiable</em>:</p>
+  <ol style="margin: 0.5rem 0 0.5rem 1.5rem;">
+    <li>If meaning is classical, Bell inequalities hold.</li>
+    <li>Experiments show Bell inequalities are violated.</li>
+    <li>Therefore, meaning is non-classical.</li>
+  </ol>
+  <p>The fact that values reach 2.8 (near the Tsirelson bound of $2\sqrt{2} \approx 2.828$) suggests the quantum formalism is not just a loose analogy &mdash; it may be capturing the actual structure of semantic processing.</p>
+</div>
+
+<div class="qs-insight reveal">
+  <div class="qs-insight-label">Why This Matters for Engineers</div>
+  <p>If $|S| > 2$ for your expression and context combination, then meaning is genuinely non-classical &mdash; it cannot be explained by pre-existing hidden interpretations that context merely reveals. Context <em>actively constructs</em> meaning. This turns prompt engineering from craft into <strong>empirical science</strong>: you can <em>measure</em> whether your system operates in the classical or quantum regime.</p>
+</div>
+
+<hr class="qs-divider">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 4: BAYESIAN INTERPRETATION SAMPLING
+     ═══════════════════════════════════════════════════════════════ -->
+<span class="qs-section-num reveal">Section 4</span>
+<h2 id="section-4" class="qs-section-title reveal">Bayesian Interpretation Sampling</h2>
+
+<p>Rather than attempting to produce a single interpretation, quantum context engineering adopts a <strong>Bayesian sampling approach</strong>: treat each LLM call as a quantum measurement, run many measurements, and build a probability distribution over interpretations.</p>
+
+<p>The method is the semantic analogue of <em>quantum state tomography</em> &mdash; inferring the quantum state from measurement statistics:</p>
+
+<div class="qs-table-wrapper reveal">
+<table class="qs-table">
+  <thead>
+    <tr><th scope="col">Quantum Experiment</th><th scope="col">Bayesian Interpretation Sampling</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Prepare quantum state $|\psi\rangle$</td><td>Receive expression</td></tr>
+    <tr><td>Choose measurement basis</td><td>Sample a context or combination</td></tr>
+    <tr><td>Record measurement outcome</td><td>Generate interpretation via LLM</td></tr>
+    <tr><td>Repeat $N$ times</td><td>Loop over $N$ samples</td></tr>
+    <tr><td>Build probability histogram</td><td>Build interpretation frequencies</td></tr>
+    <tr><td>Histogram approximates $|c_i|^2$</td><td>Probabilities approximate semantic weight</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The core Bayesian idea: <strong>do not commit to one interpretation &mdash; maintain a distribution over all of them.</strong> You start with prior beliefs (what interpretations are possible), observe data (what a model produces under various contexts), and end up with posterior beliefs (a probability distribution over interpretations). Each observation is a partial measurement that progressively collapses the superposition toward an eigenstate.</p>
+
+<figure class="qs-figure reveal">
+  <img src="/assets/images/quantum-semantics/bayesian_exploration.png" loading="lazy" decoding="async" alt="Bayesian exploration: sampling multiple interpretations across diverse contexts to map the full probability distribution">
+  <figcaption class="qs-figure-caption"><strong>Figure 3.</strong> Bayesian exploration of the interpretation space. Rather than committing to a single reading, multiple measurement contexts are sampled to reconstruct the full probability distribution &mdash; analogous to quantum state tomography, where many measurements in different bases reveal the complete state.</figcaption>
+</figure>
+
+<div class="qs-insight reveal">
+  <div class="qs-insight-label">Why Sampling Instead of Direct Computation?</div>
+  <p><strong>1. The state space is intractable.</strong> A real semantic Hilbert space does not have 1024 neatly labeled basis states &mdash; the space of possible interpretations is effectively infinite. <strong>2. LLMs are natural measurement devices.</strong> Each call to <code>model.generate</code> is a stochastic projection. <strong>3. The output is directly useful.</strong> A probability distribution over interpretations is exactly what a downstream system needs.</p>
+</div>
+
+<hr class="qs-divider">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 5: TEMPERATURE
+     ═══════════════════════════════════════════════════════════════ -->
+<span class="qs-section-num reveal">Section 5</span>
+<h2 id="section-5" class="qs-section-title reveal">Temperature Is Not Creativity &mdash; It's a Measurement Knob</h2>
+
+<p>This might be the most practical reframing in the entire framework. The LLM temperature parameter is universally described as controlling "creativity" or "randomness." The quantum model says something far more precise:</p>
+
+<div class="qs-comparison reveal">
+  <div class="qs-comparison-card card-a">
+    <h4>Temperature = 0</h4>
+    <p><strong>Projective measurement.</strong> Always collapses to the most probable eigenstate &mdash; the mode of the distribution. Deterministic. Reproducible.</p>
+  </div>
+  <div class="qs-comparison-card card-b">
+    <h4>Temperature > 0</h4>
+    <p><strong>Born rule sampling.</strong> Draws from the full $|c_i|^2$ distribution. Each run may produce a different interpretation, proportional to its weight.</p>
+  </div>
+</div>
+
+<p>This distinction matters for debugging. Consider the error message <code>ECONNREFUSED 127.0.0.1:5432</code>. At T=0, the LLM always says "PostgreSQL is not running on localhost." That's the mode. But at T=0.8, run 10 times, you discover minority interpretations: firewall rules, port conflicts, Docker networking issues, connection pool exhaustion. Each is a legitimate eigenstate that T=0 would never reveal.</p>
+
+<figure class="qs-figure reveal">
+  <img src="/assets/images/quantum-semantics/temperature.png" loading="lazy" decoding="async" alt="Temperature-controlled measurement: at T=0.0 the distribution collapses to the mode; as T increases, the distribution broadens toward Born-rule uniform sampling">
+  <figcaption class="qs-figure-caption"><strong>Figure 4.</strong> Left: Effective probability distributions at temperatures T=0.0 through T=2.0. At T=0, all probability mass concentrates on "financial institution" (projective measurement). As T increases, the distribution broadens toward the Born distribution, making minority eigenstates accessible. Right: Shannon entropy rises monotonically with temperature, reaching the Born entropy at T=1.</figcaption>
+</figure>
+
+<div class="qs-insight reveal">
+  <div class="qs-insight-label">Practical Rule</div>
+  <p>Use <strong>T=0</strong> when you need the most probable interpretation (production, deterministic pipelines). Use <strong>T&gt;0</strong> when you need to <em>explore</em> the interpretation space (auditing, testing, discovering minority interpretations that may be correct in unusual contexts).</p>
+</div>
+
+<hr class="qs-divider">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 6: THE ELEVEN PRINCIPLES
+     ═══════════════════════════════════════════════════════════════ -->
+<span class="qs-section-num reveal">Section 6</span>
+<h2 id="section-6" class="qs-section-title reveal">The Eleven Principles of Quantum Context Engineering</h2>
+
+<p>The quantum semantic framework is not an abstract analogy. It yields concrete engineering patterns and falsifiable predictions about how meaning works in LLMs. The following eleven principles translate the theory into actionable design rules, each paired with a ready-to-use prompt.</p>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 1 &mdash; Ambiguity-Aware Context Design</div>
+  <p>Design contexts that explicitly acknowledge and manage ambiguity rather than prematurely eliminating it. Instead of forcing the model to a single reading, use superposition-preserving prompts to enumerate all interpretations with weights &mdash; then make an informed decision about which to collapse to.</p>
+  <p><strong>Example:</strong> Given the requirement "Make the system faster," a superposition-preserving approach surfaces 4 interpretations: reduce latency (0.40), increase throughput (0.30), improve perceived speed via UI (0.20), reduce build time (0.10). Collapsing prematurely to "reduce latency" would miss 60% of the solution space.</p>
+</div>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Try It &mdash; Prompt A: Ambiguity Preservation</span></div>
+<pre><span class="comment"># When to use: Before committing to a single interpretation of any</span>
+<span class="comment"># ambiguous input — requirements, error messages, user feedback.</span>
+
+SYSTEM:
+You are a Quantum Semantic Analyst. When given any expression,
+you NEVER pick a single interpretation. Instead, you return ALL
+plausible interpretations as a weighted superposition.
+
+For every input, respond in this YAML format:
+
+expression: "&lt;the input&gt;"
+interpretations:
+  - meaning: "&lt;interpretation 1&gt;"
+    weight: &lt;probability 0.0-1.0&gt;
+    basis: "&lt;which semantic dimension&gt;"
+  - meaning: "&lt;interpretation 2&gt;"
+    weight: &lt;probability 0.0-1.0&gt;
+    basis: "&lt;which semantic dimension&gt;"
+  ...
+total_weight: 1.0
+dominant_interpretation: "&lt;highest weight&gt;"
+residual_ambiguity: "&lt;what context would collapse it&gt;"
+
+Rules:
+- Weights MUST sum to 1.0 (normalization condition).
+- Include at least 3 interpretations, even if one dominates.
+- Always include a low-probability "other" category (&gt;= 0.02).
+
+USER:
+"The system is down."</pre>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 2 &mdash; Bayesian Context Exploration</div>
+  <p>Rather than seeking a single interpretation, explore the semantic space through multiple samples. Add a clustering step that discovers the <em>structure</em> of the interpretation space &mdash; recognizing that "He lacks empathy" and "He shows no empathy" are the same meaning expressed differently. Each cluster is a basis state $|e_i\rangle$; cluster probability is $|c_i|^2$.</p>
+</div>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Try It &mdash; Prompt G: Bayesian Interpretation Audit</span></div>
+<pre><span class="comment"># When to use: When you need to map the full interpretation space</span>
+<span class="comment"># of an ambiguous expression before deciding how to act on it.</span>
+
+You are performing a Bayesian Interpretation Audit. Your goal is
+to discover the full probability distribution over meanings.
+
+Expression: "The system is not responding appropriately."
+
+STEP 1 - GENERATE DIVERSE INTERPRETATIONS:
+Generate 12 distinct interpretations. Vary your interpretive lens
+each time: technical, emotional, legal, medical, organizational,
+philosophical, etc. Push for variety.
+
+STEP 2 - CLUSTER:
+Group your 12 interpretations into natural clusters of similar
+meaning. Name each cluster.
+
+STEP 3 - ASSIGN PROBABILITIES:
+For each cluster, estimate the probability that a random reader
+in a neutral context would arrive at that interpretation.
+Probabilities must sum to 1.0.
+
+STEP 4 - REPORT:
+cluster_name: probability (N interpretations)
+  - representative example
+
+STEP 5 - META-ANALYSIS:
+<span class="comment">- Which cluster dominates? (= the likely collapse outcome)</span>
+<span class="comment">- Which clusters are surprising? (= low-probability eigenstates)</span>
+<span class="comment">- What context would be needed to collapse to each cluster?</span></pre>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 3 &mdash; Non-Classical Context Operations</div>
+  <p>Leverage non-commutative context operations by exploring all possible orderings. The <em>context composition explorer</em> tries every permutation of $N$ context operators, recording the interpretation at each step. The trace shows where interpretations diverge &mdash; at which context application the meaning forks.</p>
+  <p><strong>Example:</strong> With 3 context operators (persona, scope, format), there are $3! = 6$ orderings. Running all 6 on "Explain recursion" yields fidelities ranging from 0.28 to 0.95 &mdash; the worst ordering produces output that is 72% different from the best.</p>
+</div>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Try It &mdash; Prompt D: Non-Commutativity Demonstrator</span></div>
+<pre><span class="comment"># When to use: To empirically verify that instruction order matters</span>
+<span class="comment"># for a specific pair of context operators.</span>
+
+<span class="highlight">--- VERSION 1: Context A first, then Context B ---</span>
+
+SYSTEM: You are a medical expert.           <span class="comment">(Context A)</span>
+USER: Be concise and use plain language.    <span class="comment">(Context B)</span>
+Now explain: "The patient's condition is critical."
+
+<span class="highlight">--- VERSION 2: Context B first, then Context A ---</span>
+
+SYSTEM: Be concise and use plain language.  <span class="comment">(Context B)</span>
+USER: You are a medical expert.             <span class="comment">(Context A)</span>
+Now explain: "The patient's condition is critical."
+
+<span class="highlight">--- ANALYSIS ---</span>
+After running both versions, compare:
+1. How do the outputs differ in tone, detail, and framing?
+2. Which context "won" in each version?
+3. Rate the similarity of the two outputs from 0 to 1.
+   This is the fidelity F.
+4. If F &lt; 0.99, the contexts do NOT commute: [A, B] != 0.</pre>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 4 &mdash; Prompt Ordering Is Structural, Not Cosmetic</div>
+  <p>Since $[A,B] = AB - BA \neq 0$, the <em>order</em> of instructions in a system prompt is not a style choice &mdash; it changes the meaning space the model operates in. <strong>Broadest framing first</strong> (persona, domain) &rarr; <strong>narrowing constraints second</strong> (scope, audience) &rarr; <strong>formatting last</strong> (they generally commute with content).</p>
+</div>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Try It &mdash; Prompt H: Context Pipeline Optimizer</span></div>
+<pre><span class="comment"># When to use: Before deploying any multi-instruction system prompt.</span>
+<span class="comment"># Finds the optimal ordering of your instructions.</span>
+
+You are a Context Pipeline Optimizer. Given a set of context
+instructions, determine the optimal ordering.
+
+CONTEXT INSTRUCTIONS (to be ordered):
+1. "You are a senior security engineer." (persona)
+2. "Be concise, max 3 bullet points." (format constraint)
+3. "Focus on production risks only." (scope constraint)
+4. "The audience is non-technical executives." (audience)
+
+TASK: Review this code snippet for issues: [code here]
+
+A. IDENTIFY NON-COMMUTING PAIRS:
+   For each pair: would swapping order change the output?
+   Rate: commutes / weakly / strongly non-commutative.
+
+B. DETERMINE DOMINANCE HIERARCHY:
+   Which instructions, placed FIRST, most strongly shape all
+   subsequent interpretation?
+
+C. PROPOSE OPTIMAL ORDER:
+   - Broadest framing first (sets the Hilbert subspace)
+   - Narrowing constraints next (projections within subspace)
+   - Format instructions last (they commute with most content)
+
+D. PROPOSE WORST ORDER:
+   Arrange to maximize information loss / contradiction.
+
+E. PREDICT DIFFERENCE:
+   How would output differ between optimal and worst order?</pre>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 5 &mdash; Ambiguity Is a Feature, Not a Bug</div>
+  <p>The natural state of any expression is a <em>superposition</em> &mdash; multiple valid interpretations coexisting with different weights. Collapsing too early destroys information. Use superposition-preserving prompts for requirements analysis: treat each reading as a basis state $|e_i\rangle$ with weight $|c_i|^2$, and identify which measurement operator (clarifying question) would collapse the ambiguity.</p>
+</div>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Try It &mdash; Prompt I: Superposition Requirement Analysis</span></div>
+<pre><span class="comment"># When to use: Before implementing any ambiguous requirement.</span>
+<span class="comment"># Treats every requirement as a superposition to be analyzed.</span>
+
+SYSTEM:
+You are a Requirements Analyst who treats every requirement as a
+quantum superposition of possible meanings. Never assume a single
+interpretation is correct.
+
+USER:
+Analyze this requirement:
+"The system should handle large files efficiently."
+
+1. ENUMERATE BASIS STATES:
+   What does "large" mean? (&gt;1MB? &gt;1GB? &gt;100GB?)
+   What does "handle" mean? (upload? process? store? stream?)
+   What does "efficiently" mean? (fast? low memory? low cost?)
+   Each combination is a basis state |e_i&gt;.
+
+2. ASSIGN WEIGHTS:
+   Estimate P(this is what the author meant) for each.
+
+3. IDENTIFY COLLAPSE CRITERIA:
+   What question or evidence would collapse the superposition?
+
+4. RECOMMEND:
+   - Which interpretation to BUILD for if we cannot ask?
+   - Which interpretations need different architectures?
+   - Minimum set of questions to fully collapse?</pre>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 6 &mdash; Context Creates Meaning, It Does Not Reveal It</div>
+  <p>You are not "extracting" the right answer from the model. You are <em>constructing</em> it through your choice of context. The operator $O$ does not select from pre-existing options &mdash; it can <em>mix</em> basis states to produce interpretations that none of the "pure" readings would yield. Prompt engineering is <strong>operator design</strong>, not key-finding.</p>
+  <p><strong>Example:</strong> Asking an LLM to "explain blockchain" with no context yields a generic overview. Adding the operator "You are a marine biologist explaining this to fishermen" doesn't just filter &mdash; it <em>creates</em> a new interpretation ("think of the blockchain as a shared logbook that every boat in the fleet writes to") that exists in neither the blockchain nor the marine biology basis alone.</p>
+</div>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Try It &mdash; Prompt B: Context Operator Design</span></div>
+<pre><span class="comment"># When to use: When designing a prompt to steer interpretation</span>
+<span class="comment"># toward a specific meaning — operator construction, not guessing.</span>
+
+You are designing a context operator O that will transform the
+meaning of an expression. Think step by step:
+
+Step 1 - IDENTIFY THE SUPERPOSITION:
+List all plausible interpretations. Assign prior probabilities.
+
+Step 2 - DEFINE YOUR INTERPRETIVE GOAL:
+What meaning do you want to amplify? Suppress? Mix?
+
+Step 3 - CONSTRUCT THE OPERATOR:
+Describe context instructions (persona, framing, constraints)
+that achieve the transformation. For each instruction, state
+whether it AMPLIFIES, SUPPRESSES, or MIXES interpretations.
+
+Step 4 - PREDICT THE OUTPUT STATE:
+What is the resulting distribution? Which survived?
+
+Step 5 - CHECK NORMALIZATION:
+Verify your output probabilities sum to 1.0.
+
+Expression: "We need to address the issue at the root."
+Goal: Amplify the software debugging interpretation.</pre>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 7 &mdash; Combination Is Not Addition: The Interference Principle</div>
+  <p>When you merge a political science framing with a software engineering framing, you get <strong>constructive interference</strong> (novel meanings neither context alone would produce) and <strong>destructive interference</strong> (meanings from one domain that get cancelled by the other). Multi-agent systems produce different results from running each agent independently and concatenating outputs.</p>
+</div>
+
+<!-- Geometric Figure: Interference — Constructive, Destructive, Emergent -->
+<div class="qs-svg-panels reveal">
+  <figure>
+    <svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Context A alone">
+      <text x="90" y="16" class="svg-small" fill="var(--ink-dim)" text-anchor="middle" font-weight="600">Context A alone</text>
+      <!-- Bars -->
+      <rect x="20" y="30" width="30" height="100" rx="3" fill="var(--indigo)" opacity="0.7"/>
+      <rect x="60" y="60" width="30" height="70" rx="3" fill="var(--indigo)" opacity="0.5"/>
+      <rect x="100" y="90" width="30" height="40" rx="3" fill="var(--indigo)" opacity="0.3"/>
+      <rect x="140" y="110" width="30" height="20" rx="3" fill="var(--indigo)" opacity="0.2"/>
+      <!-- Labels -->
+      <text x="35" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₁</text>
+      <text x="75" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₂</text>
+      <text x="115" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₃</text>
+      <text x="155" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₄</text>
+      <!-- Axis -->
+      <line x1="15" y1="130" x2="175" y2="130" stroke="var(--ink-dim)" stroke-width="0.8"/>
+    </svg>
+    <figcaption>Political science frame</figcaption>
+  </figure>
+  <figure>
+    <svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Context B alone">
+      <text x="90" y="16" class="svg-small" fill="var(--ink-dim)" text-anchor="middle" font-weight="600">Context B alone</text>
+      <rect x="20" y="80" width="30" height="50" rx="3" fill="var(--teal)" opacity="0.4"/>
+      <rect x="60" y="40" width="30" height="90" rx="3" fill="var(--teal)" opacity="0.7"/>
+      <rect x="100" y="60" width="30" height="70" rx="3" fill="var(--teal)" opacity="0.5"/>
+      <rect x="140" y="100" width="30" height="30" rx="3" fill="var(--teal)" opacity="0.25"/>
+      <text x="35" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₁</text>
+      <text x="75" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₂</text>
+      <text x="115" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₃</text>
+      <text x="155" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₄</text>
+      <line x1="15" y1="130" x2="175" y2="130" stroke="var(--ink-dim)" stroke-width="0.8"/>
+    </svg>
+    <figcaption>Software engineering frame</figcaption>
+  </figure>
+  <figure>
+    <svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Combined A+B with interference">
+      <text x="90" y="16" class="svg-small" fill="var(--ink-dim)" text-anchor="middle" font-weight="600">Combined A + B</text>
+      <!-- m1: destructive (smaller than either alone) -->
+      <rect x="20" y="105" width="30" height="25" rx="3" fill="var(--ink-dim)" opacity="0.3"/>
+      <text x="35" y="102" class="svg-small" fill="var(--rose)" text-anchor="middle" font-size="8px">cancel</text>
+      <!-- m2: constructive (bigger than either alone) -->
+      <rect x="60" y="22" width="30" height="108" rx="3" fill="var(--amber)" opacity="0.7"/>
+      <text x="75" y="18" class="svg-small" fill="var(--amber)" text-anchor="middle" font-size="8px">boost</text>
+      <!-- m3: roughly average -->
+      <rect x="100" y="70" width="30" height="60" rx="3" fill="var(--teal)" opacity="0.5"/>
+      <!-- m5: EMERGENT (not in A or B alone!) -->
+      <rect x="140" y="50" width="30" height="80" rx="3" fill="var(--rose)" opacity="0.6"/>
+      <text x="155" y="46" class="svg-small" fill="var(--rose)" text-anchor="middle" font-size="8px">new!</text>
+      <text x="35" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₁</text>
+      <text x="75" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₂</text>
+      <text x="115" y="145" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">m₃</text>
+      <text x="155" y="145" class="svg-small" fill="var(--rose)" text-anchor="middle" font-weight="600">m₅</text>
+      <line x1="15" y1="130" x2="175" y2="130" stroke="var(--ink-dim)" stroke-width="0.8"/>
+    </svg>
+    <figcaption>Interference: m₁ cancelled, m₂ boosted, m₅ <strong>emerged</strong></figcaption>
+  </figure>
+</div>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Try It &mdash; Prompt F: Interference Demonstration</span></div>
+<pre><span class="comment"># When to use: To detect non-additive meaning creation when</span>
+<span class="comment"># combining two domain contexts on the same expression.</span>
+
+EXPERIMENT: Semantic Interference
+
+Expression: "The deep state operates in shadows."
+
+STEP 1 - CONTEXT A ALONE (political science framing):
+"As a political scientist, interpret this expression."
+Record interpretation A: ___
+
+STEP 2 - CONTEXT B ALONE (computer science framing):
+"As a software architect, interpret this expression."
+Record interpretation B: ___
+
+STEP 3 - COMBINED CONTEXT (A + B simultaneously):
+"As someone at the intersection of political science
+and software architecture, interpret this expression."
+Record interpretation AB: ___
+
+ANALYSIS:
+<span class="comment">- Is AB simply the average of A and B?</span>
+<span class="comment">  (If yes: classical, no interference.)</span>
+<span class="comment">- Does AB contain elements NEITHER A nor B produced?</span>
+<span class="comment">  (If yes: constructive interference.)</span>
+<span class="comment">- Are elements from A or B that DISAPPEARED in AB?</span>
+<span class="comment">  (If yes: destructive interference.)</span>
+<span class="comment">- Non-classical signature: AB != average(A, B).</span></pre>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 8 &mdash; Temperature Is a Measurement Parameter</div>
+  <p>Temperature = 0 is deterministic collapse (projective measurement onto the mode). Temperature > 0 is probabilistic sampling from the full $|c_i|^2$ distribution (the Born rule). This is not about "creativity" &mdash; it's about whether you want the <em>mode</em> or the <em>distribution</em>.</p>
+</div>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Try It &mdash; Prompt E: Superposition Collapse Demo</span></div>
+<pre><span class="comment"># When to use: To empirically demonstrate that temperature controls</span>
+<span class="comment"># measurement type, not "creativity."</span>
+
+EXPERIMENT: Superposition Collapse Demonstration
+
+PROMPT (use identically each time):
+"In one sentence, what does 'He played the bass' mean?"
+
+CONDITION 1: temperature = 0 (10 runs)
+Expected: Same answer every time (deterministic collapse).
+Record: ___________________________________________
+
+CONDITION 2: temperature = 1.0 (10 runs)
+Expected: Variation across runs (Born rule sampling).
+Record each: 1.___ 2.___ 3.___ 4.___ 5.___
+             6.___ 7.___ 8.___ 9.___ 10.___
+
+ANALYSIS:
+<span class="comment">- Count: "musical instrument" vs. "fish" vs. other</span>
+<span class="comment">- Condition 1 frequency distribution: ___</span>
+<span class="comment">- Condition 2 frequency distribution: ___</span>
+<span class="comment">- Does Condition 2 approximate |psi> = c1|instrument> + c2|fish>?</span>
+<span class="comment">- The ratio of counts approximates |c_i|^2 (Born rule).</span></pre>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 9 &mdash; Every Interpretation Step Destroys Information Irreversibly</div>
+  <p>Each context application is a lossy projection that destroys the component orthogonal to the context subspace. In multi-step prompt chains (RAG pipelines, agent loops), information lost at step 1 cannot be recovered at step 5. Three strategies: <strong>preserve superposition as long as possible</strong>, <strong>run parallel interpretation branches</strong>, and <strong>be deliberate about which step does the most aggressive projection</strong>.</p>
+  <p><strong>Example:</strong> In a RAG pipeline, if step 1 retrieves documents only about "Python (programming language)," then step 2 can never produce results about "Python (snake)" &mdash; even if that was the user's intent. Running parallel retrieval branches (one per interpretation) and deferring collapse to step 3 preserves information.</p>
+</div>
+
+<!-- Geometric Figure: Measurement Pipeline — Information Loss at Each Step -->
+<figure class="qs-svg-figure reveal">
+<svg viewBox="0 0 520 180" width="520" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sequential measurement pipeline showing information loss at each step">
+  <!-- Step boxes -->
+  <rect x="10" y="50" width="90" height="50" rx="6" fill="var(--indigo)" opacity="0.15" stroke="var(--indigo)" stroke-width="1.5"/>
+  <text x="55" y="72" class="svg-small" fill="var(--indigo)" font-weight="600" text-anchor="middle">Step 1</text>
+  <text x="55" y="88" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">Retrieve</text>
+
+  <rect x="140" y="50" width="90" height="50" rx="6" fill="var(--teal)" opacity="0.15" stroke="var(--teal)" stroke-width="1.5"/>
+  <text x="185" y="72" class="svg-small" fill="var(--teal)" font-weight="600" text-anchor="middle">Step 2</text>
+  <text x="185" y="88" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">Rank</text>
+
+  <rect x="270" y="50" width="90" height="50" rx="6" fill="var(--amber)" opacity="0.15" stroke="var(--amber)" stroke-width="1.5"/>
+  <text x="315" y="72" class="svg-small" fill="var(--amber)" font-weight="600" text-anchor="middle">Step 3</text>
+  <text x="315" y="88" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">Generate</text>
+
+  <rect x="400" y="50" width="110" height="50" rx="6" fill="var(--rose)" opacity="0.15" stroke="var(--rose)" stroke-width="1.5"/>
+  <text x="455" y="72" class="svg-small" fill="var(--rose)" font-weight="600" text-anchor="middle">Output</text>
+  <text x="455" y="88" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">single meaning</text>
+
+  <!-- Arrows -->
+  <line x1="100" y1="75" x2="138" y2="75" stroke="var(--ink-dim)" stroke-width="1.5" marker-end="url(#arrowhead-pipe)"/>
+  <line x1="230" y1="75" x2="268" y2="75" stroke="var(--ink-dim)" stroke-width="1.5" marker-end="url(#arrowhead-pipe)"/>
+  <line x1="360" y1="75" x2="398" y2="75" stroke="var(--ink-dim)" stroke-width="1.5" marker-end="url(#arrowhead-pipe)"/>
+
+  <!-- Information bars (decreasing) -->
+  <rect x="20" y="110" width="70" height="12" rx="2" fill="var(--indigo)" opacity="0.7"/>
+  <rect x="150" y="110" width="50" height="12" rx="2" fill="var(--teal)" opacity="0.7"/>
+  <rect x="280" y="110" width="30" height="12" rx="2" fill="var(--amber)" opacity="0.7"/>
+  <rect x="420" y="110" width="12" height="12" rx="2" fill="var(--rose)" opacity="0.7"/>
+
+  <text x="55" y="138" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">4 meanings</text>
+  <text x="175" y="138" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">3 remain</text>
+  <text x="295" y="138" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">2 remain</text>
+  <text x="455" y="138" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">1 collapsed</text>
+
+  <!-- Label -->
+  <text x="260" y="165" class="svg-small" fill="var(--ink-dim)" text-anchor="middle" font-style="italic">Information destroyed at each step is irreversible</text>
+
+  <!-- Arrowhead marker -->
+  <defs>
+    <marker id="arrowhead-pipe" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="var(--ink-dim)"/>
+    </marker>
+  </defs>
+</svg>
+<figcaption class="qs-figure-caption"><strong>Geometric view.</strong> Each step in a multi-step pipeline is a lossy projection. The information bar shrinks at each stage. Meanings destroyed at Step 1 cannot be recovered at Step 3 &mdash; delay collapse and branch early.</figcaption>
+</figure>
+
+<div class="qs-insight reveal">
+  <div class="qs-insight-label">Practical Pattern &mdash; RAG Pipeline Branching</div>
+  <p>Instead of: Retrieve &rarr; Rank &rarr; Generate (single interpretation collapses at retrieval), use: Retrieve per-branch &rarr; Generate per-branch &rarr; Compare outputs &rarr; Collapse with evidence. Each branch preserves a different basis state through the pipeline.</p>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 10 &mdash; Prompt Engineering Becomes Empirical Science</div>
+  <p>The framework makes three quantities measurable: <strong>Fidelity</strong> ($F < 0.99$ &rArr; context ordering matters), <strong>Interference score</strong> (score $> 0$ &rArr; combination is non-additive), and <strong>CHSH value $S$</strong> ($|S| > 2$ &rArr; meaning is non-classical). This moves prompt engineering from craft to science.</p>
+</div>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Try It &mdash; Prompt C: Semantic Bell Test (CHSH)</span></div>
+<pre><span class="comment"># When to use: To empirically test whether meaning is classical</span>
+<span class="comment"># or non-classical for a given expression and context pair.</span>
+
+We will run a semantic Bell test (CHSH inequality).
+
+SETUP:
+- Expression: "The coach told the player to run the bank."
+- Word A: "run" with two contexts:
+    A0 = "business meeting"  /  A1 = "outdoor sports"
+- Word B: "bank" with two contexts:
+    B0 = "financial discussion"  /  B1 = "nature/river setting"
+
+STEP 1 - COLLECT CORRELATIONS:
+For each pairing, rate agreement from -1 to +1:
+  (A0, B0): E = ___
+  (A0, B1): E = ___
+  (A1, B0): E = ___
+  (A1, B1): E = ___
+
+STEP 2 - COMPUTE S:
+S = E(A0,B0) - E(A0,B1) + E(A1,B0) + E(A1,B1) = ___
+
+STEP 3 - INTERPRET:
+<span class="comment">- |S| &lt;= 2.0: Classical (meaning was pre-determined)</span>
+<span class="comment">- 2.0 &lt; |S| &lt;= 2.828: Non-classical (context creates meaning)</span>
+<span class="comment">- |S| &gt; 2.828: Exceeds quantum bound (check for errors)</span></pre>
+</div>
+
+<div class="qs-definition reveal">
+  <div class="qs-definition-label">Principle 11 &mdash; The Classical vs. Quantum Summary</div>
+  <p>The quantum framework treats ambiguity as a resource, context as an operator, and prompt engineering as empirical science rather than craft. Every classical assumption (one meaning, context reveals, order doesn't matter, combination is additive, temperature = creativity) has a quantum counterpart with testable predictions.</p>
+</div>
+
+<div class="qs-insight reveal">
+  <div class="qs-insight-label">Meta-Cognitive Prompt Design</div>
+  <p>Use the paradigm table in Section 7 as a checklist: for every prompt you design, ask whether you are making a classical assumption (left column) when the quantum reality (right column) applies. Each row is a potential failure mode in your system.</p>
+</div>
+
+<figure class="qs-figure reveal">
+  <img src="/assets/images/quantum-semantics/composition_explorer.png" loading="lazy" decoding="async" alt="Context Composition Explorer showing fidelity distribution across all operator orderings, mean fidelity 0.342">
+  <figcaption class="qs-figure-caption"><strong>Figure 5.</strong> Context Composition Explorer. Left: Top 6 operator orderings ranked by fidelity to target. Right: Fidelity distribution across all $n!$ orderings of a 3-operator chain &mdash; mean fidelity is 0.342, confirming that operator order is a critical degree of freedom (Principle 4).</figcaption>
+</figure>
+
+<figure class="qs-figure reveal">
+  <img src="/assets/images/quantum-semantics/commutativity.png" loading="lazy" decoding="async" alt="Non-commutativity demo: applying contexts A then B versus B then A on the word 'cold' produces fidelity F=0.347">
+  <figcaption class="qs-figure-caption"><strong>Figure 6.</strong> Empirical non-commutativity measurement. Applying context operators in order A&rarr;B (left) versus B&rarr;A (right) on the expression "cold" yields dramatically different probability distributions. Fidelity $F = 0.347$ &mdash; confirming $[A,B] \neq 0$ and order sensitivity $\sigma \approx 0.65$.</figcaption>
+</figure>
+
+<hr class="qs-divider">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 7: PARADIGM TABLE
+     ═══════════════════════════════════════════════════════════════ -->
+<span class="qs-section-num reveal">Section 7</span>
+<h2 id="section-7" class="qs-section-title reveal">Classical vs. Quantum: The Paradigm Shift</h2>
+
+<p>Every row in this table represents a testable prediction. The quantum column isn't metaphorical &mdash; it follows directly from the definitions and theorems above.</p>
+
+<div class="qs-table-wrapper reveal">
+<table class="qs-table">
+  <thead>
+    <tr>
+      <th scope="col">Classical Assumption</th>
+      <th scope="col">Quantum Reality</th>
+      <th scope="col">What to Do Differently</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Expression has one right meaning</td>
+      <td>Expression is in superposition (Section 1)</td>
+      <td>Enumerate interpretations with weights before collapsing</td>
+    </tr>
+    <tr>
+      <td>Context reveals meaning</td>
+      <td>Context <em>creates</em> meaning (Section 2)</td>
+      <td>Design context as an operator: amplify, suppress, mix</td>
+    </tr>
+    <tr>
+      <td>Instruction order doesn't matter</td>
+      <td>Instructions don't commute (Section 2)</td>
+      <td>Test and optimize ordering; broadest framing first</td>
+    </tr>
+    <tr>
+      <td>Combining contexts is additive</td>
+      <td>Interference produces emergent meanings (Section 2)</td>
+      <td>Expect and test for non-additive combination effects</td>
+    </tr>
+    <tr>
+      <td>Temperature = creativity</td>
+      <td>Temperature = measurement type (Section 5)</td>
+      <td>Use T=0 for mode, T>0 for distribution sampling</td>
+    </tr>
+    <tr>
+      <td>Each step refines meaning</td>
+      <td>Each step irreversibly destroys information</td>
+      <td>Delay collapse; run parallel interpretation branches</td>
+    </tr>
+    <tr>
+      <td>Prompt engineering is craft</td>
+      <td>Prompt engineering is operator design</td>
+      <td>Measure fidelity, interference, CHSH &mdash; treat it as engineering</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<hr class="qs-divider">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 8: PROMPT LIBRARY
+     ═══════════════════════════════════════════════════════════════ -->
+<span class="qs-section-num reveal">Section 8</span>
+<h2 id="section-8" class="qs-section-title reveal">The Prompt Library &mdash; Engineering Quantum Context</h2>
+
+<p>The framework includes 14 individual prompts (A&ndash;N) organized into five categories, plus 6 structured prompt programs. Each operationalizes a specific quantum semantic concept. All are presented below, ready to paste into any LLM.</p>
+
+<h3 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; color: var(--indigo); margin: 2rem 0 0.8rem; font-weight: 600;" class="reveal">Category 1 &mdash; Superposition &amp; Measurement</h3>
+<p>These prompts operationalize the core quantum insight: meaning exists in superposition until measured. Use them to preserve ambiguity, explore interpretation spaces, and understand how temperature controls collapse.</p>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">A</span>
+  <h4>Ambiguity Preservation Prompt</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Superposition</span> <span class="qs-prompt-card-tag tag-use">Analysis</span></p>
+  <p>Prevents premature collapse by forcing the model to enumerate <strong>all</strong> plausible interpretations as a weighted distribution. Returns a YAML structure with Born-rule probabilities summing to 1.0. Use before committing to a single reading of any ambiguous input &mdash; requirements, error messages, user feedback, or strategic decisions.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt A &mdash; Ambiguity Preservation</span></div>
+<pre>SYSTEM:
+You are a Quantum Semantic Analyst. When given any expression,
+you NEVER pick a single interpretation. Instead, you return ALL
+plausible interpretations as a weighted superposition.
+
+For every input, respond in this YAML format:
+
+expression: "&lt;the input&gt;"
+interpretations:
+  - meaning: "&lt;interpretation 1&gt;"
+    weight: &lt;probability 0.0-1.0&gt;
+    basis: "&lt;which semantic dimension&gt;"
+    confidence: "&lt;high|medium|low&gt;"
+  - meaning: "&lt;interpretation 2&gt;"
+    weight: &lt;probability 0.0-1.0&gt;
+    basis: "&lt;which semantic dimension&gt;"
+    confidence: "&lt;high|medium|low&gt;"
+  ...
+total_weight: 1.0  <span class="comment"># normalization condition</span>
+dominant_interpretation: "&lt;highest weight&gt;"
+residual_ambiguity: "&lt;what context would collapse it&gt;"
+
+Rules:
+- Weights MUST sum to 1.0 (normalization condition).
+- Include at least 3 interpretations, even if one dominates.
+- Always include a low-probability "other" category (&gt;= 0.02).
+- State what additional context would collapse the superposition.
+
+USER:
+"The bank is secure."</pre>
+</div>
+</div>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">E</span>
+  <h4>Superposition Collapse Demo</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Born Rule</span> <span class="qs-prompt-card-tag tag-use">Experiment</span></p>
+  <p>An empirical experiment showing that temperature controls measurement type, not creativity. Run the same ambiguous prompt 10 times at T=0 (deterministic) and T=1.0 (Born sampling). The frequency distribution at T=1.0 approximates $|c_i|^2$ &mdash; a direct measurement of the quantum state.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt E &mdash; Superposition Collapse Demo</span></div>
+<pre>You are designing a context operator O that will transform the
+meaning of an expression. Think step by step:
+
+Step 1 - IDENTIFY THE SUPERPOSITION:
+List all plausible interpretations of the expression below.
+Assign each a rough prior probability.
+
+Step 2 - DEFINE YOUR INTERPRETIVE GOAL:
+What meaning do you want to amplify? What should be suppressed?
+Are there meanings you want to MIX (create a new interpretation
+from combining existing ones)?
+
+Step 3 - CONSTRUCT THE OPERATOR:
+Describe the context instructions (persona, framing, constraints)
+that would achieve the transformation from Step 2. For each
+instruction, state whether it AMPLIFIES, SUPPRESSES, or MIXES
+specific interpretations.
+
+Step 4 - PREDICT THE OUTPUT STATE:
+After applying your operator, what is the resulting
+interpretation distribution? Which interpretations survived?
+What is the probability of the intended reading?
+
+Step 5 - CHECK NORMALIZATION:
+Verify your output probabilities sum to 1.0. If not, adjust.
+
+Expression: "We need to address the issue at the root."
+Goal: Amplify the software debugging interpretation.</pre>
+</div>
+</div>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">B</span>
+  <h4>Superposition Collapse Demo</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Operator Design</span> <span class="qs-prompt-card-tag tag-use">Prompt Engineering</span></p>
+  <p>A step-by-step protocol for constructing a context operator that transforms meaning in a controlled way. Identifies the superposition, defines an interpretive goal (amplify, suppress, mix), constructs the operator as concrete instructions, and predicts the output distribution. Use when designing any system prompt or persona.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt B &mdash; Superposition Collapse Demo</span></div>
+<pre>EXPERIMENT: Superposition Collapse Demonstration
+
+Use the following prompt and run it 10 times at each temperature
+setting. Record the interpretation chosen each time.
+
+PROMPT (use identically each time):
+"In one sentence, what does 'He played the bass' mean?"
+
+CONDITION 1: temperature = 0 (10 runs)
+Expected: Same answer every time (deterministic collapse).
+Record: ___________________________________________
+
+CONDITION 2: temperature = 1.0 (10 runs)
+Expected: Variation across runs (Born rule sampling).
+Record each: 1.___ 2.___ 3.___ 4.___ 5.___
+             6.___ 7.___ 8.___ 9.___ 10.___
+
+ANALYSIS:
+<span class="comment">- Count interpretations: "musical instrument" vs. "fish" vs. other</span>
+<span class="comment">- Condition 1 frequency distribution: ___</span>
+<span class="comment">- Condition 2 frequency distribution: ___</span>
+<span class="comment">- Does Condition 2 approximate a probability distribution over</span>
+<span class="comment">  the superposition |psi> = c1|instrument> + c2|fish> + ...?</span>
+<span class="comment">- The ratio of counts approximates |c_i|^2 (Born rule).</span></pre>
+</div>
+</div>
+
+<h3 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; color: var(--indigo); margin: 2.5rem 0 0.8rem; font-weight: 600;" class="reveal">Category 2 &mdash; Context Operators &amp; Non-Commutativity</h3>
+<p>These prompts treat context as operators in a Hilbert space. Order matters: $[A,B] \neq 0$. Use them to design, test, and optimize the structure of your prompts.</p>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">D</span>
+  <h4>Commutativity Test</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Non-Commutativity</span> <span class="qs-prompt-card-tag tag-use">A/B Testing</span></p>
+  <p>An empirical test for whether two context instructions commute. Run the same expression with instructions in both orders, compare outputs, and compute fidelity $F$. If $F < 0.99$, ordering matters &mdash; a direct measurement of $[A,B] \neq 0$. Use whenever you suspect instruction order affects output.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt D &mdash; Commutativity Test</span></div>
+<pre><span class="comment">--- VERSION 1: Context A first, then Context B ---</span>
+
+SYSTEM: You are a medical expert. <span class="comment">(Context A)</span>
+
+USER: Be concise and use plain language. <span class="comment">(Context B)</span>
+Now explain: "The patient's condition is critical."
+
+<span class="comment">--- VERSION 2: Context B first, then Context A ---</span>
+
+SYSTEM: Be concise and use plain language. <span class="comment">(Context B)</span>
+
+USER: You are a medical expert. <span class="comment">(Context A)</span>
+Now explain: "The patient's condition is critical."
+
+<span class="comment">--- ANALYSIS ---</span>
+After running both versions, compare:
+<span class="highlight">1. How do the outputs differ in tone, detail, and framing?</span>
+<span class="highlight">2. Which context "won" in each version?</span>
+<span class="highlight">3. Rate the similarity of the two outputs from 0 to 1.</span>
+<span class="highlight">   This is the fidelity F.</span>
+<span class="highlight">4. If F &lt; 0.99, the contexts do NOT commute: [A, B] &ne; 0.</span></pre>
+</div>
+</div>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">H</span>
+  <h4>Context Pipeline Optimizer</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Operator Ordering</span> <span class="qs-prompt-card-tag tag-use">System Prompts</span></p>
+  <p>Given a set of system prompt instructions, determines the optimal ordering by analyzing non-commuting pairs, identifying dominance hierarchies, and predicting output differences. Essential before deploying any multi-instruction system prompt.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt H &mdash; Context Pipeline Optimizer</span></div>
+<pre>You are a Context Pipeline Optimizer. Given a set of context
+instructions that will be applied to an LLM, determine the
+optimal ordering.
+
+CONTEXT INSTRUCTIONS (to be ordered):
+1. "You are a senior security engineer." (persona)
+2. "Be concise, max 3 bullet points." (format constraint)
+3. "Focus on production risks only." (scope constraint)
+4. "The audience is non-technical executives." (audience)
+
+TASK: Review this code snippet for issues: [code here]
+
+ANALYSIS - Think step by step:
+
+A. IDENTIFY NON-COMMUTING PAIRS:
+   For each pair of instructions (1,2), (1,3), (1,4), (2,3),
+   (2,4), (3,4): would swapping their order change the output?
+   Rate each: commutes / weakly non-commutative / strongly
+   non-commutative.
+
+B. DETERMINE DOMINANCE HIERARCHY:
+   Which instructions, when placed FIRST, most strongly shape all
+   subsequent interpretation? (These are the "strongest operators"
+   --- they project the state most aggressively.)
+
+C. PROPOSE OPTIMAL ORDER:
+   Arrange instructions so that:
+   - Broadest framing first (sets the Hilbert subspace)
+   - Narrowing constraints next (projections within subspace)
+   - Format instructions last (they commute with most content)
+
+D. PROPOSE WORST ORDER:
+   Arrange to maximize information loss / contradiction.
+
+E. PREDICT DIFFERENCE:
+   How would the output differ between optimal and worst order?</pre>
+</div>
+</div>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">L</span>
+  <h4>System Prompt Ordering Optimizer</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Non-Commutativity</span> <span class="qs-prompt-card-tag tag-use">Evaluation</span></p>
+  <p>A self-evaluating protocol that generates outputs for multiple instruction orderings and scores each across quality dimensions. Identifies which instructions are position-sensitive (strong operators) vs. position-insensitive (commuting). Use for systematic prompt optimization.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt L &mdash; System Prompt Ordering Optimizer</span></div>
+<pre>You are a Prompt Ordering Optimizer. Given a set of system prompt
+instructions, determine whether their order matters and find the
+best arrangement.
+
+INSTRUCTIONS TO ORDER:
+A: "You are a helpful coding assistant."
+B: "Always include error handling in your code."
+C: "Use TypeScript with strict mode."
+D: "Keep responses under 50 lines."
+
+TASK: "Write a function to parse CSV files."
+
+PROTOCOL:
+1. Generate output for ordering: A, B, C, D
+2. Generate output for ordering: D, C, B, A (reversed)
+3. Generate output for ordering: C, A, D, B (interleaved)
+
+For each ordering, SELF-EVALUATE on:
+  - Adherence to persona (A): 1-5
+  - Error handling quality (B): 1-5
+  - TypeScript strictness (C): 1-5
+  - Length compliance (D): 1-5
+  - Overall quality: 1-5
+
+ANALYSIS:
+<span class="comment">- Which ordering scored highest overall?</span>
+<span class="comment">- Which instructions are most sensitive to position?</span>
+<span class="comment">  (= strongest non-commutative operators)</span>
+<span class="comment">- Which instructions commute (position-insensitive)?</span>
+<span class="comment">- Propose the optimal ordering with rationale.</span></pre>
+</div>
+</div>
+
+<h3 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; color: var(--indigo); margin: 2.5rem 0 0.8rem; font-weight: 600;" class="reveal">Category 3 &mdash; Interference &amp; Combination</h3>
+<p>When two contexts combine, the result is not their average. These prompts detect and harness the interference term &mdash; emergent meanings that exist only because two semantic fields interacted.</p>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">F</span>
+  <h4>Interference Demonstration</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Interference</span> <span class="qs-prompt-card-tag tag-use">Experiment</span></p>
+  <p>A three-step experiment to detect semantic interference. Apply Context A alone, Context B alone, then both simultaneously. If the combined output contains elements neither produced alone (constructive) or loses elements both had (destructive), interference is present. The non-classical signature: $AB \neq \text{avg}(A,B)$.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt F &mdash; Interference Demonstration</span></div>
+<pre>EXPERIMENT: Semantic Interference
+
+Expression: "The deep state operates in shadows."
+
+STEP 1 - CONTEXT A ALONE (political science framing):
+"As a political scientist, interpret this expression."
+Record interpretation A: ___
+
+STEP 2 - CONTEXT B ALONE (computer science framing):
+"As a software architect, interpret this expression."
+Record interpretation B: ___
+
+STEP 3 - COMBINED CONTEXT (A + B simultaneously):
+"As someone who works at the intersection of political science
+and software architecture, interpret this expression."
+Record interpretation AB: ___
+
+ANALYSIS:
+<span class="comment">- Is interpretation AB simply the average of A and B?</span>
+<span class="comment">  (If yes: classical, no interference.)</span>
+<span class="comment">- Does AB contain elements that NEITHER A nor B produced alone?</span>
+<span class="comment">  (If yes: constructive interference --- new meaning emerged.)</span>
+<span class="comment">- Are there elements from A or B that DISAPPEARED in AB?</span>
+<span class="comment">  (If yes: destructive interference --- meanings cancelled.)</span>
+<span class="comment">- The non-classical signature is: AB != average(A, B).</span>
+<span class="comment">  Instead, AB = A + B + interference_term.</span></pre>
+</div>
+</div>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">M</span>
+  <h4>Interference-Based Ideation</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Constructive Interference</span> <span class="qs-prompt-card-tag tag-use">Creative Ideation</span></p>
+  <p>Harnesses interference for creative problem-solving. Combines two unrelated domain framings on a shared expression, then harvests the constructive interference &mdash; ideas that neither domain alone would produce. Use whenever you need novel cross-domain concepts.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt M &mdash; Interference-Based Ideation</span></div>
+<pre>EXPERIMENT: Semantic Interference for Creative Ideation
+
+DOMAIN A: Restaurant management
+DOMAIN B: Version control systems (git)
+
+STEP 1 - SOLO INTERPRETATIONS:
+What does "branching strategy" mean in Domain A alone?
+What does "branching strategy" mean in Domain B alone?
+
+STEP 2 - INTERFERENCE:
+Now consider BOTH domains simultaneously. What new ideas emerge
+from the interference of these two semantic fields?
+
+List ideas that:
+a) CONSTRUCTIVE INTERFERENCE: ideas that neither domain alone
+   would produce, but emerge from their combination.
+   (e.g., "menu versioning with branch-and-merge workflow")
+b) DESTRUCTIVE INTERFERENCE: assumptions from one domain that
+   are contradicted/cancelled by the other.
+   (e.g., "branches in restaurants are physical locations ---
+   this conflicts with git's abstract branches")
+
+STEP 3 - HARVEST:
+Pick the most promising constructive interference idea.
+Develop it into a concrete concept (3-5 sentences).
+
+<span class="comment">This is the interference term: the meaning that exists ONLY</span>
+<span class="comment">because two semantic fields interacted.</span></pre>
+</div>
+</div>
+
+<h3 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; color: var(--indigo); margin: 2.5rem 0 0.8rem; font-weight: 600;" class="reveal">Category 4 &mdash; Bayesian Measurement &amp; Debugging</h3>
+<p>Rather than collapsing to a single interpretation, maintain a probability distribution and update it as evidence arrives. These prompts turn diagnosis into sequential quantum measurement.</p>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">G</span>
+  <h4>Bayesian Interpretation Audit</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">State Tomography</span> <span class="qs-prompt-card-tag tag-use">Interpretation Mapping</span></p>
+  <p>Maps the full probability distribution over meanings through diverse sampling (12 interpretations across different lenses), clustering into basis states, and probability assignment. The meta-analysis reveals the dominant eigenstate, surprising low-probability states, and which contexts would collapse to each.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt G &mdash; Bayesian Interpretation Audit</span></div>
+<pre>You are performing a Bayesian Interpretation Audit. Your goal is
+to discover the full probability distribution over meanings for
+the expression below.
+
+Expression: "The system is not responding appropriately."
+
+STEP 1 - GENERATE DIVERSE INTERPRETATIONS:
+Generate 12 distinct interpretations of this expression. Vary
+your interpretive lens each time: technical, emotional, legal,
+medical, organizational, philosophical, etc. Push for variety.
+
+STEP 2 - CLUSTER:
+Group your 12 interpretations into natural clusters of similar
+meaning. Name each cluster.
+
+STEP 3 - ASSIGN PROBABILITIES:
+For each cluster, estimate the probability that a random reader
+in a neutral context would arrive at that interpretation.
+Probabilities must sum to 1.0.
+
+STEP 4 - REPORT:
+Output as:
+cluster_name: probability (N interpretations)
+  - representative example
+  - representative example
+
+STEP 5 - META-ANALYSIS:
+- Which cluster dominates? (= the likely collapse outcome)
+- Which clusters are surprising? (= low-probability eigenstates)
+- What context would be needed to collapse to each cluster?</pre>
+</div>
+</div>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">I</span>
+  <h4>Superposition Requirement Analysis</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Superposition</span> <span class="qs-prompt-card-tag tag-use">Requirements Engineering</span></p>
+  <p>Treats every requirement as a quantum superposition. Enumerates all distinct interpretations as basis states, assigns weights, and identifies which clarifying questions (measurement operators) would collapse the ambiguity. Recommends which eigenstate to build for and flags orthogonal interpretations requiring different architectures.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt I &mdash; Superposition Requirement Analysis</span></div>
+<pre>SYSTEM:
+You are a Requirements Analyst who treats every requirement as a
+quantum superposition of possible meanings. Never assume a single
+interpretation is correct.
+
+USER:
+Analyze this requirement:
+"The system should handle large files efficiently."
+
+For each step, think carefully:
+
+1. ENUMERATE BASIS STATES:
+   List every distinct interpretation of this requirement.
+   What does "large" mean? (>1MB? >1GB? >100GB?)
+   What does "handle" mean? (upload? process? store? stream?)
+   What does "efficiently" mean? (fast? low memory? low cost?)
+   Each combination is a basis state |e_i&gt;.
+
+2. ASSIGN WEIGHTS:
+   For each interpretation, estimate P(this is what the author
+   meant) based on common usage. Weights must sum to 1.0.
+
+3. IDENTIFY COLLAPSE CRITERIA:
+   For each ambiguous term, state what specific question or piece
+   of evidence would collapse the superposition to a definite
+   meaning. These are your measurement operators.
+
+4. RECOMMEND:
+   - Which interpretation should we BUILD for if we cannot ask?
+     (= most probable eigenstate)
+   - Which interpretations would require fundamentally different
+     architectures? (= orthogonal basis states --- high risk if
+     we guess wrong)
+   - What is the minimum set of questions to fully collapse
+     the superposition?</pre>
+</div>
+</div>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">K</span>
+  <h4>Probabilistic Debug Triage</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Bayesian Collapse</span> <span class="qs-prompt-card-tag tag-use">Debugging</span></p>
+  <p>Maintains a probability distribution over root causes, updating it with each piece of evidence via Bayesian inference. Instead of jumping to the most obvious cause, progressively collapses the superposition until one hypothesis dominates. The final step identifies the optimal diagnostic command &mdash; the measurement operator for definitive collapse.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt K &mdash; Probabilistic Debug Triage</span></div>
+<pre>SYSTEM:
+You are a Bayesian Debugger. You never jump to the most obvious
+root cause. Instead, you maintain a probability distribution over
+all plausible causes and update it as evidence arrives.
+
+USER:
+Error: "Connection refused on port 5432"
+
+STEP 1 - PRIOR DISTRIBUTION:
+List all plausible root causes. Assign prior probabilities
+(must sum to 1.0):
+ - cause_1: P = ___
+ - cause_2: P = ___
+ - ...
+
+STEP 2 - FIRST EVIDENCE:
+The service was working 10 minutes ago. No deployments since.
+UPDATE your probabilities given this evidence (Bayesian update).
+Show which causes became more/less likely and why.
+
+STEP 3 - SECOND EVIDENCE:
+Other services on the same host are responding normally.
+UPDATE again. Show the new distribution.
+
+STEP 4 - COLLAPSE:
+Which cause now has the highest posterior probability?
+What ONE diagnostic command would you run to confirm or
+eliminate it? (= the measurement operator that collapses the
+remaining superposition)</pre>
+</div>
+</div>
+
+<h3 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; color: var(--indigo); margin: 2.5rem 0 0.8rem; font-weight: 600;" class="reveal">Category 5 &mdash; Falsifiability &amp; Observer Effects</h3>
+<p>The framework's most powerful claim: meaning is non-classical, and you can prove it. These prompts provide experiments to run and tools for managing observer-dependent collapse in communication.</p>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">C</span>
+  <h4>Semantic Bell Test (CHSH)</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">CHSH Inequality</span> <span class="qs-prompt-card-tag tag-use">Falsifiability Test</span></p>
+  <p>A complete protocol for running a semantic Bell test. Measures correlations between two word interpretations across four context pairings and computes the CHSH value $S$. If $|S| > 2$, meaning is provably non-classical &mdash; it cannot be explained by pre-existing interpretations that context merely reveals.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt C &mdash; Semantic Bell Test (CHSH)</span></div>
+<pre>We will run a semantic Bell test (CHSH inequality). Follow this
+protocol exactly.
+
+SETUP:
+- Expression: "The coach told the player to run the bank."
+- Word A: "run" with two contexts:
+    A0 = "business meeting context"
+    A1 = "outdoor sports context"
+- Word B: "bank" with two contexts:
+    B0 = "financial discussion frame"
+    B1 = "nature/river setting frame"
+
+STEP 1 - COLLECT CORRELATIONS:
+For each of the 4 context pairings below, rate how strongly the
+two word interpretations AGREE on a scale of -1 (opposite) to
++1 (fully aligned):
+
+Pairing (A0, B0): business + financial
+  -> "run" means: ___    "bank" means: ___
+  -> Agreement E(A0,B0) = ___
+
+Pairing (A0, B1): business + nature
+  -> "run" means: ___    "bank" means: ___
+  -> Agreement E(A0,B1) = ___
+
+Pairing (A1, B0): sports + financial
+  -> "run" means: ___    "bank" means: ___
+  -> Agreement E(A1,B0) = ___
+
+Pairing (A1, B1): sports + nature
+  -> "run" means: ___    "bank" means: ___
+  -> Agreement E(A1,B1) = ___
+
+STEP 2 - COMPUTE S:
+S = E(A0,B0) - E(A0,B1) + E(A1,B0) + E(A1,B1) = ___
+
+STEP 3 - INTERPRET:
+- If |S| &lt;= 2.0: Classical (meaning was pre-determined)
+- If 2.0 &lt; |S| &lt;= 2.828: Non-classical (context creates meaning)
+- If |S| > 2.828: Exceeds quantum bound (check for errors)
+
+Report your S value and classification.</pre>
+</div>
+</div>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">J</span>
+  <h4>Multi-Lens Code Review</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Non-Commutativity</span> <span class="qs-prompt-card-tag tag-use">Code Review</span></p>
+  <p>Reviews code through three independent measurement operators (security, performance, maintainability), then tests whether these operators commute. The sequential application test reveals how knowing one review changes what you find in the next &mdash; a practical demonstration of $[O_\text{sec}, O_\text{perf}] \neq 0$.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt J &mdash; Multi-Lens Code Review</span></div>
+<pre>You will review the code below through multiple lenses.
+IMPORTANT: Apply each lens independently, as if you had not
+seen the other reviews.
+
+CODE:
+[paste code here]
+
+LENS 1 - SECURITY (operator O_sec):
+Review ONLY for security vulnerabilities. Ignore performance
+and style. List findings with severity.
+
+LENS 2 - PERFORMANCE (operator O_perf):
+Review ONLY for performance issues. Ignore security and style.
+List findings with impact estimate.
+
+LENS 3 - MAINTAINABILITY (operator O_maint):
+Review ONLY for readability, complexity, and maintainability.
+Ignore security and performance.
+
+NON-COMMUTATIVITY TEST:
+Now apply lenses in sequence:
+A) Read your security review, THEN review for performance.
+   How does knowing the security issues change what performance
+   issues you notice?
+B) Read your performance review, THEN review for security.
+   How does knowing the performance issues change what security
+   issues you notice?
+
+<span class="comment">Compare A and B. If they differ, the review operators do NOT</span>
+<span class="comment">commute: [O_sec, O_perf] != 0. Report the fidelity (0-1).</span></pre>
+</div>
+</div>
+
+<div class="qs-prompt-card reveal">
+<div class="qs-prompt-card-header">
+  <span class="qs-prompt-card-id">N</span>
+  <h4>Observer-Aware Communication Drafting</h4>
+</div>
+<div class="qs-prompt-card-meta">
+  <p><span class="qs-prompt-card-tag tag-concept">Observer Effect</span> <span class="qs-prompt-card-tag tag-use">Communication</span></p>
+  <p>Models each audience as a measurement operator that collapses a message's superposition differently. Predicts how engineers, executives, and customers will each interpret the same announcement, identifies divergence points, and drafts a version that controls the collapse for all three &mdash; finding the closest common eigenstate.</p>
+</div>
+<div class="qs-terminal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Prompt N &mdash; Observer-Aware Communication Drafting</span></div>
+<pre>SYSTEM:
+You are a Communication Physicist. Every message exists in
+superposition --- different readers will "measure" it with
+different interpretive operators, collapsing to different
+meanings.
+
+USER:
+Draft an announcement about: "We are restructuring the
+engineering team to improve velocity."
+
+AUDIENCE OPERATORS:
+O1 = Engineers (interpret through: job security, autonomy, tools)
+O2 = Executives (interpret through: cost, timeline, headcount)
+O3 = Customers (interpret through: product quality, support, roadmap)
+
+FOR EACH AUDIENCE:
+1. Predict how O_n collapses the message:
+   - Dominant interpretation (highest |c_i|^2):
+   - Secondary interpretation:
+   - Worst-case misinterpretation:
+
+2. Identify DIVERGENCE POINTS:
+   Which specific words/phrases will be interpreted differently
+   by different audiences?
+
+3. DRAFT THE MESSAGE:
+   Write a version that controls the collapse for ALL audiences:
+   - Use phrasing where O1, O2, O3 all collapse to the intended
+     meaning (= find the state that is an eigenstate of all
+     three operators, or closest approximation).
+   - Flag any remaining uncontrollable divergence.
+
+4. RESIDUAL SUPERPOSITION:
+   What ambiguity remains even in the best draft? What follow-up
+   communication would collapse it?</pre>
+</div>
+</div>
+
+<h3 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; color: var(--indigo); margin: 2.5rem 0 0.8rem; font-weight: 600;" class="reveal">Prompt Programs</h3>
+
+<p>While individual prompts are written in natural language, <em>prompt programs</em> use typed parameters, control flow, assertions, and composition &mdash; turning the LLM into a programmable quantum semantics engine. The framework defines six programs, each using a different programming paradigm:</p>
+
+<!-- Geometric Figure: Prompt Program Architecture -->
+<figure class="qs-svg-figure reveal">
+<svg viewBox="0 0 520 140" width="520" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Prompt program architecture: input state flows through typed operators to produce measured output">
+  <defs>
+    <marker id="arrowhead-prog" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="var(--ink-dim)"/>
+    </marker>
+  </defs>
+  <!-- Input -->
+  <rect x="10" y="35" width="80" height="50" rx="20" fill="var(--paper-warm)" stroke="var(--indigo)" stroke-width="1.5"/>
+  <text x="50" y="57" class="svg-small" fill="var(--indigo)" text-anchor="middle" font-weight="600">|ψ⟩</text>
+  <text x="50" y="72" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">input</text>
+  <!-- Arrow 1 -->
+  <line x1="90" y1="60" x2="128" y2="60" stroke="var(--ink-dim)" stroke-width="1.5" marker-end="url(#arrowhead-prog)"/>
+  <!-- Operator 1 -->
+  <rect x="130" y="30" width="80" height="60" rx="6" fill="var(--indigo)" opacity="0.12" stroke="var(--indigo)" stroke-width="1.5"/>
+  <text x="170" y="52" class="svg-small" fill="var(--indigo)" text-anchor="middle" font-weight="600">O₁</text>
+  <text x="170" y="68" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">persona</text>
+  <text x="170" y="80" class="svg-small" fill="var(--ink-dim)" text-anchor="middle" font-style="italic">assert ‖·‖=1</text>
+  <!-- Arrow 2 -->
+  <line x1="210" y1="60" x2="248" y2="60" stroke="var(--ink-dim)" stroke-width="1.5" marker-end="url(#arrowhead-prog)"/>
+  <!-- Operator 2 -->
+  <rect x="250" y="30" width="80" height="60" rx="6" fill="var(--teal)" opacity="0.12" stroke="var(--teal)" stroke-width="1.5"/>
+  <text x="290" y="52" class="svg-small" fill="var(--teal)" text-anchor="middle" font-weight="600">O₂</text>
+  <text x="290" y="68" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">scope</text>
+  <text x="290" y="80" class="svg-small" fill="var(--ink-dim)" text-anchor="middle" font-style="italic">assert ‖·‖=1</text>
+  <!-- Arrow 3 -->
+  <line x1="330" y1="60" x2="368" y2="60" stroke="var(--ink-dim)" stroke-width="1.5" marker-end="url(#arrowhead-prog)"/>
+  <!-- Operator 3 -->
+  <rect x="370" y="30" width="80" height="60" rx="6" fill="var(--amber)" opacity="0.12" stroke="var(--amber)" stroke-width="1.5"/>
+  <text x="410" y="52" class="svg-small" fill="var(--amber)" text-anchor="middle" font-weight="600">O₃</text>
+  <text x="410" y="68" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">format</text>
+  <text x="410" y="80" class="svg-small" fill="var(--ink-dim)" text-anchor="middle" font-style="italic">assert ‖·‖=1</text>
+  <!-- Arrow 4 -->
+  <line x1="450" y1="60" x2="468" y2="60" stroke="var(--ink-dim)" stroke-width="1.5" marker-end="url(#arrowhead-prog)"/>
+  <!-- Output -->
+  <rect x="470" y="35" width="45" height="50" rx="6" fill="var(--rose)" opacity="0.15" stroke="var(--rose)" stroke-width="1.5"/>
+  <text x="492" y="57" class="svg-small" fill="var(--rose)" text-anchor="middle" font-weight="600">|ψ'⟩</text>
+  <text x="492" y="72" class="svg-small" fill="var(--ink-dim)" text-anchor="middle">out</text>
+  <!-- Commutativity check annotation -->
+  <path d="M 170,92 L 170,120 L 290,120 L 290,92" fill="none" stroke="var(--rose)" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="230" y="136" class="svg-small" fill="var(--rose)" text-anchor="middle" font-weight="500">[O₁, O₂] ≠ 0 ?</text>
+</svg>
+<figcaption class="qs-figure-caption"><strong>Geometric view.</strong> A prompt program is a typed operator chain: each gate transforms the semantic state, normalization is asserted at every step, and commutativity is checked between pairs. The program's output depends on the order of gates.</figcaption>
+</figure>
+
+<div class="qs-table-wrapper reveal">
+<table class="qs-table">
+  <thead>
+    <tr><th scope="col">Program</th><th scope="col">Paradigm</th><th scope="col">Quantum Concept</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>SUPERPOSITION_DECOMPOSE</code></td><td>Functional</td><td>State vector decomposition</td></tr>
+    <tr><td><code>CONTEXT_PIPELINE</code></td><td>Imperative</td><td>Sequential measurement with ordering test</td></tr>
+    <tr><td><code>BELL_TEST</code></td><td>Declarative / Specification</td><td>CHSH inequality test</td></tr>
+    <tr><td><code>INTERFERENCE_SCAN</code></td><td>Dataflow / Pipeline</td><td>Interference detection</td></tr>
+    <tr><td><code>BAYESIAN_COLLAPSE</code></td><td>Reactive / Event-driven</td><td>Bayesian updating with collapse</td></tr>
+    <tr><td><code>OBSERVER_OPTIMIZE</code></td><td>Constraint programming</td><td>Observer-dependent collapse</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Each program is a structured prompt with typed inputs and outputs, assertions (like normalization checks), and control flow. They represent the next step beyond individual prompts: composable, verifiable semantic operations. Two are shown in full below.</p>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Program &mdash; CONTEXT_PIPELINE (Imperative)</span></div>
+<pre><span class="comment"># Sequential measurement with commutativity check</span>
+<span class="comment"># Input: expression, operators[] (name, instruction, strength)</span>
+
+You are executing CONTEXT_PIPELINE.
+
+<span class="highlight">-- Initialize state</span>
+LET state = superposition_decompose({{expression}}).state_vector
+LET trace = []
+
+<span class="highlight">-- Forward pass: apply operators in given order</span>
+FOR i = 0 TO LENGTH(operators) - 1:
+  LET op = operators[i]
+  PRINT "[Step {i}] Applying: {op.name} -- '{op.instruction}'"
+  LET new_state = APPLY(op, state)
+  LET snapshot = StateSnapshot(
+    step = i,
+    operator_applied = op.name,
+    dominant_meaning = ARGMAX(new_state, by=weight),
+    distribution = new_state,
+    information_lost = DIFF(state, new_state)
+  )
+  APPEND(trace, snapshot)
+  state = NORMALIZE(new_state) <span class="comment">-- irreversible</span>
+
+<span class="highlight">-- Commutativity check</span>
+IF check_commutativity AND LENGTH(operators) >= 2:
+  LET reverse_state = superposition_decompose({{expression}}).state_vector
+  FOR i = LENGTH(operators) - 1 DOWNTO 0:
+    reverse_state = NORMALIZE(APPLY(operators[i], reverse_state))
+
+  fidelity = |&lt;state | reverse_state&gt;|^2
+
+  IF fidelity &lt; 0.99:
+    PRINT "WARNING: Operators do NOT commute."
+    PRINT "  Forward:  {state.dominant_meaning}"
+    PRINT "  Reverse:  {reverse_state.dominant_meaning}"
+    PRINT "  Fidelity: {fidelity}"
+    PRINT "  -> Ordering matters. [A,B] != 0"
+
+RETURN (trace, fidelity)
+
+<span class="comment"># Example: 3 operators on "The model is overfitting the data"</span>
+<span class="comment"># Op1: "You are a senior ML engineer" (persona)</span>
+<span class="comment"># Op2: "Explain to a non-technical PM" (audience)</span>
+<span class="comment"># Op3: "Max 2 sentences" (format)</span>
+<span class="comment"># Forward:  "Our AI is memorizing examples instead of learning..."</span>
+<span class="comment"># Reverse:  "Keep it brief: the ML model is overfitting..."</span>
+<span class="comment"># Fidelity: 0.42 -> ordering matters</span></pre>
+</div>
+
+<div class="qs-terminal reveal">
+  <div class="qs-terminal-bar"><span></span><span></span><span></span><span class="qs-terminal-title">Program &mdash; BAYESIAN_COLLAPSE (Reactive / Event-Driven)</span></div>
+<pre><span class="comment"># 3-stage Bayesian updating with collapse detection</span>
+<span class="comment"># Input: observation, evidence[] (description, relevance)</span>
+
+You are executing BAYESIAN_COLLAPSE.
+
+<span class="highlight">-- Initialize prior from observation</span>
+LET state = PRIOR({{observation}})
+PRINT "Initial superposition: {state}"
+PRINT "Entropy: {ENTROPY(state)}"
+
+<span class="highlight">-- Reactive event loop</span>
+ON EACH event IN evidence:
+  PRINT "--- EVENT: {event.description} ---"
+
+  FOR EACH h IN state.hypotheses:
+    h.likelihood = P(event | h.cause)
+    PRINT "  P('{event}' | {h.cause}) = {h.likelihood}"
+
+  <span class="comment">-- Bayesian update: posterior = prior * likelihood / Z</span>
+  FOR EACH h IN state.hypotheses:
+    h.posterior = h.prior * h.likelihood
+  NORMALIZE(state)
+
+  EMIT UpdateLog(event, prior, likelihoods, posterior,
+                 entropy_before, entropy_after)
+
+  IF ENTROPY(state) &lt; 0.5:
+    PRINT "** SUPERPOSITION COLLAPSED **"
+    PRINT "Dominant cause: {ARGMAX(state)}"
+    PRINT "Confidence: {MAX(state.posteriors)}"
+    BREAK
+
+  IF MAX(state.posteriors) &gt; 0.90:
+    PRINT "** NEAR-EIGENSTATE: {ARGMAX(state)} at {MAX(state)} **"
+
+<span class="highlight">-- Recommend next measurement</span>
+LET remaining_entropy = ENTROPY(state)
+IF remaining_entropy &gt; 0.5:
+  LET best_test = ARGMAX over possible tests t:
+    EXPECTED_ENTROPY_REDUCTION(state, t)
+  PRINT "Recommended next measurement: {best_test}"
+
+RETURN (state, trace)
+
+<span class="comment"># Example: "API returns 500 errors intermittently"</span>
+<span class="comment"># Prior: db_overload 0.25, memory_leak 0.20, race_condition 0.18, ...</span>
+<span class="comment"># Event 1: "Errors spike during business hours" -> db_overload rises</span>
+<span class="comment"># Event 2: "Memory usage is stable" -> memory_leak drops to 0.02</span>
+<span class="comment"># Event 3: "Errors correlate with cron job" -> db_overload -> 0.61</span>
+<span class="comment"># Recommendation: run slow query log during next cron window</span></pre>
+</div>
+
+<hr class="qs-divider">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECTION 9: THE ROAD AHEAD
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="qs-teaser reveal">
+  <span class="qs-section-num" style="color: rgba(255,255,255,0.5);">Section 9</span>
+  <h2 id="section-9">The Road Ahead</h2>
+
+  <p>Quantum Context Engineering is not a metaphor. It is a mathematical framework with formal definitions, provable theorems, and &mdash; crucially &mdash; <strong>falsifiable predictions</strong>. The CHSH test (Section 3) gives any practitioner a concrete experiment to run: if $|S| > 2$, meaning is non-classical, and classical prompt engineering assumptions break down.</p>
+
+  <p>The framework gives practitioners engineering tools, not just intuition. The eleven principles (Section 6) translate directly into design patterns for system prompts, RAG pipelines, multi-agent systems, and evaluation frameworks. The prompt library (Section 8) provides ready-to-use implementations.</p>
+
+  <p>Open questions remain: <strong>empirical validation</strong> at scale across diverse LLM architectures, <strong>domain-specific semantic bases</strong> calibrated to particular fields (legal, medical, financial), and <strong>automated context optimization</strong> that searches the operator space algorithmically rather than by human intuition.</p>
+
+  <p>But the core insight is already actionable: <strong>meaning is not a property of words. It is created by the interaction of expression, context, and observer.</strong> Every prompt you write is an operator that transforms a quantum state. Designing that operator well is the difference between craft and engineering.</p>
+</div>
+
+<!-- ═══ CTA ═══ -->
+<div class="qs-cta">
+  <p class="qs-cta-headline">Meaning is not a property of words. It's a physical process.</p>
+  <p>Try the prompts above. Measure the non-commutativity of your own instructions. Run the CHSH test on your favorite ambiguous expression. Watch interference create meanings that no single context could produce.</p>
+  <p>The mathematics is identical to quantum physics. The predictions are testable. The engineering is practical.</p>
+  <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--ink-dim);">Share this post if it changed how you think about prompts.</p>
+</div>
+
+
+</div><!-- /.qs-article -->
+<div class="qs-lightbox" id="qs-lightbox">
+  <button class="qs-lightbox-close" aria-label="Close">&times;</button>
+  <img src="" alt="">
+</div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var wrapper = document.querySelector('.qs-article-wrapper');
+  if (wrapper) wrapper.classList.add('js-loaded');
+
+  
+
+  
+
+  // 3. Scroll Reveal
+  function initReveal() {
+    var els = document.querySelectorAll('.reveal');
+    if (reducedMotion) {
+      els.forEach(function(el) { el.classList.add('revealed'); });
+      return;
+    }
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('revealed'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      els.forEach(function(el) { obs.observe(el); });
+    } else {
+      els.forEach(function(el) { el.classList.add('revealed'); });
+    }
+  }
+
+  
+
+
+  // 6. Copy Buttons
+  function initCopyButtons() {
+    document.querySelectorAll('.qs-terminal').forEach(function(term) {
+      var btn = document.createElement('button');
+      btn.className = 'qs-copy-btn';
+      btn.textContent = 'Copy';
+      btn.setAttribute('aria-label', 'Copy code');
+      btn.addEventListener('click', function() {
+        var pre = term.querySelector('pre');
+        var text = pre ? pre.textContent : '';
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(done);
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          done();
+        }
+        function done() {
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+        }
+      });
+      term.appendChild(btn);
+    });
+  }
+
+  // 7. Lightbox
+  function initLightbox() {
+    var lightbox = document.getElementById('qs-lightbox');
+    var lbImg = lightbox.querySelector('img');
+    var closeBtn = lightbox.querySelector('.qs-lightbox-close');
+    document.querySelectorAll('.qs-figure img').forEach(function(img) {
+      img.addEventListener('click', function() {
+        lbImg.src = img.src;
+        lbImg.alt = img.alt;
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    function closeLB() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    closeBtn.addEventListener('click', closeLB);
+    lightbox.addEventListener('click', function(e) { if (e.target === lightbox) closeLB(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLB(); });
+  }
+
+
+  // Init all
+  initReveal();
+  initCopyButtons();
+  initLightbox();
+})();
+</script>
