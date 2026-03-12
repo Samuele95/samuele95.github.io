@@ -1,99 +1,44 @@
 ---
-layout: post
+layout: quantum-post
 title: "Quantum Context Engineering — When Words Become Wavefunctions"
 date: 2026-03-10
 category: AI & Context Engineering
-tags: [AI, LLM, Context Engineering, Quantum Semantics, Prompt Engineering, Hilbert Spaces]
-excerpt: "Meaning lives in superposition, context collapses it. A framework for non-classical meaning representation with 11 engineering principles and a prompt library."
-author: Samuele95
+tags: [AI, LLM, Context Engineering, Quantum Semantics, Prompt Engineering, Hilbert Space, CHSH]
+description: "Meaning lives in superposition. Context collapses it. A mathematical framework for non-classical meaning representation, with 11 engineering principles and a complete prompt library for LLMs."
+excerpt: "A framework where meaning obeys quantum rules — superposition, collapse, interference, non-commutativity — with practical engineering tools for LLM prompt design. Third article in the Context Engineering series."
+image: /assets/images/quantum-semantics/bayesian_collapse.png
+math: true
 ---
 
-
-<div class="series-banner">
-  <span class="series-label">Article #3 of the Series</span>
-  <h2 class="series-title">Context Engineering: Advanced Strategies for LLM and Artificial Intelligence</h2>
-  <p>This article is the third installment of the <strong>Context Engineering</strong> series. It presents a mathematical framework — <strong>Quantum Semantics</strong> — that treats meaning as a quantum system and derives practical engineering principles for LLM prompt design.</p>
-  <p><strong>Previously:</strong> <a href="/blog/2026/02/02/symbolic-reasoning-in-llm/">Article #1 — Symbolic Reasoning</a> | <a href="/blog/2026/01/18/emergent-introspective-awareness-llms/">Article #2 — Emergent Introspective Awareness</a></p>
+<div class="series-banner" style="background: #141414; border: 1px solid #262626; border-left: 4px solid #f87171; border-radius: 0.75rem; padding: 1.5rem 2rem; margin-bottom: 2rem; font-family: 'Inter', system-ui, sans-serif;">
+  <span style="display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #f87171; margin-bottom: 0.5rem;">Article #3 of the Series</span>
+  <h2 style="font-family: 'Inter', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: #f5f5f5; margin: 0 0 0.75rem 0; line-height: 1.3;">Context Engineering: Advanced Strategies for LLM and Artificial Intelligence</h2>
+  <p style="font-size: 0.88rem; color: #a3a3a3; margin: 0 0 0.5rem 0; line-height: 1.6;">This series provides conceptual and methodological tools to maximize the value extracted from Large Language Models and AI technologies.</p>
+  <p style="font-size: 0.85rem; color: #a3a3a3; margin: 0; line-height: 1.6;">
+    Previous articles:
+    <a href="/blog/2026/02/symbolic-reasoning-in-llm/" style="color: #f87171; text-decoration: none; border-bottom: 1px solid rgba(248,113,113,0.3);">Article #1: Symbolic Reasoning in LLMs</a> &bull;
+    <a href="/blog/2026/01/emergent-introspective-awareness-llms/" style="color: #f87171; text-decoration: none; border-bottom: 1px solid rgba(248,113,113,0.3);">Article #2: Emergent Introspective Awareness</a>
+  </p>
 </div>
 
-<style>
-/* Series Banner */
-.series-banner {
-  background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-  border: 2px solid #f87171;
-  border-radius: 0.75rem;
-  padding: 2rem;
-  margin: -1rem 0 3rem 0;
-  box-shadow: 0 4px 20px rgba(248, 113, 113, 0.15);
-}
-
-.series-label {
-  display: inline-block;
-  background: #f87171;
-  color: #0d0d0d;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.4rem 0.8rem;
-  border-radius: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-.series-title {
-  color: #f5f5f5;
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 1rem 0;
-  line-height: 1.3;
-}
-
-.series-banner p {
-  color: #a3a3a3;
-  line-height: 1.7;
-  margin-bottom: 0.5rem;
-}
-
-.series-banner p:last-child {
-  margin-bottom: 0;
-}
-
-.series-banner a {
-  color: #22d3ee;
-  text-decoration: underline;
-}
-
-.series-banner a:hover {
-  color: #06b6d4;
-}
-</style>
-
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Google Fonts for the post -->
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-
-<!-- MathJax for equation rendering -->
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
-  svg: { fontCache: 'global' },
-  startup: { typeset: true }
-};
-</script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
-
 <style>
+/* ═══════════════════════════════════════════════════════════════
+   QS Academic Theme — Scoped under .qs-wrapper
+   ═══════════════════════════════════════════════════════════════ */
 
-.qs-article-wrapper {
-  /* Force light theme */
+.qs-wrapper {
+  /* Paper & text */
   --paper: #FDFBF7;
   --paper-warm: #F8F5EE;
   --paper-cool: #F3F1EC;
   --ink: #1C1C28;
   --ink-light: #4A4A5A;
   --ink-dim: #8A8A9A;
+
+  /* Accents */
   --indigo: #4354A0;
   --indigo-light: #5B6CC2;
   --indigo-pale: rgba(67,84,160,0.08);
@@ -104,6 +49,8 @@ window.MathJax = {
   --rose: #B84A4A;
   --rose-pale: rgba(184,74,74,0.06);
   --sage: #3A8A5A;
+
+  /* Structural */
   --rule: rgba(28,28,40,0.10);
   --rule-accent: rgba(67,84,160,0.25);
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
@@ -112,38 +59,84 @@ window.MathJax = {
   --radius: 6px;
   --radius-lg: 10px;
 
-  /* Reset to light theme */
+  /* Wrapper styling */
   background: var(--paper);
   color: var(--ink);
   font-family: "Crimson Pro", "Georgia", "Times New Roman", serif;
   font-size: 1.15rem;
   line-height: 1.82;
+  border-radius: 1rem;
+  margin: 2rem 0;
+  padding: 0;
+  overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  border-radius: 12px;
-  padding: 2rem;
-  margin: 2rem -2rem;
 }
 
-.qs-article-wrapper ::selection { background: rgba(67,84,160,0.18); color: var(--ink); }
+.qs-wrapper *, .qs-wrapper *::before, .qs-wrapper *::after { box-sizing: border-box; }
 
-/* ═══════════════════════════════════════════════════════════════
-   QS Academic Theme — Light scholarly design
-   Inspired by Quanta Magazine / Nature / academic monographs
-   ═══════════════════════════════════════════════════════════════ */
-
-/* ═══ Reset & Base ═══ */
-
+.qs-wrapper ::selection { background: rgba(67,84,160,0.18); color: var(--ink); }
+.qs-wrapper :focus-visible { outline: 2px solid var(--indigo); outline-offset: 3px; }
 
 /* ═══ Main Wrapper ═══ */
-.qs-article-wrapper .qs-article {
+.qs-wrapper .qs-article {
   max-width: 740px;
   margin: 0 auto;
   padding: 0 2rem 4rem;
 }
 
+/* ═══ Hero ═══ */
+.qs-wrapper .qs-hero {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 5rem 2rem 3rem;
+  text-align: left;
+}
+
+.qs-wrapper .qs-hero-badge {
+  display: inline-block;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--indigo);
+  border: 1.5px solid rgba(67,84,160,0.3);
+  border-radius: 3px;
+  padding: 0.25rem 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.qs-wrapper .qs-hero h1 {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: clamp(2.2rem, 5.5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 1.2rem 0;
+  letter-spacing: -0.02em;
+}
+
+.qs-wrapper .qs-hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--ink-light);
+  font-style: italic;
+  line-height: 1.65;
+  max-width: 600px;
+}
+
+.qs-wrapper .qs-hero-meta {
+  margin-top: 1.5rem;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.82rem;
+  color: var(--ink-dim);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
 /* ═══ Epigraph ═══ */
-.qs-article-wrapper .qs-epigraph {
+.qs-wrapper .qs-epigraph {
   text-align: center;
   font-style: italic;
   color: var(--ink-light);
@@ -155,7 +148,7 @@ window.MathJax = {
   border-bottom: 1px solid var(--rule);
 }
 
-.qs-article-wrapper .qs-epigraph cite {
+.qs-wrapper .qs-epigraph cite {
   display: block;
   margin-top: 0.5rem;
   font-size: 0.85rem;
@@ -164,27 +157,27 @@ window.MathJax = {
 }
 
 /* ═══ Typography ═══ */
-.qs-article-wrapper .qs-article p {
+.qs-wrapper .qs-article p {
   margin: 1.1rem 0;
   text-align: justify;
   hyphens: auto;
 }
 
-.qs-article-wrapper .qs-article strong { color: var(--ink); font-weight: 600; }
+.qs-wrapper .qs-article strong { color: var(--ink); font-weight: 600; }
 
-.qs-article-wrapper .qs-article a {
+.qs-wrapper .qs-article a {
   color: var(--indigo);
   text-decoration: none;
   border-bottom: 1px solid rgba(67,84,160,0.3);
   transition: border-color 0.2s, color 0.2s;
 }
-.qs-article-wrapper .qs-article a:hover {
+.qs-wrapper .qs-article a:hover {
   color: var(--indigo-light);
   border-bottom-color: var(--indigo);
 }
 
 /* Inline code */
-.qs-article-wrapper .qs-article code {
+.qs-wrapper .qs-article code {
   background: var(--paper-cool);
   color: var(--indigo);
   padding: 0.12rem 0.45rem;
@@ -195,7 +188,7 @@ window.MathJax = {
 }
 
 /* ═══ Section Headings ═══ */
-.qs-article-wrapper .qs-section-num {
+.qs-wrapper .qs-section-num {
   display: block;
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.72rem;
@@ -206,7 +199,7 @@ window.MathJax = {
   margin-bottom: 0.3rem;
 }
 
-.qs-article-wrapper .qs-section-title {
+.qs-wrapper .qs-section-title {
   font-family: "Inter", system-ui, sans-serif;
   font-size: clamp(1.5rem, 3.5vw, 2rem);
   font-weight: 700;
@@ -217,7 +210,7 @@ window.MathJax = {
 }
 
 /* ═══ Divider ═══ */
-.qs-article-wrapper .qs-divider {
+.qs-wrapper .qs-divider {
   border: none;
   height: 0;
   border-top: 1px solid var(--rule);
@@ -225,14 +218,14 @@ window.MathJax = {
   position: relative;
 }
 
-.qs-article-wrapper .qs-divider-ornament {
+.qs-wrapper .qs-divider-ornament {
   border: none;
   height: 0;
   margin: 3.5rem 0;
   text-align: center;
   position: relative;
 }
-.qs-article-wrapper .qs-divider-ornament::before {
+.qs-wrapper .qs-divider-ornament::before {
   content: "* * *";
   display: block;
   font-family: "Crimson Pro", serif;
@@ -242,7 +235,7 @@ window.MathJax = {
 }
 
 /* ═══ Definition Box ═══ */
-.qs-article-wrapper .qs-definition {
+.qs-wrapper .qs-definition {
   background: var(--indigo-pale);
   border-left: 3px solid var(--indigo);
   border-radius: 0 var(--radius) var(--radius) 0;
@@ -250,7 +243,7 @@ window.MathJax = {
   margin: 1.8rem 0;
 }
 
-.qs-article-wrapper .qs-definition-label {
+.qs-wrapper .qs-definition-label {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.82rem;
   font-weight: 700;
@@ -260,17 +253,17 @@ window.MathJax = {
   margin-bottom: 0.4rem;
 }
 
-.qs-article-wrapper .qs-definition p {
+.qs-wrapper .qs-definition p {
   margin: 0.4rem 0;
   text-align: left;
 }
 
-.qs-article-wrapper .qs-definition .qs-math-block {
+.qs-wrapper .qs-definition .qs-math-block {
   margin: 0.8rem 0;
 }
 
 /* ═══ Theorem Box ═══ */
-.qs-article-wrapper .qs-theorem {
+.qs-wrapper .qs-theorem {
   background: var(--teal-pale);
   border-left: 3px solid var(--teal);
   border-radius: 0 var(--radius) var(--radius) 0;
@@ -278,7 +271,7 @@ window.MathJax = {
   margin: 1.8rem 0;
 }
 
-.qs-article-wrapper .qs-theorem-label {
+.qs-wrapper .qs-theorem-label {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.82rem;
   font-weight: 700;
@@ -288,13 +281,13 @@ window.MathJax = {
   margin-bottom: 0.4rem;
 }
 
-.qs-article-wrapper .qs-theorem p {
+.qs-wrapper .qs-theorem p {
   margin: 0.4rem 0;
   text-align: left;
 }
 
 /* ═══ Proposition / Remark Box ═══ */
-.qs-article-wrapper .qs-proposition {
+.qs-wrapper .qs-proposition {
   background: var(--amber-pale);
   border-left: 3px solid var(--amber);
   border-radius: 0 var(--radius) var(--radius) 0;
@@ -302,7 +295,7 @@ window.MathJax = {
   margin: 1.8rem 0;
 }
 
-.qs-article-wrapper .qs-proposition-label {
+.qs-wrapper .qs-proposition-label {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.82rem;
   font-weight: 700;
@@ -312,13 +305,13 @@ window.MathJax = {
   margin-bottom: 0.4rem;
 }
 
-.qs-article-wrapper .qs-proposition p {
+.qs-wrapper .qs-proposition p {
   margin: 0.4rem 0;
   text-align: left;
 }
 
 /* ═══ Insight Box ═══ */
-.qs-article-wrapper .qs-insight {
+.qs-wrapper .qs-insight {
   background: var(--paper-warm);
   border: 1px solid var(--rule);
   border-radius: var(--radius-lg);
@@ -326,7 +319,7 @@ window.MathJax = {
   margin: 2rem 0;
 }
 
-.qs-article-wrapper .qs-insight-label {
+.qs-wrapper .qs-insight-label {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.78rem;
   font-weight: 700;
@@ -336,13 +329,13 @@ window.MathJax = {
   margin-bottom: 0.4rem;
 }
 
-.qs-article-wrapper .qs-insight p {
+.qs-wrapper .qs-insight p {
   margin: 0.4rem 0;
   font-style: italic;
 }
 
 /* ═══ Math Display ═══ */
-.qs-article-wrapper .qs-math-block {
+.qs-wrapper .qs-math-block {
   text-align: center;
   margin: 1.5rem 0;
   padding: 1rem 1.5rem;
@@ -352,7 +345,7 @@ window.MathJax = {
   overflow-x: auto;
 }
 
-.qs-article-wrapper .qs-math-block .qs-eq-label {
+.qs-wrapper .qs-math-block .qs-eq-label {
   float: right;
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.72rem;
@@ -362,7 +355,7 @@ window.MathJax = {
 }
 
 /* ═══ Pull Quote ═══ */
-.qs-article-wrapper .qs-pullquote {
+.qs-wrapper .qs-pullquote {
   font-size: 1.35rem;
   font-style: italic;
   text-align: center;
@@ -375,13 +368,13 @@ window.MathJax = {
 }
 
 /* ═══ Comparison Cards ═══ */
-.qs-article-wrapper .qs-comparison {
+.qs-wrapper .qs-comparison {
   display: flex;
   gap: 1.2rem;
   margin: 2rem 0;
 }
 
-.qs-article-wrapper .qs-comparison-card {
+.qs-wrapper .qs-comparison-card {
   flex: 1;
   padding: 1.4rem 1.5rem;
   border-radius: var(--radius-lg);
@@ -390,36 +383,37 @@ window.MathJax = {
   font-size: 0.95rem;
 }
 
-.qs-article-wrapper .qs-comparison-card.card-a {
+.qs-wrapper .qs-comparison-card.card-a {
   border-top: 3px solid var(--ink-dim);
 }
 
-.qs-article-wrapper .qs-comparison-card.card-b {
+.qs-wrapper .qs-comparison-card.card-b {
   border-top: 3px solid var(--indigo);
 }
 
-.qs-article-wrapper .qs-comparison-card h4 {
+.qs-wrapper .qs-comparison-card h4 {
   margin: 0 0 0.7rem 0;
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
 }
 
-.qs-article-wrapper .qs-comparison-card.card-a h4 { color: var(--ink-light); }
-.qs-article-wrapper .qs-comparison-card.card-b h4 { color: var(--indigo); }
+.qs-wrapper .qs-comparison-card.card-a h4 { color: var(--ink-light); }
+.qs-wrapper .qs-comparison-card.card-b h4 { color: var(--indigo); }
 
-.qs-article-wrapper .qs-comparison-card p { margin: 0.4rem 0; text-align: left; }
+.qs-wrapper .qs-comparison-card p { margin: 0.4rem 0; text-align: left; }
 
 /* ═══ Terminal/Try-It Card ═══ */
-.qs-article-wrapper .qs-terminal {
+.qs-wrapper .qs-terminal {
   background: #1C1C28;
   border-radius: var(--radius-lg);
   margin: 2rem 0;
   overflow: hidden;
   box-shadow: var(--shadow-md);
+  position: relative;
 }
 
-.qs-article-wrapper .qs-terminal-bar {
+.qs-wrapper .qs-terminal-bar {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -427,23 +421,23 @@ window.MathJax = {
   background: #282838;
 }
 
-.qs-article-wrapper .qs-terminal-bar span {
+.qs-wrapper .qs-terminal-bar span {
   width: 11px; height: 11px;
   border-radius: 50%;
   display: inline-block;
 }
-.qs-article-wrapper .qs-terminal-bar span:nth-child(1) { background: #ff5f57; }
-.qs-article-wrapper .qs-terminal-bar span:nth-child(2) { background: #ffbd2e; }
-.qs-article-wrapper .qs-terminal-bar span:nth-child(3) { background: #28c841; }
+.qs-wrapper .qs-terminal-bar span:nth-child(1) { background: #ff5f57; }
+.qs-wrapper .qs-terminal-bar span:nth-child(2) { background: #ffbd2e; }
+.qs-wrapper .qs-terminal-bar span:nth-child(3) { background: #28c841; }
 
-.qs-article-wrapper .qs-terminal-title {
+.qs-wrapper .qs-terminal-title {
   margin-left: auto;
   font-family: "JetBrains Mono", monospace;
   font-size: 0.75rem;
   color: #8A8A9A;
 }
 
-.qs-article-wrapper .qs-terminal pre {
+.qs-wrapper .qs-terminal pre {
   background: #1C1C28;
   color: #E8E8ED;
   border: none;
@@ -458,17 +452,17 @@ window.MathJax = {
   margin: 0;
 }
 
-.qs-article-wrapper .qs-terminal pre .prompt { color: #5B9BD5; }
-.qs-article-wrapper .qs-terminal pre .comment { color: #6A9955; }
-.qs-article-wrapper .qs-terminal pre .highlight { color: #DCDCAA; }
+.qs-wrapper .qs-terminal pre .prompt { color: #5B9BD5; }
+.qs-wrapper .qs-terminal pre .comment { color: #6A9955; }
+.qs-wrapper .qs-terminal pre .highlight { color: #DCDCAA; }
 
 /* ═══ Figure ═══ */
-.qs-article-wrapper .qs-figure {
+.qs-wrapper .qs-figure {
   margin: 2.5rem 0;
   text-align: center;
 }
 
-.qs-article-wrapper .qs-figure img {
+.qs-wrapper .qs-figure img {
   max-width: 100%;
   height: auto;
   border-radius: var(--radius);
@@ -479,7 +473,7 @@ window.MathJax = {
   cursor: zoom-in;
 }
 
-.qs-article-wrapper .qs-figure-caption {
+.qs-wrapper .qs-figure-caption {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.88rem;
   color: var(--ink-dim);
@@ -490,13 +484,13 @@ window.MathJax = {
   margin-right: auto;
 }
 
-.qs-article-wrapper .qs-figure-caption strong {
+.qs-wrapper .qs-figure-caption strong {
   color: var(--ink-light);
   font-weight: 600;
 }
 
 /* ═══ Table ═══ */
-.qs-article-wrapper .qs-table-wrapper {
+.qs-wrapper .qs-table-wrapper {
   overflow-x: auto;
   margin: 2rem 0;
   border-radius: var(--radius-lg);
@@ -504,14 +498,14 @@ window.MathJax = {
   box-shadow: var(--shadow-sm);
 }
 
-.qs-article-wrapper .qs-table {
+.qs-wrapper .qs-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.92rem;
   background: #fff;
 }
 
-.qs-article-wrapper .qs-table th {
+.qs-wrapper .qs-table th {
   background: var(--paper-cool);
   color: var(--indigo);
   padding: 0.8rem 1rem;
@@ -522,21 +516,21 @@ window.MathJax = {
   border-bottom: 2px solid var(--rule);
 }
 
-.qs-article-wrapper .qs-table td {
+.qs-wrapper .qs-table td {
   padding: 0.7rem 1rem;
   border-bottom: 1px solid var(--rule);
   color: var(--ink);
   vertical-align: top;
 }
 
-.qs-article-wrapper .qs-table tr:last-child td { border-bottom: none; }
+.qs-wrapper .qs-table tr:last-child td { border-bottom: none; }
 
-.qs-article-wrapper .qs-table tr:hover td {
+.qs-wrapper .qs-table tr:hover td {
   background: rgba(67,84,160,0.06);
 }
 
 /* ═══ What-Is Summary Box ═══ */
-.qs-article-wrapper .qs-summary-box {
+.qs-wrapper .qs-summary-box {
   background: #fff;
   border: 1px solid var(--rule);
   border-radius: var(--radius-lg);
@@ -545,7 +539,7 @@ window.MathJax = {
   box-shadow: var(--shadow-sm);
 }
 
-.qs-article-wrapper .qs-summary-box h2 {
+.qs-wrapper .qs-summary-box h2 {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
@@ -553,24 +547,24 @@ window.MathJax = {
   margin: 0 0 0.8rem 0;
 }
 
-.qs-article-wrapper .qs-summary-box p { margin: 0.5rem 0; font-size: 1rem; }
+.qs-wrapper .qs-summary-box p { margin: 0.5rem 0; font-size: 1rem; }
 
-.qs-article-wrapper .qs-summary-box ul {
+.qs-wrapper .qs-summary-box ul {
   margin: 0.8rem 0;
   padding-left: 1.4rem;
 }
 
-.qs-article-wrapper .qs-summary-box li {
+.qs-wrapper .qs-summary-box li {
   margin-bottom: 0.5rem;
   font-size: 0.98rem;
 }
 
-.qs-article-wrapper .qs-summary-box li strong {
+.qs-wrapper .qs-summary-box li strong {
   color: var(--indigo);
 }
 
 /* ═══ QSC Teaser Section ═══ */
-.qs-article-wrapper .qs-teaser {
+.qs-wrapper .qs-teaser {
   background: var(--ink);
   color: var(--paper);
   border-radius: var(--radius-lg);
@@ -578,7 +572,7 @@ window.MathJax = {
   margin: 3rem 0;
 }
 
-.qs-article-wrapper .qs-teaser h2 {
+.qs-wrapper .qs-teaser h2 {
   font-family: "Inter", system-ui, sans-serif;
   font-weight: 700;
   margin: 0 0 1rem 0;
@@ -586,17 +580,17 @@ window.MathJax = {
   color: #fff;
 }
 
-.qs-article-wrapper .qs-teaser p { color: #C8C8D8; margin: 0.8rem 0; text-align: left; }
-.qs-article-wrapper .qs-teaser strong { color: #fff; }
+.qs-wrapper .qs-teaser p { color: #C8C8D8; margin: 0.8rem 0; text-align: left; }
+.qs-wrapper .qs-teaser strong { color: #fff; }
 
-.qs-article-wrapper .qs-teaser code {
+.qs-wrapper .qs-teaser code {
   background: rgba(91,108,194,0.2);
   color: #8BA4E8;
   border: 1px solid rgba(91,108,194,0.3);
 }
 
 /* ═══ Reference Tag ═══ */
-.qs-article-wrapper .qs-ref {
+.qs-wrapper .qs-ref {
   display: inline;
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.7em;
@@ -608,7 +602,7 @@ window.MathJax = {
 }
 
 /* ═══ CTA ═══ */
-.qs-article-wrapper .qs-cta {
+.qs-wrapper .qs-cta {
   text-align: center;
   padding: 2.5rem 2rem;
   margin: 2rem 0;
@@ -616,9 +610,9 @@ window.MathJax = {
   border-bottom: 1px solid var(--rule);
 }
 
-.qs-article-wrapper .qs-cta p { margin: 0.4rem auto; font-size: 1.05rem; text-align: center; }
+.qs-wrapper .qs-cta p { margin: 0.4rem auto; font-size: 1.05rem; text-align: center; }
 
-.qs-article-wrapper .qs-cta-headline {
+.qs-wrapper .qs-cta-headline {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
@@ -626,53 +620,46 @@ window.MathJax = {
   margin-bottom: 0.5rem;
 }
 
-/* ═══ Image Grid (two images side by side) ═══ */
-.qs-article-wrapper .qs-figure-grid {
+/* ═══ Image Grid ═══ */
+.qs-wrapper .qs-figure-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.2rem;
   margin: 2.5rem 0;
 }
 
-.qs-article-wrapper .qs-figure-grid .qs-figure {
+.qs-wrapper .qs-figure-grid .qs-figure {
   margin: 0;
 }
 
+/* ═══ Footer ═══ */
+.qs-wrapper .qs-footer {
+  text-align: center;
+  padding: 2rem 0 3rem;
+  color: var(--ink-dim);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.82rem;
+}
+.qs-wrapper .qs-footer-org {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink-light);
+}
+.qs-wrapper .qs-footer-sub {
+  font-size: 0.78rem;
+  margin-top: 0.3rem;
+  opacity: 0.7;
+}
+
 /* ═══ Scroll Reveal ═══ */
-.qs-article-wrapper.js-loaded .reveal {
+.qs-wrapper.js-loaded .reveal {
   opacity: 0; transform: translateY(20px);
   transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
 }
-.qs-article-wrapper.js-loaded .reveal.revealed { opacity: 1; transform: translateY(0); }
-
-/* ═══ Responsive ═══ */
-@media (max-width: 768px) {
-.qs-article-wrapper .qs-article { padding: 0 1.2rem 3rem; }
-.qs-article-wrapper .qs-hero { padding: 3rem 1.2rem 2rem; }
-.qs-article-wrapper .qs-comparison { flex-direction: column; }
-.qs-article-wrapper .qs-figure-grid { grid-template-columns: 1fr; }
-.qs-article-wrapper .qs-teaser { padding: 2rem 1.5rem; }
-  
-}
-
-@media (max-width: 480px) {
-.qs-article-wrapper .qs-hero { padding: 2rem 1rem 1.5rem; }
-.qs-article-wrapper .qs-article { padding: 0 0.8rem 2rem; }
-.qs-article-wrapper .qs-hero-meta { flex-direction: column; gap: 0.3rem; }
-.qs-article-wrapper .qs-definition, .qs-article-wrapper .qs-theorem, .qs-article-wrapper .qs-proposition { padding: 1rem 1.2rem; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-.qs-article-wrapper * { transition: none !important; }
-.qs-article-wrapper.js-loaded .reveal { opacity: 1; transform: none; }
-}
+.qs-wrapper.js-loaded .reveal.revealed { opacity: 1; transform: translateY(0); }
 
 /* ═══ Copy Button ═══ */
-.qs-article-wrapper .qs-terminal {
-  position: relative;
-}
-
-.qs-article-wrapper .qs-copy-btn {
+.qs-wrapper .qs-copy-btn {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -689,19 +676,19 @@ window.MathJax = {
   transition: background 0.2s, color 0.2s;
 }
 
-.qs-article-wrapper .qs-copy-btn:hover {
+.qs-wrapper .qs-copy-btn:hover {
   background: rgba(255,255,255,0.18);
   color: #ccc;
 }
 
-.qs-article-wrapper .qs-copy-btn.copied {
+.qs-wrapper .qs-copy-btn.copied {
   background: rgba(40,200,65,0.2);
   color: #28c841;
   border-color: rgba(40,200,65,0.3);
 }
 
 /* ═══ Lightbox ═══ */
-.qs-article-wrapper .qs-lightbox {
+.qs-lightbox {
   position: fixed;
   inset: 0;
   z-index: 10000;
@@ -715,22 +702,22 @@ window.MathJax = {
   cursor: zoom-out;
 }
 
-.qs-article-wrapper .qs-lightbox.open {
+.qs-lightbox.open {
   opacity: 1;
   visibility: visible;
 }
 
-.qs-article-wrapper .qs-lightbox img {
+.qs-lightbox img {
   max-width: 92vw;
   max-height: 90vh;
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   box-shadow: 0 8px 48px rgba(0,0,0,0.5);
   cursor: default;
   background: #fff;
   padding: 0.5rem;
 }
 
-.qs-article-wrapper .qs-lightbox-close {
+.qs-lightbox-close {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
@@ -749,16 +736,16 @@ window.MathJax = {
   line-height: 1;
 }
 
-.qs-article-wrapper .qs-lightbox-close:hover {
+.qs-lightbox-close:hover {
   background: rgba(255,255,255,0.3);
 }
 
 /* ═══ Proof Details ═══ */
-.qs-article-wrapper .qs-proof-details {
+.qs-wrapper .qs-proof-details {
   margin: 0.8rem 0 0;
 }
 
-.qs-article-wrapper .qs-proof-details summary {
+.qs-wrapper .qs-proof-details summary {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.88rem;
   font-weight: 600;
@@ -767,16 +754,16 @@ window.MathJax = {
   padding: 0.2rem 0;
 }
 
-.qs-article-wrapper .qs-proof-details summary:hover {
+.qs-wrapper .qs-proof-details summary:hover {
   color: var(--indigo);
 }
 
-.qs-article-wrapper .qs-proof-details p {
+.qs-wrapper .qs-proof-details p {
   margin: 0.5rem 0 0;
 }
 
 /* ═══ Prompt Card ═══ */
-.qs-article-wrapper .qs-prompt-card {
+.qs-wrapper .qs-prompt-card {
   margin: 2rem 0;
   border: 1px solid var(--rule);
   border-radius: var(--radius-lg);
@@ -784,7 +771,7 @@ window.MathJax = {
   box-shadow: var(--shadow-sm);
 }
 
-.qs-article-wrapper .qs-prompt-card-header {
+.qs-wrapper .qs-prompt-card-header {
   display: flex;
   align-items: baseline;
   gap: 0.8rem;
@@ -793,7 +780,7 @@ window.MathJax = {
   border-bottom: 1px solid var(--rule);
 }
 
-.qs-article-wrapper .qs-prompt-card-id {
+.qs-wrapper .qs-prompt-card-id {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.78rem;
   font-weight: 600;
@@ -805,7 +792,7 @@ window.MathJax = {
   flex-shrink: 0;
 }
 
-.qs-article-wrapper .qs-prompt-card-header h4 {
+.qs-wrapper .qs-prompt-card-header h4 {
   margin: 0;
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.95rem;
@@ -813,16 +800,16 @@ window.MathJax = {
   color: var(--ink);
 }
 
-.qs-article-wrapper .qs-prompt-card-meta {
+.qs-wrapper .qs-prompt-card-meta {
   padding: 0.8rem 1.5rem;
   background: var(--paper-warm);
   font-size: 0.92rem;
   line-height: 1.6;
 }
 
-.qs-article-wrapper .qs-prompt-card-meta p { margin: 0.3rem 0; text-align: left; }
+.qs-wrapper .qs-prompt-card-meta p { margin: 0.3rem 0; text-align: left; }
 
-.qs-article-wrapper .qs-prompt-card-tag {
+.qs-wrapper .qs-prompt-card-tag {
   display: inline-block;
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.7rem;
@@ -832,39 +819,39 @@ window.MathJax = {
   margin-right: 0.3rem;
 }
 
-.qs-article-wrapper .qs-prompt-card-tag.tag-concept {
+.qs-wrapper .qs-prompt-card-tag.tag-concept {
   background: var(--teal-pale);
   color: var(--teal);
   border: 1px solid rgba(26,138,125,0.2);
 }
 
-.qs-article-wrapper .qs-prompt-card-tag.tag-use {
+.qs-wrapper .qs-prompt-card-tag.tag-use {
   background: var(--amber-pale);
   color: var(--amber);
   border: 1px solid rgba(196,136,11,0.2);
 }
 
-.qs-article-wrapper .qs-prompt-card .qs-terminal {
+.qs-wrapper .qs-prompt-card .qs-terminal {
   margin: 0;
   border-radius: 0;
   box-shadow: none;
 }
 
 /* ═══ Inline SVG Diagrams ═══ */
-.qs-article-wrapper .qs-svg-figure {
+.qs-wrapper .qs-svg-figure {
   margin: 2.5rem 0;
   text-align: center;
 }
 
-.qs-article-wrapper .qs-svg-figure svg {
+.qs-wrapper .qs-svg-figure svg {
   max-width: 100%;
   height: auto;
   display: block;
   margin: 0 auto;
 }
 
-.qs-svg-figure figcaption,
-.qs-article-wrapper .qs-svg-figure .qs-figure-caption {
+.qs-wrapper .qs-svg-figure figcaption,
+.qs-wrapper .qs-svg-figure .qs-figure-caption {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.88rem;
   color: var(--ink-dim);
@@ -875,38 +862,38 @@ window.MathJax = {
   margin-right: auto;
 }
 
-.qs-svg-figure figcaption strong,
-.qs-article-wrapper .qs-svg-figure .qs-figure-caption strong {
+.qs-wrapper .qs-svg-figure figcaption strong,
+.qs-wrapper .qs-svg-figure .qs-figure-caption strong {
   color: var(--ink-light);
   font-weight: 600;
 }
 
-/* SVG color variables for theme support */
-.qs-article-wrapper .qs-svg-figure text { fill: var(--ink); }
-.qs-article-wrapper .qs-svg-figure .svg-axis { stroke: var(--ink-dim); }
-.qs-article-wrapper .qs-svg-figure .svg-grid { stroke: var(--rule); }
-.qs-article-wrapper .qs-svg-figure .svg-primary { stroke: var(--indigo); fill: var(--indigo); }
-.qs-article-wrapper .qs-svg-figure .svg-secondary { stroke: var(--teal); fill: var(--teal); }
-.qs-article-wrapper .qs-svg-figure .svg-tertiary { stroke: var(--amber); fill: var(--amber); }
-.qs-article-wrapper .qs-svg-figure .svg-accent { stroke: var(--rose); fill: var(--rose); }
-.qs-article-wrapper .qs-svg-figure .svg-dim { stroke: var(--ink-dim); fill: none; }
-.qs-article-wrapper .qs-svg-figure .svg-label {
+/* SVG color variables */
+.qs-wrapper .qs-svg-figure text { fill: var(--ink); }
+.qs-wrapper .qs-svg-figure .svg-axis { stroke: var(--ink-dim); }
+.qs-wrapper .qs-svg-figure .svg-grid { stroke: var(--rule); }
+.qs-wrapper .qs-svg-figure .svg-primary { stroke: var(--indigo); fill: var(--indigo); }
+.qs-wrapper .qs-svg-figure .svg-secondary { stroke: var(--teal); fill: var(--teal); }
+.qs-wrapper .qs-svg-figure .svg-tertiary { stroke: var(--amber); fill: var(--amber); }
+.qs-wrapper .qs-svg-figure .svg-accent { stroke: var(--rose); fill: var(--rose); }
+.qs-wrapper .qs-svg-figure .svg-dim { stroke: var(--ink-dim); fill: none; }
+.qs-wrapper .qs-svg-figure .svg-label {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 12px;
   font-weight: 500;
 }
-.qs-article-wrapper .qs-svg-figure .svg-math {
+.qs-wrapper .qs-svg-figure .svg-math {
   font-family: "Crimson Pro", serif;
   font-style: italic;
   font-size: 14px;
 }
-.qs-article-wrapper .qs-svg-figure .svg-small {
+.qs-wrapper .qs-svg-figure .svg-small {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 10px;
 }
 
 /* ═══ Three-Panel Layout ═══ */
-.qs-article-wrapper .qs-svg-panels {
+.qs-wrapper .qs-svg-panels {
   display: flex;
   gap: 1rem;
   justify-content: center;
@@ -914,19 +901,19 @@ window.MathJax = {
   margin: 2.5rem 0;
 }
 
-.qs-article-wrapper .qs-svg-panels > figure {
+.qs-wrapper .qs-svg-panels > figure {
   flex: 1;
   min-width: 180px;
   max-width: 260px;
   text-align: center;
 }
 
-.qs-article-wrapper .qs-svg-panels svg {
+.qs-wrapper .qs-svg-panels svg {
   max-width: 100%;
   height: auto;
 }
 
-.qs-article-wrapper .qs-svg-panels figcaption {
+.qs-wrapper .qs-svg-panels figcaption {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 0.78rem;
   color: var(--ink-dim);
@@ -934,15 +921,48 @@ window.MathJax = {
   line-height: 1.4;
 }
 
-@media (max-width: 600px) {
-.qs-article-wrapper .qs-svg-panels { flex-direction: column; align-items: center; }
-.qs-article-wrapper .qs-svg-panels > figure { max-width: 300px; }
+/* ═══ Responsive ═══ */
+@media (max-width: 768px) {
+  .qs-wrapper .qs-article { padding: 0 1.2rem 3rem; }
+  .qs-wrapper .qs-hero { padding: 3rem 1.2rem 2rem; }
+  .qs-wrapper .qs-comparison { flex-direction: column; }
+  .qs-wrapper .qs-figure-grid { grid-template-columns: 1fr; }
+  .qs-wrapper .qs-teaser { padding: 2rem 1.5rem; }
+  .qs-wrapper { font-size: 1.05rem; }
 }
 
+@media (max-width: 480px) {
+  .qs-wrapper .qs-hero { padding: 2rem 1rem 1.5rem; }
+  .qs-wrapper .qs-article { padding: 0 0.8rem 2rem; }
+  .qs-wrapper .qs-hero-meta { flex-direction: column; gap: 0.3rem; }
+  .qs-wrapper .qs-definition, .qs-wrapper .qs-theorem, .qs-wrapper .qs-proposition { padding: 1rem 1.2rem; }
+}
 
+@media (max-width: 600px) {
+  .qs-wrapper .qs-svg-panels { flex-direction: column; align-items: center; }
+  .qs-wrapper .qs-svg-panels > figure { max-width: 300px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qs-wrapper * { transition: none !important; }
+  .qs-wrapper.js-loaded .reveal { opacity: 1; transform: none; }
+}
 </style>
 
-<div class="qs-article-wrapper">
+<div class="qs-wrapper" id="qs-wrapper">
+
+<header class="qs-hero">
+  <span class="qs-hero-badge">Quantum Semantics</span>
+  <h1>Quantum Context Engineering &mdash; When Words Become Wavefunctions</h1>
+  <p class="qs-hero-subtitle">Meaning lives in superposition. Context collapses it. This framework &mdash; built on Hilbert spaces, unitary operators, and the Born rule &mdash; gives you engineering control over that collapse.</p>
+  <div class="qs-hero-meta">
+    <span>Samuele95</span>
+    <span>March 2025</span>
+    <span>~25 min read</span>
+  </div>
+  </div>
+</header>
+
 <div class="qs-article">
 
 <div class="qs-epigraph reveal">
@@ -2664,7 +2684,7 @@ FOR EACH AUDIENCE:
 You are executing CONTEXT_PIPELINE.
 
 <span class="highlight">-- Initialize state</span>
-LET state = superposition_decompose({{expression}}).state_vector
+LET state = superposition_decompose({% raw %}{{expression}}{% endraw %}).state_vector
 LET trace = []
 
 <span class="highlight">-- Forward pass: apply operators in given order</span>
@@ -2684,7 +2704,7 @@ FOR i = 0 TO LENGTH(operators) - 1:
 
 <span class="highlight">-- Commutativity check</span>
 IF check_commutativity AND LENGTH(operators) >= 2:
-  LET reverse_state = superposition_decompose({{expression}}).state_vector
+  LET reverse_state = superposition_decompose({% raw %}{{expression}}{% endraw %}).state_vector
   FOR i = LENGTH(operators) - 1 DOWNTO 0:
     reverse_state = NORMALIZE(APPLY(operators[i], reverse_state))
 
@@ -2716,7 +2736,7 @@ RETURN (trace, fidelity)
 You are executing BAYESIAN_COLLAPSE.
 
 <span class="highlight">-- Initialize prior from observation</span>
-LET state = PRIOR({{observation}})
+LET state = PRIOR({% raw %}{{observation}}{% endraw %})
 PRINT "Initial superposition: {state}"
 PRINT "Entropy: {ENTROPY(state)}"
 
@@ -2790,26 +2810,24 @@ RETURN (state, trace)
 
 
 </div><!-- /.qs-article -->
+
+</div><!-- /.qs-wrapper -->
+
 <div class="qs-lightbox" id="qs-lightbox">
   <button class="qs-lightbox-close" aria-label="Close">&times;</button>
   <img src="" alt="">
-</div>
 </div>
 
 <script>
 (function() {
   'use strict';
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var wrapper = document.querySelector('.qs-article-wrapper');
+  var wrapper = document.getElementById('qs-wrapper');
   if (wrapper) wrapper.classList.add('js-loaded');
 
-  
-
-  
-
-  // 3. Scroll Reveal
+  // Scroll Reveal (scoped to .qs-wrapper)
   function initReveal() {
-    var els = document.querySelectorAll('.reveal');
+    var els = document.querySelectorAll('.qs-wrapper .reveal');
     if (reducedMotion) {
       els.forEach(function(el) { el.classList.add('revealed'); });
       return;
@@ -2826,12 +2844,9 @@ RETURN (state, trace)
     }
   }
 
-  
-
-
-  // 6. Copy Buttons
+  // Copy Buttons (scoped to .qs-wrapper)
   function initCopyButtons() {
-    document.querySelectorAll('.qs-terminal').forEach(function(term) {
+    document.querySelectorAll('.qs-wrapper .qs-terminal').forEach(function(term) {
       var btn = document.createElement('button');
       btn.className = 'qs-copy-btn';
       btn.textContent = 'Copy';
@@ -2862,12 +2877,12 @@ RETURN (state, trace)
     });
   }
 
-  // 7. Lightbox
+  // Lightbox (scoped to .qs-wrapper)
   function initLightbox() {
     var lightbox = document.getElementById('qs-lightbox');
     var lbImg = lightbox.querySelector('img');
     var closeBtn = lightbox.querySelector('.qs-lightbox-close');
-    document.querySelectorAll('.qs-figure img').forEach(function(img) {
+    document.querySelectorAll('.qs-wrapper .qs-figure img').forEach(function(img) {
       img.addEventListener('click', function() {
         lbImg.src = img.src;
         lbImg.alt = img.alt;
@@ -2884,8 +2899,7 @@ RETURN (state, trace)
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLB(); });
   }
 
-
-  // Init all
+  // Init
   initReveal();
   initCopyButtons();
   initLightbox();
