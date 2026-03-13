@@ -1109,50 +1109,56 @@ math: true
   transform: translateX(0);
 }
 .qs-toc-panel h3 {
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--ink-dim);
-  margin: 0 0 0.8rem 0;
+  font-family: "Inter", system-ui, sans-serif !important;
+  font-size: 0.65rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  color: var(--ink-dim) !important;
+  margin: 0 0 0.8rem 0 !important;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--rule);
 }
 .qs-toc-panel ol {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 .qs-toc-panel li {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 .qs-toc-panel a {
-  display: flex;
+  display: flex !important;
   align-items: baseline;
   font-family: "Inter", system-ui, sans-serif;
-  font-size: 0.78rem;
-  color: var(--ink-light);
-  text-decoration: none;
+  font-size: 0.78rem !important;
+  color: var(--ink-light) !important;
+  text-decoration: none !important;
   padding: 0.3rem 0.5rem 0.3rem 0;
   transition: color 0.2s;
-  line-height: 1.35;
+  line-height: 1.35 !important;
+  border-left: none !important;
+}
+.qs-toc-panel a::after {
+  display: none !important;
+  content: none !important;
 }
 .qs-toc-panel a::before {
-  content: "\2014";
-  color: var(--rule);
+  content: "\2014" !important;
+  display: inline !important;
+  color: var(--rule) !important;
   margin-right: 0.5rem;
   flex-shrink: 0;
   font-size: 0.7rem;
 }
 .qs-toc-panel a:hover,
 .qs-toc-panel a:hover::before {
-  color: var(--indigo);
+  color: var(--indigo) !important;
 }
 .qs-toc-panel a.active,
 .qs-toc-panel a.active::before {
-  color: var(--indigo);
+  color: var(--indigo) !important;
   font-weight: 600;
 }
 @media (min-width: 1100px) {
@@ -1176,7 +1182,17 @@ math: true
     display: flex;
   }
 }
+
+@media print {
+  .qs-toc-toggle, .qs-toc-panel, .qs-copy-btn, .series-banner { display: none !important; }
+  .qs-wrapper { background: #fff; }
+  .qs-article { max-width: 100%; padding: 0; }
+  .qs-hero { padding: 1rem 0; }
+  .qs-figure img { box-shadow: none; }
+}
 </style>
+
+<div class="qs-wrapper" id="qs-wrapper">
 
 <nav class="qs-toc" aria-label="Table of contents">
   <button class="qs-toc-toggle" id="qs-toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
@@ -1185,8 +1201,6 @@ math: true
     <ol id="qs-toc-list"></ol>
   </div>
 </nav>
-
-<div class="qs-wrapper" id="qs-wrapper">
 
 <header class="qs-hero">
   <span class="qs-hero-badge">Quantum Semantics</span>
@@ -3170,21 +3184,25 @@ RETURN (state, trace)
     }
   }
 
-  // Hide TOC when footer is visible
+  // Hide TOC when scrolled past article / footer visible
   function initTOCFooterGuard() {
-    var toc = document.querySelector('.qs-toc');
-    var footer = document.querySelector('.footer, footer');
-    if (!toc || !footer) return;
-    if ('IntersectionObserver' in window) {
-      var obs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          toc.style.opacity = e.isIntersecting ? '0' : '1';
-          toc.style.pointerEvents = e.isIntersecting ? 'none' : '';
-          toc.style.transition = 'opacity 0.3s';
-        });
-      }, { threshold: 0.05 });
-      obs.observe(footer);
+    var toggle = document.getElementById('qs-toc-toggle');
+    var panel = document.getElementById('qs-toc-panel');
+    var wrapper = document.getElementById('qs-wrapper');
+    if (!toggle || !panel || !wrapper) return;
+
+    function checkTOCVisibility() {
+      var rect = wrapper.getBoundingClientRect();
+      var pastArticle = rect.bottom < 100;
+      toggle.style.opacity = pastArticle ? '0' : '';
+      toggle.style.pointerEvents = pastArticle ? 'none' : '';
+      panel.style.opacity = pastArticle ? '0' : '';
+      panel.style.pointerEvents = pastArticle ? 'none' : '';
     }
+    toggle.style.transition = 'opacity 0.3s';
+    panel.style.transition = panel.style.transition ? panel.style.transition + ', opacity 0.3s' : 'opacity 0.3s';
+    window.addEventListener('scroll', checkTOCVisibility, { passive: true });
+    checkTOCVisibility();
   }
 
   // Init
