@@ -3170,10 +3170,28 @@ RETURN (state, trace)
     }
   }
 
+  // Hide TOC when footer is visible
+  function initTOCFooterGuard() {
+    var toc = document.querySelector('.qs-toc');
+    var footer = document.querySelector('.footer, footer');
+    if (!toc || !footer) return;
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          toc.style.opacity = e.isIntersecting ? '0' : '1';
+          toc.style.pointerEvents = e.isIntersecting ? 'none' : '';
+          toc.style.transition = 'opacity 0.3s';
+        });
+      }, { threshold: 0.05 });
+      obs.observe(footer);
+    }
+  }
+
   // Init
   initReveal();
   initCopyButtons();
   initLightbox();
   initTOC();
+  initTOCFooterGuard();
 })();
 </script>
